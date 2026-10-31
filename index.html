@@ -4,12 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D-IV TLM STIKES Nasional Surakarta Angkatan 2026</title>
-  <script>
-    // DETEKTOR ERROR: Biar kalau crash, ketahuan baris mana yang salah
-    window.onerror = function(msg, url, line) {
-      document.body.innerHTML = '<div style="background:#1e293b; color:#ff4444; padding:20px; font-family:monospace; font-size:16px; z-index:9999; position:fixed; inset:0;"><h2>TERJADI ERROR:</h2><p>' + msg + '</p><p>Baris: ' + line + '</p></div>';
-    };
-  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -89,7 +83,6 @@
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
       
-      <!-- Desktop Menu -->
       <div class="hidden md:flex gap-6 text-sm">
         <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
         <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
@@ -97,13 +90,11 @@
         <a href="#guestbook" class="hover:text-neon transition">Buku Tamu</a>
       </div>
 
-      <!-- Mobile Hamburger Button -->
       <button id="menuBtn" class="md:hidden text-neon focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
     </div>
 
-    <!-- Mobile Menu Dropdown -->
     <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 flex flex-col gap-4 text-sm bg-slate-800/90 backdrop-blur-md">
       <a href="#about" class="hover:text-neon transition block">Tentang Kami</a>
       <a href="#directory" class="hover:text-neon transition block">Struktur & Anggota</a>
@@ -139,8 +130,6 @@
       <p class="text-slate-300 leading-relaxed text-lg mb-8">
         Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta. Dengan semangat kebersamaan dan dedikasi pada ilmu laboratorium medis, kami berkomitmen untuk membangun kompetensi, integritas, dan ketelitian yang menjadi fondasi pelayanan kesehatan yang akurat dan terpercaya.
       </p>
-
-      <!-- Kotak Statistik -->
       <div class="grid grid-cols-2 gap-4">
         <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
           <p class="text-slate-400 text-sm mb-1">JUMLAH MAHASISWA</p>
@@ -166,12 +155,8 @@
   <section id="directory" class="py-24 px-6">
     <div class="max-w-6xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-16">Struktur & Anggota</h2>
-
-      <!-- Committee -->
       <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Pengurus Kelas</h3>
       <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24"></div>
-
-      <!-- Member grid -->
       <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Anggota Kelas</h3>
       <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
     </div>
@@ -188,10 +173,8 @@
           <img src="https://ui-avatars.com/api/?name=Foto+3&background=1e293b&color=00f0ff&size=800" alt="Foto 3" class="w-full flex-shrink-0 rounded-2xl aspect-video object-cover">
           <img src="https://ui-avatars.com/api/?name=Foto+4&background=1e293b&color=00f0ff&size=800" alt="Foto 4" class="w-full flex-shrink-0 rounded-2xl aspect-video object-cover">
         </div>
-        <button id="prevBtn" aria-label="Sebelumnya"
-          class="absolute left-4 top-1/2 -translate-y-1/2 glass w-10 h-10 rounded-full text-neon hover:shadow-neon transition">&#10094;</button>
-        <button id="nextBtn" aria-label="Berikutnya"
-          class="absolute right-4 top-1/2 -translate-y-1/2 glass w-10 h-10 rounded-full text-neon hover:shadow-neon transition">&#10095;</button>
+        <button id="prevBtn" class="absolute left-4 top-1/2 -translate-y-1/2 glass w-10 h-10 rounded-full text-neon hover:shadow-neon transition">&#10094;</button>
+        <button id="nextBtn" class="absolute right-4 top-1/2 -translate-y-1/2 glass w-10 h-10 rounded-full text-neon hover:shadow-neon transition">&#10095;</button>
         <div id="dots" class="flex justify-center gap-2 mt-4"></div>
       </div>
     </div>
@@ -200,40 +183,25 @@
   <!-- 5. Contact & Guestbook -->
   <section id="guestbook" class="py-24 px-6">
     <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-      <!-- Contact form -->
       <div class="reveal glass rounded-3xl p-8 shadow-neon">
         <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
         <form id="contactForm" class="space-y-4">
-          <input type="text" placeholder="Nama Lengkap" required
-            class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
-          <input type="email" placeholder="Email" required
-            class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
-          <textarea rows="4" placeholder="Pesan Anda" required
-            class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
-          <button type="submit"
-            class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold hover:shadow-neon transition">
-            Kirim Pesan
-          </button>
+          <input type="text" placeholder="Nama Lengkap" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
+          <input type="email" placeholder="Email" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
+          <textarea rows="4" placeholder="Pesan Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
+          <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold hover:shadow-neon transition">Kirim Pesan</button>
           <p id="contactMsg" class="text-sm text-neon hidden"></p>
         </form>
       </div>
 
-      <!-- Guestbook -->
       <div class="reveal glass rounded-3xl p-8 shadow-neon">
         <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
         <form id="guestForm" class="space-y-4 mb-6">
-          <input type="text" placeholder="Nama Anda" required
-            class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
-          <textarea rows="2" placeholder="Tulis ucapan..." required
-            class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
-          <button type="submit"
-            class="w-full py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 hover:shadow-neon transition">
-            Tambahkan Ucapan
-          </button>
+          <input type="text" placeholder="Nama Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
+          <textarea rows="2" placeholder="Tulis ucapan..." required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
+          <button type="submit" class="w-full py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 hover:shadow-neon transition">Tambahkan Ucapan</button>
         </form>
-        <ul id="guestList" class="space-y-3 max-h-64 overflow-y-auto pr-2">
-          <!-- Komentar bakal muncul di sini -->
-        </ul>
+        <ul id="guestList" class="space-y-3 max-h-64 overflow-y-auto pr-2"></ul>
       </div>
     </div>
   </section>
@@ -241,41 +209,29 @@
   <!-- 6. Footer -->
   <footer class="glass mt-12 py-10 px-6">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-      
       <div class="text-center md:text-left">
         <p class="text-slate-400 text-sm mb-2">Ikuti Media Sosial Kami:</p>
         <p class="text-slate-500 text-xs">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
       </div>
-
-      <!-- Tombol Sosmed -->
       <div class="flex flex-col gap-4 w-full max-w-xs">
-        
-        <!-- Instagram Button -->
-        <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" rel="noopener"
-          class="flex items-center justify-center gap-3 w-full py-3 px-6 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-300">
+        <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" rel="noopener" class="flex items-center justify-center gap-3 w-full py-3 px-6 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-300">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           @d4tlm.stikesnas26
         </a>
-
-        <!-- TikTok Button -->
-        <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" rel="noopener"
-          class="flex items-center justify-center gap-3 w-full py-3 px-6 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon hover:bg-neon/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-300">
+        <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" rel="noopener" class="flex items-center justify-center gap-3 w-full py-3 px-6 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon hover:bg-neon/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-300">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
           @d4tlm_stikesnas26
         </a>
-
       </div>
     </div>
   </footer>
 
   <script>
-    // KONFIGURASI SUPABASE (GANTI DENGAN PUNYAMU)
     const supabaseUrl = 'https://pwyzpsiyymhb.supabase.co'; 
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
     
     const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-    // Fade-in on scroll
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -286,7 +242,6 @@
     }, { threshold: 0.15 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Toggle Mobile Menu
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     menuBtn.addEventListener('click', () => {
@@ -298,7 +253,6 @@
       });
     });
 
-    // Committee Grid
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://i.imgur.com/KD0O2Pv.jpeg" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -328,7 +282,6 @@
       revealObserver.observe(card);
     });
 
-    // Member Grid
     const memberNames = { 6: "Dania Rahma", 7: "Devita", 9: "Helena", 16: "Shafira" };
     const memberGrid = document.getElementById('memberGrid');
     for (let i = 1; i <= 24; i++) {
@@ -349,7 +302,6 @@
       revealObserver.observe(card);
     }
 
-    // Carousel
     const slides = document.getElementById('slides');
     const total = slides.children.length;
     const dotsWrap = document.getElementById('dots');
@@ -372,7 +324,6 @@
     setInterval(() => goTo(current + 1), 5000);
     goTo(0);
 
-    // Contact Form (Static)
     document.getElementById('contactForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const msg = document.getElementById('contactMsg');
@@ -381,10 +332,6 @@
       e.target.reset();
     });
 
-    // ==========================================
-    // LOGIKA BUKU TAMU (SUPABASE)
-    // ==========================================
-    
     async function loadGuestbook() {
       const { data, error } = await supabaseClient.from('guestbook').select('*').order('created_at', { ascending: false });
       if (error) { console.error('Error fetching:', error); return; }
@@ -425,7 +372,8 @@
       const { error } = await supabaseClient.from('guestbook').insert([{ name, message }]);
       if (error) {
         console.error('Error submitting:', error);
-        alert('Gagal mengirim ucapan. Coba lagi.');
+        // ALERT DIPERBARUI UNTUK DEBUGGING
+        alert('Gagal mengirim ucapan. Error: ' + error.message + ' | Details: ' + (error.details || 'none'));
       } else {
         e.target.reset();
         await loadGuestbook();
@@ -434,7 +382,6 @@
       btn.disabled = false;
     });
 
-    // Panggil fungsi
     loadGuestbook();
   </script>
 </body>

@@ -145,7 +145,7 @@
         </a>
         <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" rel="noopener" class="flex items-center justify-center gap-3 w-full py-3 px-6 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon hover:bg-neon/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-300">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
-          @d4tlm.stikesnas26
+          @d4tlm_stikesnas26
         </a>
       </div>
     </div>
@@ -258,7 +258,7 @@
     });
 
     // ==========================================
-    // LOGIKA BUKU TAMU (TANPA PROXY)
+    // LOGIKA BUKU TAMU (VIA VERCEL API)
     // ==========================================
     
     async function fetchData() {
@@ -314,12 +314,16 @@
           body: JSON.stringify({ name, message })
         });
 
-        if (!res.ok) throw new Error('Gagal kirim');
+        // Baca error asli dari Supabase
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error || 'Gagal kirim');
+        }
 
         e.target.reset();
         await fetchData(); // Refresh list
       } catch (err) {
-        alert('Gagal kirim: ' + err.message);
+        alert('Pesan Error: ' + err.message);
       } finally {
         btn.textContent = oldText;
         btn.disabled = false;

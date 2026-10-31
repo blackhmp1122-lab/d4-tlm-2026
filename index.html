@@ -4,8 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D-IV TLM STIKES Nasional Surakarta Angkatan 2026</title>
+  <script>
+    // DETEKTOR ERROR: Biar kalau crash, ketahuan baris mana yang salah
+    window.onerror = function(msg, url, line) {
+      document.body.innerHTML = '<div style="background:#1e293b; color:#ff4444; padding:20px; font-family:monospace; font-size:16px; z-index:9999; position:fixed; inset:0;"><h2>TERJADI ERROR:</h2><p>' + msg + '</p><p>Baris: ' + line + '</p></div>';
+    };
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- SCRIPT SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     tailwind.config = {
@@ -264,10 +269,11 @@
   </footer>
 
   <script>
-    // KONFIGURASI SUPABASE
+    // KONFIGURASI SUPABASE (GANTI DENGAN PUNYAMU)
     const supabaseUrl = 'https://pwyzpsiyymhb.supabase.co'; 
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     // Fade-in on scroll
     const revealObserver = new IntersectionObserver((entries) => {
@@ -380,7 +386,7 @@
     // ==========================================
     
     async function loadGuestbook() {
-      const { data, error } = await supabase.from('guestbook').select('*').order('created_at', { ascending: false });
+      const { data, error } = await supabaseClient.from('guestbook').select('*').order('created_at', { ascending: false });
       if (error) { console.error('Error fetching:', error); return; }
       
       const list = document.getElementById('guestList');
@@ -416,7 +422,7 @@
       btn.textContent = 'Mengirim...';
       btn.disabled = true;
 
-      const { error } = await supabase.from('guestbook').insert([{ name, message }]);
+      const { error } = await supabaseClient.from('guestbook').insert([{ name, message }]);
       if (error) {
         console.error('Error submitting:', error);
         alert('Gagal mengirim ucapan. Coba lagi.');
@@ -428,7 +434,8 @@
       btn.disabled = false;
     });
 
-   // loadGuestbook();
+    // Panggil fungsi
+    loadGuestbook();
   </script>
 </body>
 </html>

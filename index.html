@@ -291,11 +291,11 @@
 
     // Generate Committee Grid (Data Papan Tulis & Foto)
     const committeeData = [
-      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://i.imgur.com/FhGFDOB.jpeg" }, 
+      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://i.imgur.com/2rTZvhQ.jpeg" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Viera Nada", role: "Bendahara 1", nim: "00000000", img: "https://ui-avatars.com/api/?name=Viera+Nada&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Rizka Oktaviani", role: "Bendahara 2", nim: "00000000", img: "https://ui-avatars.com/api/?name=Rizka+Oktaviani&background=0f172a&color=00f0ff&size=120&bold=true" },
-      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "00000000", img: "https://i.imgur.com/w9fly73.jpeg" },
+      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "00000000", img: "https://i.imgur.com/w9fIy73.jpeg" },
       { name: "Trealyta", role: "Dokumentasi 2", nim: "00000000", img: "https://ui-avatars.com/api/?name=Trealyta&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Veronica Laura", role: "Sarpras", nim: "00000000", img: "https://ui-avatars.com/api/?name=Veronica+Laura&background=0f172a&color=00f0ff&size=120&bold=true" }
     ];
@@ -319,7 +319,7 @@
       revealObserver.observe(card);
     });
 
-    // Generate Member Grid (Anggota dengan foto spesifik di nomor 6, 7, 9)
+    // Generate Member Grid (Anggota)
     const memberGrid = document.getElementById('memberGrid');
     for (let i = 1; i <= 24; i++) {
       let imgSrc = `https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=120`;
@@ -327,6 +327,7 @@
       if (i === 6) imgSrc = "https://i.imgur.com/1op71vB.jpeg"; // Dania
       if (i === 7) imgSrc = "https://i.imgur.com/QgjXFig.jpeg"; // Devita
       if (i === 9) imgSrc = "https://i.imgur.com/GgRzhQl.jpeg"; // Helena
+      if (i === 16) imgSrc = "https://i.imgur.com/tH8j17Z.jpeg"; // Shafira
 
       const card = document.createElement('div');
       card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition';

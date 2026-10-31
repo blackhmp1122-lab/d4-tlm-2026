@@ -224,7 +224,7 @@
   </footer>
 
   <script>
-    const supabaseUrl = 'https://pwyzpsiiyymhbpvaazbd.supabase.co'; 
+    const supabaseUrl = 'https://pwyzpsiyymhbpvaazbd.supabase.co'; 
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
 
     const revealObserver = new IntersectionObserver((entries) => {
@@ -249,11 +249,11 @@
     });
 
     const committeeData = [
-      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://i.imgur.com/KD0O2Pv.jpeg" }, 
+      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/vns.jpg" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Viera Nada", role: "Bendahara 1", nim: "00000000", img: "https://ui-avatars.com/api/?name=Viera+Nada&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Rizka Oktaviani", role: "Bendahara 2", nim: "00000000", img: "https://ui-avatars.com/api/?name=Rizka+Oktaviani&background=0f172a&color=00f0ff&size=120&bold=true" },
-      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "00000000", img: "https://i.imgur.com/w9fIy73.jpeg" },
+      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "00000000", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Phuan.jpg" },
       { name: "Trealyta", role: "Dokumentasi 2", nim: "00000000", img: "https://ui-avatars.com/api/?name=Trealyta&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Veronica Laura", role: "Sarpras", nim: "00000000", img: "https://ui-avatars.com/api/?name=Veronica+Laura&background=0f172a&color=00f0ff&size=120&bold=true" }
     ];
@@ -278,14 +278,22 @@
     });
 
     const memberNames = { 6: "Dania Rahma", 7: "Devita", 9: "Helena", 16: "Shafira" };
+    const memberImages = {
+      6: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Dania.jpg",
+      7: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Devita.jpg",
+      9: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/helena.jpg",
+      16: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/saf.jpg"
+    };
+
     const memberGrid = document.getElementById('memberGrid');
     for (let i = 1; i <= 24; i++) {
       let imgSrc = `https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=120`;
       let displayName = `Nama Anggota ${i}`;
-      if (i === 6) { imgSrc = "https://i.imgur.com/1op71vB.jpeg"; displayName = memberNames[6]; }
-      if (i === 7) { imgSrc = "https://i.imgur.com/QgjXFig.jpeg"; displayName = memberNames[7]; }
-      if (i === 9) { imgSrc = "https://i.imgur.com/GgRzhQl.jpeg"; displayName = memberNames[9]; }
-      if (i === 16) { imgSrc = "https://i.imgur.com/2JcTEVL.jpeg"; displayName = memberNames[16]; }
+      
+      if (memberImages[i]) {
+        imgSrc = memberImages[i];
+        displayName = memberNames[i];
+      }
 
       const card = document.createElement('div');
       card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition';
@@ -327,10 +335,6 @@
       e.target.reset();
     });
 
-    // ==========================================
-    // LOGIKA BUKU TAMU (NATIVE FETCH - NO LIBRARY)
-    // ==========================================
-    
     async function loadGuestbook() {
       try {
         const res = await fetch(`${supabaseUrl}/rest/v1/guestbook?select=*&order=created_at.desc`, {

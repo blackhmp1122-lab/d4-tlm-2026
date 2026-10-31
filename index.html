@@ -155,8 +155,8 @@
     const supabaseUrl = 'https://pwyzpsiyymhbpvaazbd.supabase.co'; 
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
 
-    // PROXY ALLORIGINS (Gratis & Tanpa API Key)
-    const proxyUrl = 'https://api.allorigins.win/raw?url=';
+    // URL CLOUDFLARE WORKERS KAMU
+    const workerUrl = 'https://api-tlm.blackhmp1122.workers.dev';
 
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -263,13 +263,13 @@
     });
 
     // ==========================================
-    // LOGIKA BUKU TAMU (ALLORIGINS PROXY)
+    // LOGIKA BUKU TAMU (CLOUDFLARE WORKERS)
     // ==========================================
     
     async function fetchData() {
       try {
         const targetUrl = `${supabaseUrl}/rest/v1/guestbook?select=*`;
-        const fetchUrl = proxyUrl + encodeURIComponent(targetUrl);
+        const fetchUrl = `${workerUrl}?path=${encodeURIComponent(targetUrl)}`;
         
         const res = await fetch(fetchUrl, {
           method: 'GET',
@@ -321,7 +321,7 @@
 
       try {
         const targetUrl = `${supabaseUrl}/rest/v1/guestbook`;
-        const fetchUrl = proxyUrl + encodeURIComponent(targetUrl);
+        const fetchUrl = `${workerUrl}?path=${encodeURIComponent(targetUrl)}`;
 
         const res = await fetch(fetchUrl, {
           method: 'POST',

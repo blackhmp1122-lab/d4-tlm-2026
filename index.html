@@ -33,23 +33,19 @@
 </head>
 <body class="bg-slate-900 text-slate-200 font-sans antialiased overflow-x-hidden">
 
-  <!-- Navbar -->
   <nav class="fixed top-0 inset-x-0 z-50 glass">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
-      
       <div class="hidden md:flex gap-6 text-sm">
         <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
         <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
         <a href="#gallery" class="hover:text-neon transition">Dokumentasi</a>
         <a href="#guestbook" class="hover:text-neon transition">Buku Tamu</a>
       </div>
-
       <button id="menuBtn" class="md:hidden text-neon focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
     </div>
-
     <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 flex flex-col gap-4 text-sm bg-slate-800/90 backdrop-blur-md">
       <a href="#about" class="hover:text-neon transition block">Tentang Kami</a>
       <a href="#directory" class="hover:text-neon transition block">Struktur & Anggota</a>
@@ -58,7 +54,6 @@
     </div>
   </nav>
 
-  <!-- 1. Hero -->
   <section class="relative min-h-screen flex items-center justify-center px-6 pt-24">
     <div class="absolute inset-0 overflow-hidden -z-10">
       <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl"></div>
@@ -72,7 +67,6 @@
     </div>
   </section>
 
-  <!-- 2. About -->
   <section id="about" class="py-24 px-6">
     <div class="reveal max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12">
       <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
@@ -86,7 +80,6 @@
     </div>
   </section>
 
-  <!-- 3. Directory -->
   <section id="directory" class="py-24 px-6">
     <div class="max-w-6xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-16">Struktur & Anggota</h2>
@@ -97,7 +90,6 @@
     </div>
   </section>
 
-  <!-- 4. Gallery -->
   <section id="gallery" class="py-24 px-6">
     <div class="max-w-4xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi</h2>
@@ -113,7 +105,6 @@
     </div>
   </section>
 
-  <!-- 5. Contact & Guestbook -->
   <section id="guestbook" class="py-24 px-6">
     <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
       <div class="reveal glass rounded-3xl p-8 shadow-neon">
@@ -141,7 +132,6 @@
     </div>
   </section>
 
-  <!-- 6. Footer -->
   <footer class="glass mt-12 py-10 px-6">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="text-center md:text-left">
@@ -162,11 +152,11 @@
   </footer>
 
   <script>
-    // KONFIGURASI SUPABASE
-    const supabaseUrl = 'https://pwyzpsiyymhb pvaazbd.supabase.co'; 
+    // KONFIGURASI SUPABASE (PASTIKAN TANPA SPASI)
+    const supabaseUrl = 'https://pwyzpsiyymhbpvaazbd.supabase.co'; 
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
-    
-    // Fade-in on scroll
+
+    // Render Elemen Visual
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -177,19 +167,13 @@
     }, { threshold: 0.15 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Toggle Mobile Menu
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
+    menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
     mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-      });
+      link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); });
     });
 
-    // Render Pengurus
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/vns.jpg" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -219,7 +203,6 @@
       revealObserver.observe(card);
     });
 
-    // Render Anggota
     const memberNames = { 6: "Dania Rahma", 7: "Devita", 9: "Helena", 16: "Shafira" };
     const memberImages = {
       6: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Dania.jpg",
@@ -232,10 +215,12 @@
     for (let i = 1; i <= 24; i++) {
       let imgSrc = `https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=120`;
       let displayName = `Nama Anggota ${i}`;
+      
       if (memberImages[i]) {
         imgSrc = memberImages[i];
         displayName = memberNames[i];
       }
+
       const card = document.createElement('div');
       card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition';
       card.innerHTML = `
@@ -246,7 +231,6 @@
       revealObserver.observe(card);
     }
 
-    // Carousel
     const slides = document.getElementById('slides');
     const total = slides.children.length;
     const dotsWrap = document.getElementById('dots');
@@ -269,7 +253,6 @@
     setInterval(() => goTo(current + 1), 5000);
     goTo(0);
 
-    // Contact Form
     document.getElementById('contactForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const msg = document.getElementById('contactMsg');
@@ -279,30 +262,31 @@
     });
 
     // ==========================================
-    // LOGIKA BUKU TAMU (PAKAI PROXY BYPASS)
+    // LOGIKA BUKU TAMU (TANPA PROXY)
     // ==========================================
     
     async function fetchData() {
       try {
-        const targetUrl = `${supabaseUrl}/rest/v1/guestbook?select=*`;
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-        
-        const res = await fetch(proxyUrl, {
+        // Pakai REST API standar
+        const res = await fetch(`${supabaseUrl}/rest/v1/guestbook?select=*`, {
           method: 'GET',
           headers: {
             'apikey': supabaseKey,
             'Authorization': `Bearer ${supabaseKey}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
           }
         });
 
-        if (!res.ok) throw new Error('Gagal konek ke database');
+        if (!res.ok) {
+          throw new Error('Network error');
+        }
 
         const data = await res.json();
         const list = document.getElementById('guestList');
         list.innerHTML = ''; 
 
-        if (!data || data.length === 0) {
+        if (data.length === 0) {
           list.innerHTML = '<li class="text-center text-slate-500 text-sm py-4">Belum ada ucapan.</li>';
           return;
         }
@@ -321,11 +305,10 @@
 
       } catch (error) {
         console.error('Gagal:', error);
-        document.getElementById('guestList').innerHTML = `<li class="text-center text-red-500 text-sm py-4">Gagal memuat data. (Error proxy)</li>`;
+        document.getElementById('guestList').innerHTML = `<li class="text-center text-red-500 text-sm py-4">Gagal memuat data. (Coba Refresh)</li>`;
       }
     }
 
-    // Fungsi Kirim via Proxy
     document.getElementById('guestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = e.target.querySelector('button');
@@ -337,10 +320,7 @@
       const message = e.target.querySelector('textarea').value;
 
       try {
-        const targetUrl = `${supabaseUrl}/rest/v1/guestbook`;
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-
-        const res = await fetch(proxyUrl, {
+        const res = await fetch(`${supabaseUrl}/rest/v1/guestbook`, {
           method: 'POST',
           headers: {
             'apikey': supabaseKey,
@@ -351,7 +331,10 @@
           body: JSON.stringify({ name, message })
         });
 
-        if (!res.ok) throw new Error('Gagal kirim');
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || 'Gagal insert');
+        }
 
         e.target.reset();
         await fetchData(); // Refresh list
@@ -363,7 +346,6 @@
       }
     });
 
-    // Panggil fungsi saat halaman dimuat
     fetchData();
   </script>
 </body>

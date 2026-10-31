@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D-IV TLM STIKES Nasional Surakarta Angkatan 2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neon: { DEFAULT: '#00f0ff', blue: '#1e90ff' }
+          },
+          boxShadow: {
+            neon: '0 0 15px rgba(0,240,255,0.5), 0 0 40px rgba(30,144,255,0.25)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+
+    .glass {
+      background: rgba(30, 41, 59, 0.45);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+    }
+
+    .neon-text {
+      text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5);
+    }
+
+    /* Fade-in on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ID card lanyard + floating */
+    .lanyard-wrap { display: flex; flex-direction: column; align-items: center; }
+    .lanyard {
+      width: 4px;
+      height: 46px;
+      background: linear-gradient(#00f0ff, #1e90ff);
+      box-shadow: 0 0 8px rgba(0,240,255,0.6);
+    }
+    .lanyard-clip {
+      width: 14px; height: 14px; border-radius: 3px;
+      background: #94a3b8; margin-top: -4px;
+      box-shadow: 0 0 6px rgba(148,163,184,0.6);
+    }
+    .float {
+      animation: floatY 4s ease-in-out infinite;
+    }
+    .float-delay { animation-delay: -2s; }
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .hole-punch {
+      width: 36px; height: 8px; border-radius: 999px;
+      background: #0f172a; margin: 0 auto 10px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+    }
+
+    .slide { transition: transform 0.6s ease; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-200 font-sans antialiased overflow-x-hidden">
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 inset-x-0 z-50 glass">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
+      <div class="hidden md:flex gap-6 text-sm">
+        <a href="#about" class="hover:text-neon transition">Tentang</a>
+        <a href="#directory" class="hover:text-neon transition">Direktori</a>
+        <a href="#gallery" class="hover:text-neon transition">Galeri</a>
+        <a href="#guestbook" class="hover:text-neon transition">Buku Tamu</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 1. Hero -->
+  <section class="relative min-h-screen flex items-center justify-center px-6 pt-24">
+    <div class="absolute inset-0 overflow-hidden -z-10">
+      <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-72 h-72 bg-cyan-400/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="reveal text-center max-w-3xl">
+      <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
+      <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">
+        D-IV Teknologi Laboratorium Medis
+      </h1>
+      <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">
+        "Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."
+      </p>
+      <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition">
+        Jelajahi Kelas
+      </a>
+    </div>
+  </section>
+
+  <!-- 2. About -->
+  <section id="about" class="py-24 px-6">
+    <div class="reveal max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12">
+      <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Angkatan</h2>
+      <p class="text-slate-300 leading-relaxed text-lg">
+        Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta. Dengan semangat kebersamaan dan dedikasi pada ilmu laboratorium medis, kami berkomitmen untuk membangun kompetensi, integritas, dan ketelitian yang menjadi fondasi pelayanan kesehatan yang akurat dan terpercaya.
+      </p>
+    </div>
+  </section>
+
+  <!-- 3. Directory -->
+  <section id="directory" class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-16">Direktori Angkatan</h2>
+
+      <!-- Committee -->
+      <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Panitia Inti</h3>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center mb-24">
+        <div class="reveal lanyard-wrap float">
+          <div class="lanyard"></div>
+          <div class="lanyard-clip"></div>
+          <div class="glass rounded-2xl w-64 p-6 text-center shadow-neon mt-2">
+            <div class="hole-punch"></div>
+            <img src="https://ui-avatars.com/api/?name=Ketua+Angkatan&background=0f172a&color=00f0ff&size=120&bold=true"
+                 alt="Ketua Angkatan" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon">
+            <h4 class="font-bold text-white">Nama Ketua</h4>
+            <p class="text-neon text-sm mb-2">Ketua Angkatan</p>
+            <p class="text-xs text-slate-400">NIM: 00000000</p>
+          </div>
+        </div>
+
+        <div class="reveal lanyard-wrap float float-delay">
+          <div class="lanyard"></div>
+          <div class="lanyard-clip"></div>
+          <div class="glass rounded-2xl w-64 p-6 text-center shadow-neon mt-2">
+            <div class="hole-punch"></div>
+            <img src="https://ui-avatars.com/api/?name=Wakil+Ketua&background=0f172a&color=00f0ff&size=120&bold=true"
+                 alt="Wakil Ketua" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon">
+            <h4 class="font-bold text-white">Nama Wakil</h4>
+            <p class="text-neon text-sm mb-2">Wakil Ketua</p>
+            <p class="text-xs text-slate-400">NIM: 00000000</p>
+          </div>
+        </div>
+
+        <div class="reveal lanyard-wrap float">
+          <div class="lanyard"></div>
+          <div class="lanyard-clip"></div>
+          <div class="glass rounded-2xl w-64 p-6 text-center shadow-neon mt-2">
+            <div class="hole-punch"></div>
+            <img src="https://ui-avatars.com/api/?name=Sekretaris&background=0f172a&color=00f0ff&size=120&bold=true"
+                 alt="Sekretaris" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon">
+            <h4 class="font-bold text-white">Nama Sekretaris</h4>
+            <p class="text-neon text-sm mb-2">Sekretaris</p>
+            <p class="text-xs text-slate-400">NIM: 00000000</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member grid -->
+      <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Anggota Angkatan</h3>
+      <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+    </div>
+  </section>
+
+  <!-- 4. Gallery -->
+  <section id="gallery" class="py-24 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Galeri</h2>
+      <div class="reveal glass rounded-3xl p-4 relative overflow-hidden shadow-neon">
+        <div id="slides" class="flex slide">
+          <img src="https://ui-avatars.com/api/?name=Foto+1&background=1e293b&color=00f0ff&size=800" alt="Foto 1" class="w-full flex-shrink-0 rounded-2xl aspect-video object-cover">
+          <img src="https://ui-avatars.com/api/?name=Foto+2&background=1e293b&color=00f0ff&size=800" alt="Foto 2" class="w-full flex-shrink-0 rounded-2xl aspect-video object-cover">
+          <img src="https://ui-avatars.com/api/?name=Foto+3&background=1e293b&color=00f0ff&size=800" alt="Foto 3" class="w-full flex-shrink-0 rounded-2xl aspect-video object-cover">
+          <img src="https://ui-avatars.com/api/?name=Foto+4&background=1e293b&color=00f0ff&size=800" alt="Foto 4" class="w-full flex-shrink-0 rounded-2xl aspect-video object-cover">
+        </div>
+        <button id="prevBtn" aria-label="Sebelumnya"
+          class="absolute left-4 top-1/2 -translate-y-1/2 glass w-10 h-10 rounded-full text-neon hover:shadow-neon transition">&#10094;</button>
+        <button id="nextBtn" aria-label="Berikutnya"
+          class="absolute right-4 top-1/2 -translate-y-1/2 glass w-10 h-10 rounded-full text-neon hover:shadow-neon transition">&#10095;</button>
+        <div id="dots" class="flex justify-center gap-2 mt-4"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Contact & Guestbook -->
+  <section id="guestbook" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+      <!-- Contact form -->
+      <div class="reveal glass rounded-3xl p-8 shadow-neon">
+        <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
+        <form id="contactForm" class="space-y-4">
+          <input type="text" placeholder="Nama Lengkap" required
+            class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
+          <input type="email" placeholder="Email" required
+            class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
+          <textarea rows="4" placeholder="Pesan Anda" required
+            class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
+          <button type="submit"
+            class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold hover:shadow-neon transition">
+            Kirim Pesan
+          </button>
+          <p id="contactMsg" class="text-sm text-neon hidden"></p>
+        </form>
+      </div>
+
+      <!-- Guestbook -->
+      <div class="reveal glass rounded-3xl p-8 shadow-neon">
+        <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
+        <form id="guestForm" class="space-y-4 mb-6">
+          <input type="text" placeholder="Nama Anda" required
+            class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
+          <textarea rows="2" placeholder="Tulis ucapan..." required
+            class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
+          <button type="submit"
+            class="w-full py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 hover:shadow-neon transition">
+            Tambahkan Ucapan
+          </button>
+        </form>
+        <ul id="guestList" class="space-y-3 max-h-64 overflow-y-auto pr-2">
+          <li class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+            <p class="font-semibold text-white">Contoh Pengunjung</p>
+            <p class="text-sm text-slate-400">Selamat untuk Angkatan 2026!</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Footer -->
+  <footer class="glass mt-12 py-10 px-6">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <p class="text-slate-400 text-sm">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
+      <div class="flex gap-6 text-sm">
+        <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" rel="noopener"
+          class="hover:text-neon transition">Instagram: @d4tlm.stikesnas26</a>
+        <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" rel="noopener"
+          class="hover:text-neon transition">TikTok: @d4tlm_stikesnas26</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Fade-in on scroll
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Generate member grid
+    const memberGrid = document.getElementById('memberGrid');
+    for (let i = 1; i <= 24; i++) {
+      const card = document.createElement('div');
+      card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition';
+      card.innerHTML = `
+        <img src="https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=80"
+             alt="Anggota ${i}" class="w-16 h-16 rounded-full mx-auto mb-3">
+        <p class="text-sm font-medium text-white">Nama Anggota ${i}</p>
+        <p class="text-xs text-slate-400">NIM: 00000${i}</p>`;
+      memberGrid.appendChild(card);
+      revealObserver.observe(card);
+    }
+
+    // Carousel
+    const slides = document.getElementById('slides');
+    const total = slides.children.length;
+    const dotsWrap = document.getElementById('dots');
+    let current = 0;
+
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'w-2.5 h-2.5 rounded-full bg-slate-600 transition';
+      dot.setAttribute('aria-label', `Slide ${i + 1}`);
+      dot.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(dot);
+    }
+
+    function goTo(index) {
+      current = (index + total) % total;
+      slides.style.transform = `translateX(-${current * 100}%)`;
+      [...dotsWrap.children].forEach((d, i) => {
+        d.className = `w-2.5 h-2.5 rounded-full transition ${i === current ? 'bg-neon shadow-neon' : 'bg-slate-600'}`;
+      });
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+    setInterval(() => goTo(current + 1), 5000);
+    goTo(0);
+
+    // Static contact form
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('contactMsg');
+      msg.textContent = 'Terima kasih! Pesan Anda telah diterima (mode statis).';
+      msg.classList.remove('hidden');
+      e.target.reset();
+    });
+
+    // Static guestbook
+    document.getElementById('guestForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const [nameInput, msgInput] = e.target.querySelectorAll('input, textarea');
+      const li = document.createElement('li');
+      li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800';
+      li.innerHTML = `<p class="font-semibold text-white"></p><p class="text-sm text-slate-400"></p>`;
+      li.querySelector('p:first-child').textContent = nameInput.value;
+      li.querySelector('p:last-child').textContent = msgInput.value;
+      document.getElementById('guestList').prepend(li);
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>

@@ -34,7 +34,6 @@
       text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5);
     }
 
-    /* Fade-in on scroll */
     .reveal {
       opacity: 0;
       transform: translateY(30px);
@@ -45,7 +44,6 @@
       transform: translateY(0);
     }
 
-    /* ID card lanyard + floating */
     .lanyard-wrap { display: flex; flex-direction: column; align-items: center; }
     .lanyard {
       width: 4px;
@@ -78,7 +76,6 @@
 </head>
 <body class="bg-slate-900 text-slate-200 font-sans antialiased overflow-x-hidden">
 
-  <!-- Navbar -->
   <nav class="fixed top-0 inset-x-0 z-50 glass">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
@@ -103,7 +100,6 @@
     </div>
   </nav>
 
-  <!-- 1. Hero -->
   <section class="relative min-h-screen flex items-center justify-center px-6 pt-24">
     <div class="absolute inset-0 overflow-hidden -z-10">
       <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl"></div>
@@ -123,7 +119,6 @@
     </div>
   </section>
 
-  <!-- 2. About -->
   <section id="about" class="py-24 px-6">
     <div class="reveal max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12">
       <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
@@ -151,7 +146,6 @@
     </div>
   </section>
 
-  <!-- 3. Directory -->
   <section id="directory" class="py-24 px-6">
     <div class="max-w-6xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-16">Struktur & Anggota</h2>
@@ -162,7 +156,6 @@
     </div>
   </section>
 
-  <!-- 4. Gallery -->
   <section id="gallery" class="py-24 px-6">
     <div class="max-w-4xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi</h2>
@@ -180,7 +173,6 @@
     </div>
   </section>
 
-  <!-- 5. Contact & Guestbook -->
   <section id="guestbook" class="py-24 px-6">
     <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
       <div class="reveal glass rounded-3xl p-8 shadow-neon">
@@ -206,7 +198,6 @@
     </div>
   </section>
 
-  <!-- 6. Footer -->
   <footer class="glass mt-12 py-10 px-6">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="text-center md:text-left">
@@ -227,7 +218,7 @@
   </footer>
 
   <script>
-    const supabaseUrl = 'https://pwyzpsiyymhb.supabase.co'; 
+    const supabaseUrl = 'https://pwyzpsiyymhbpvaazbd.supabase.co'; 
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
     
     const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);

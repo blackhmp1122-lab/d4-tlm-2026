@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D-IV TLM STIKES Nasional Surakarta Angkatan 2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- SCRIPT SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -225,10 +227,7 @@
           </button>
         </form>
         <ul id="guestList" class="space-y-3 max-h-64 overflow-y-auto pr-2">
-          <li class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
-            <p class="font-semibold text-white">Contoh Pengunjung</p>
-            <p class="text-sm text-slate-400">Selamat untuk Angkatan 2026!</p>
-          </li>
+          <!-- Komentar bakal muncul di sini -->
         </ul>
       </div>
     </div>
@@ -265,6 +264,11 @@
   </footer>
 
   <script>
+    // KONFIGURASI SUPABASE
+    const supabaseUrl = 'https://pwyzpsiyymhb.supabase.co'; 
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2l5eW1oYiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzE0NDQ4MDAwLCJleHAiOjIwMjk5MDQwMDB9.6MjEwOTAxMjM2OX0.FXBOTh0vJrV6SVPvT5c-8VNR-F_EVLKnRY3GScSq24'; // GANTI DENGAN KEY PANJANG DARI SUPABASE KAMU
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
     // Fade-in on scroll
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -282,14 +286,13 @@
     menuBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
     });
-    // Hide menu when link clicked
     mobileMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         mobileMenu.classList.add('hidden');
       });
     });
 
-    // Generate Committee Grid (Data Papan Tulis & Foto)
+    // Committee Grid
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://i.imgur.com/KD0O2Pv.jpeg" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -319,19 +322,12 @@
       revealObserver.observe(card);
     });
 
-    // Generate Member Grid (Anggota)
-    const memberNames = {
-      6: "Dania Rahma",
-      7: "Devita",
-      9: "Helena",
-      16: "Shafira"
-    };
-
+    // Member Grid
+    const memberNames = { 6: "Dania Rahma", 7: "Devita", 9: "Helena", 16: "Shafira" };
     const memberGrid = document.getElementById('memberGrid');
     for (let i = 1; i <= 24; i++) {
       let imgSrc = `https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=120`;
       let displayName = `Nama Anggota ${i}`;
-
       if (i === 6) { imgSrc = "https://i.imgur.com/1op71vB.jpeg"; displayName = memberNames[6]; }
       if (i === 7) { imgSrc = "https://i.imgur.com/QgjXFig.jpeg"; displayName = memberNames[7]; }
       if (i === 9) { imgSrc = "https://i.imgur.com/GgRzhQl.jpeg"; displayName = memberNames[9]; }
@@ -352,15 +348,12 @@
     const total = slides.children.length;
     const dotsWrap = document.getElementById('dots');
     let current = 0;
-
     for (let i = 0; i < total; i++) {
       const dot = document.createElement('button');
       dot.className = 'w-2.5 h-2.5 rounded-full bg-slate-600 transition';
-      dot.setAttribute('aria-label', `Slide ${i + 1}`);
       dot.addEventListener('click', () => goTo(i));
       dotsWrap.appendChild(dot);
     }
-
     function goTo(index) {
       current = (index + total) % total;
       slides.style.transform = `translateX(-${current * 100}%)`;
@@ -368,13 +361,12 @@
         d.className = `w-2.5 h-2.5 rounded-full transition ${i === current ? 'bg-neon shadow-neon' : 'bg-slate-600'}`;
       });
     }
-
     document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
     document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
     setInterval(() => goTo(current + 1), 5000);
     goTo(0);
 
-    // Static contact form
+    // Contact Form (Static)
     document.getElementById('contactForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const msg = document.getElementById('contactMsg');
@@ -383,18 +375,60 @@
       e.target.reset();
     });
 
-    // Static guestbook
-    document.getElementById('guestForm').addEventListener('submit', (e) => {
+    // ==========================================
+    // LOGIKA BUKU TAMU (SUPABASE)
+    // ==========================================
+    
+    async function loadGuestbook() {
+      const { data, error } = await supabase.from('guestbook').select('*').order('created_at', { ascending: false });
+      if (error) { console.error('Error fetching:', error); return; }
+      
+      const list = document.getElementById('guestList');
+      list.innerHTML = ''; 
+      if (data.length === 0) {
+        list.innerHTML = '<li class="text-center text-slate-500 text-sm py-4">Belum ada ucapan. Jadilah yang pertama!</li>';
+        return;
+      }
+      
+      data.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
+        const date = new Date(item.created_at);
+        const timeString = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        li.innerHTML = `
+          <div class="flex justify-between items-start mb-1">
+            <p class="font-semibold text-white">${item.name}</p>
+            <span class="text-[10px] text-slate-500">${timeString}</span>
+          </div>
+          <p class="text-sm text-slate-300">${item.message}</p>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    document.getElementById('guestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const [nameInput, msgInput] = e.target.querySelectorAll('input, textarea');
-      const li = document.createElement('li');
-      li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800';
-      li.innerHTML = `<p class="font-semibold text-white"></p><p class="text-sm text-slate-400"></p>`;
-      li.querySelector('p:first-child').textContent = nameInput.value;
-      li.querySelector('p:last-child').textContent = msgInput.value;
-      document.getElementById('guestList').prepend(li);
-      e.target.reset();
+      const btn = e.target.querySelector('button');
+      const originalText = btn.textContent;
+      const name = e.target.querySelector('input').value;
+      const message = e.target.querySelector('textarea').value;
+
+      btn.textContent = 'Mengirim...';
+      btn.disabled = true;
+
+      const { error } = await supabase.from('guestbook').insert([{ name, message }]);
+      if (error) {
+        console.error('Error submitting:', error);
+        alert('Gagal mengirim ucapan. Coba lagi.');
+      } else {
+        e.target.reset();
+        await loadGuestbook();
+      }
+      btn.textContent = originalText;
+      btn.disabled = false;
     });
+
+    loadGuestbook();
   </script>
 </body>
 </html>

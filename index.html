@@ -162,52 +162,11 @@
 
       <!-- Committee -->
       <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Pengurus Kelas</h3>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24">
-        
-        <!-- ID Card 1 -->
-        <div class="reveal lanyard-wrap float">
-          <div class="lanyard"></div>
-          <div class="lanyard-clip"></div>
-          <div class="glass rounded-2xl w-64 p-6 text-center shadow-neon mt-2">
-            <div class="hole-punch"></div>
-            <img src="https://ui-avatars.com/api/?name=Ketua+Angkatan&background=0f172a&color=00f0ff&size=120&bold=true" alt="Ketua Angkatan" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon">
-            <h4 class="font-bold text-white">Nama Ketua</h4>
-            <p class="text-neon text-sm mb-1">Ketua Kelas</p>
-            <p class="text-xs text-slate-400">NIM: 00000000</p>
-          </div>
-        </div>
-
-        <!-- ID Card 2 -->
-        <div class="reveal lanyard-wrap float float-delay">
-          <div class="lanyard"></div>
-          <div class="lanyard-clip"></div>
-          <div class="glass rounded-2xl w-64 p-6 text-center shadow-neon mt-2">
-            <div class="hole-punch"></div>
-            <img src="https://ui-avatars.com/api/?name=Sekretaris&background=0f172a&color=00f0ff&size=120&bold=true" alt="Sekretaris" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon">
-            <h4 class="font-bold text-white">Nama Sekretaris</h4>
-            <p class="text-neon text-sm mb-1">Sekretaris</p>
-            <p class="text-xs text-slate-400">NIM: 00000000</p>
-          </div>
-        </div>
-
-        <!-- ID Card 3 -->
-        <div class="reveal lanyard-wrap float">
-          <div class="lanyard"></div>
-          <div class="lanyard-clip"></div>
-          <div class="glass rounded-2xl w-64 p-6 text-center shadow-neon mt-2">
-            <div class="hole-punch"></div>
-            <img src="https://ui-avatars.com/api/?name=Bendahara&background=0f172a&color=00f0ff&size=120&bold=true" alt="Bendahara" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon">
-            <h4 class="font-bold text-white">Nama Bendahara 1</h4>
-            <p class="text-neon text-sm mb-1">Bendahara 1</p>
-            <p class="text-xs text-slate-400">NIM: 00000000</p>
-          </div>
-        </div>
-
-      </div>
+      <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24"></div>
 
       <!-- Member grid -->
       <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Anggota Kelas</h3>
-      <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+      <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
     </div>
   </section>
 
@@ -330,7 +289,37 @@
       });
     });
 
-    // Generate member grid
+    // Generate Committee Grid (Data Papan Tulis)
+    const committeeData = [
+      { name: "Nama Ketua", role: "Ketua Kelas", nim: "00000000" }, 
+      { name: "Nur Azizah", role: "Sekretaris", nim: "00000000" },
+      { name: "Vina Nada", role: "Bendahara 1", nim: "00000000" },
+      { name: "Rizka", role: "Bendahara 2", nim: "00000000" },
+      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "00000000" },
+      { name: "Trealyta", role: "Dokumentasi 2", nim: "00000000" },
+      { name: "Veronica Laura", role: "Sarpras", nim: "00000000" }
+    ];
+
+    const committeeGrid = document.getElementById('committeeGrid');
+    committeeData.forEach((data, index) => {
+      const card = document.createElement('div');
+      card.className = `reveal lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''}`;
+      card.innerHTML = `
+        <div class="lanyard"></div>
+        <div class="lanyard-clip"></div>
+        <div class="glass rounded-2xl w-64 p-6 text-center shadow-neon mt-2">
+          <div class="hole-punch"></div>
+          <img src="https://ui-avatars.com/api/?name=${data.name.replace(/ /g, '+')}&background=0f172a&color=00f0ff&size=120&bold=true" alt="${data.name}" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon">
+          <h4 class="font-bold text-white">${data.name}</h4>
+          <p class="text-neon text-sm mb-1">${data.role}</p>
+          <p class="text-xs text-slate-400">NIM: ${data.nim}</p>
+        </div>
+      `;
+      committeeGrid.appendChild(card);
+      revealObserver.observe(card);
+    });
+
+    // Generate Member Grid (Anggota)
     const memberGrid = document.getElementById('memberGrid');
     for (let i = 1; i <= 24; i++) {
       const card = document.createElement('div');

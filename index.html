@@ -218,7 +218,7 @@
   </footer>
 
   <script>
-    const supabaseUrl = 'https://pwyzpsiyymhbpvaazbd.supabase.co'; 
+    const supabaseUrl = 'https://pwyzpsiyymhb pvaazbd.supabase.co'; 
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
     
     const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
@@ -363,8 +363,7 @@
       const { error } = await supabaseClient.from('guestbook').insert([{ name, message }]);
       if (error) {
         console.error('Error submitting:', error);
-        // ALERT DIPERBARUI UNTUK DEBUGGING
-        alert('Gagal mengirim ucapan. Error: ' + error.message + ' | Details: ' + (error.details || 'none'));
+        alert('Gagal mengirim ucapan. Error: ' + error.message);
       } else {
         e.target.reset();
         await loadGuestbook();

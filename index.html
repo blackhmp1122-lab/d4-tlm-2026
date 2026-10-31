@@ -9,27 +9,16 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            neon: { DEFAULT: '#00f0ff', blue: '#1e90ff' }
-          },
-          boxShadow: {
-            neon: '0 0 15px rgba(0,240,255,0.5), 0 0 40px rgba(30,144,255,0.25)'
-          }
+          colors: { neon: { DEFAULT: '#00f0ff', blue: '#1e90ff' } },
+          boxShadow: { neon: '0 0 15px rgba(0,240,255,0.5), 0 0 40px rgba(30,144,255,0.25)' }
         }
       }
     }
   </script>
   <style>
     html { scroll-behavior: smooth; }
-    .glass {
-      background: rgba(30, 41, 59, 0.45);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(0, 240, 255, 0.15);
-    }
-    .neon-text {
-      text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5);
-    }
+    .glass { background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
+    .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
     .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .lanyard-wrap { display: flex; flex-direction: column; align-items: center; }
@@ -163,11 +152,9 @@
   </footer>
 
   <script>
-    // PERHATIKAN URL DAN KEY DI SINI (PASTIKAN TANPA SPASI)
     const supabaseUrl = 'https://pwyzpsiyymhbpvaazbd.supabase.co'; 
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
 
-    // Render Elemen Visual
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -273,26 +260,28 @@
     });
 
     // ==========================================
-    // BUKU TAMU LOGIC (PALING SEDERHANA)
+    // BUKU TAMU LOGIC (DIPERBAIKI)
     // ==========================================
     
     async function fetchData() {
       try {
-        // Ambil data menggunakan REST API standar Supabase
-        const response = await fetch(`${supabaseUrl}/rest/v1/guestbook?select=*&order=created_at.desc`, {
+        // Pakai header standar tanpa query rumit
+        const res = await fetch(`${supabaseUrl}/rest/v1/guestbook?select=*`, {
           method: 'GET',
           headers: {
             'apikey': supabaseKey,
             'Authorization': `Bearer ${supabaseKey}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
           }
         });
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`HTTP ${res.status}: ${errText}`);
         }
 
-        const data = await response.json();
+        const data = await res.json();
         const list = document.getElementById('guestList');
         list.innerHTML = ''; 
 
@@ -301,14 +290,12 @@
           return;
         }
 
-        // Render setiap data
         data.forEach(item => {
           const li = document.createElement('li');
           li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
           li.innerHTML = `
             <div class="flex justify-between items-start mb-1">
               <p class="font-semibold text-white">${item.name}</p>
-              <span class="text-[10px] text-slate-500">${new Date(item.created_at).toLocaleDateString()}</span>
             </div>
             <p class="text-sm text-slate-300">${item.message}</p>
           `;
@@ -316,8 +303,8 @@
         });
 
       } catch (error) {
-        console.error('Gagal mengambil data:', error);
-        document.getElementById('guestList').innerHTML = '<li class="text-center text-red-500 text-sm py-4">Gagal memuat data. Cek koneksi.</li>';
+        console.error('Gagal:', error);
+        document.getElementById('guestList').innerHTML = `<li class="text-center text-red-500 text-sm py-4">Gagal memuat. Error: ${error.message}</li>`;
       }
     }
 
@@ -332,7 +319,7 @@
       const message = e.target.querySelector('textarea').value;
 
       try {
-        const response = await fetch(`${supabaseUrl}/rest/v1/guestbook`, {
+        const res = await fetch(`${supabaseUrl}/rest/v1/guestbook`, {
           method: 'POST',
           headers: {
             'apikey': supabaseKey,
@@ -343,22 +330,21 @@
           body: JSON.stringify({ name, message })
         });
 
-        if (response.ok) {
-          e.target.reset();
-          await fetchData(); // Refresh list
-        } else {
-          const err = await response.json();
-          alert('Gagal kirim: ' + (err.message || 'Unknown error'));
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || 'Gagal insert');
         }
+
+        e.target.reset();
+        await fetchData(); // Refresh list
       } catch (err) {
-        alert('Error jaringan: ' + err.message);
+        alert('Gagal kirim: ' + err.message);
       } finally {
         btn.textContent = oldText;
         btn.disabled = false;
       }
     });
 
-    // Panggil fungsi saat halaman dimuat
     fetchData();
   </script>
 </body>

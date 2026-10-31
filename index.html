@@ -145,14 +145,16 @@
         </a>
         <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" rel="noopener" class="flex items-center justify-center gap-3 w-full py-3 px-6 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon hover:bg-neon/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-300">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
-          @d4tlm_stikesnas26
+          @d4tlm.stikesnas26
         </a>
       </div>
     </div>
   </footer>
 
   <script>
-    // Render Elemen Visual
+    const supabaseUrl = 'https://pwyzpsiyymhbpvaazbd.supabase.co'; 
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
+
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -257,15 +259,16 @@
       e.target.reset();
     });
 
-    // ==========================================
-    // LOGIKA BUKU TAMU (VIA VERCEL API)
-    // ==========================================
-    
     async function fetchData() {
       try {
-        const res = await fetch('/api/guestbook', {
+        const res = await fetch(`${supabaseUrl}/rest/v1/guestbook?select=*`, {
           method: 'GET',
-          headers: { 'Content-Type': 'application/json' }
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
         });
 
         if (!res.ok) throw new Error('Network error');
@@ -308,22 +311,26 @@
       const message = e.target.querySelector('textarea').value;
 
       try {
-        const res = await fetch('/api/guestbook', {
+        const res = await fetch(`${supabaseUrl}/rest/v1/guestbook`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
           body: JSON.stringify({ name, message })
         });
 
-        // Baca error asli dari Supabase
         if (!res.ok) {
-          const errData = await res.json();
-          throw new Error(errData.error || 'Gagal kirim');
+          const err = await res.json();
+          throw new Error(err.message || 'Gagal insert');
         }
 
         e.target.reset();
         await fetchData(); // Refresh list
       } catch (err) {
-        alert('Pesan Error: ' + err.message);
+        alert('Gagal kirim: ' + err.message);
       } finally {
         btn.textContent = oldText;
         btn.disabled = false;

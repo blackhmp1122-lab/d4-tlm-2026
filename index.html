@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D-IV TLM STIKES Nasional Surakarta Angkatan 2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -76,6 +75,7 @@
 </head>
 <body class="bg-slate-900 text-slate-200 font-sans antialiased overflow-x-hidden">
 
+  <!-- Navbar -->
   <nav class="fixed top-0 inset-x-0 z-50 glass">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
@@ -100,6 +100,7 @@
     </div>
   </nav>
 
+  <!-- 1. Hero -->
   <section class="relative min-h-screen flex items-center justify-center px-6 pt-24">
     <div class="absolute inset-0 overflow-hidden -z-10">
       <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl"></div>
@@ -119,6 +120,7 @@
     </div>
   </section>
 
+  <!-- 2. About -->
   <section id="about" class="py-24 px-6">
     <div class="reveal max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12">
       <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
@@ -146,6 +148,7 @@
     </div>
   </section>
 
+  <!-- 3. Directory -->
   <section id="directory" class="py-24 px-6">
     <div class="max-w-6xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-16">Struktur & Anggota</h2>
@@ -156,6 +159,7 @@
     </div>
   </section>
 
+  <!-- 4. Gallery -->
   <section id="gallery" class="py-24 px-6">
     <div class="max-w-4xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi</h2>
@@ -173,6 +177,7 @@
     </div>
   </section>
 
+  <!-- 5. Contact & Guestbook -->
   <section id="guestbook" class="py-24 px-6">
     <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
       <div class="reveal glass rounded-3xl p-8 shadow-neon">
@@ -198,6 +203,7 @@
     </div>
   </section>
 
+  <!-- 6. Footer -->
   <footer class="glass mt-12 py-10 px-6">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="text-center md:text-left">
@@ -220,8 +226,6 @@
   <script>
     const supabaseUrl = 'https://pwyzpsiyymhbpvaazbd.supabase.co'; 
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
-    
-    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -323,31 +327,45 @@
       e.target.reset();
     });
 
+    // ==========================================
+    // LOGIKA BUKU TAMU (NATIVE FETCH - NO LIBRARY)
+    // ==========================================
+    
     async function loadGuestbook() {
-      const { data, error } = await supabaseClient.from('guestbook').select('*').order('created_at', { ascending: false });
-      if (error) { console.error('Error fetching:', error); return; }
-      
-      const list = document.getElementById('guestList');
-      list.innerHTML = ''; 
-      if (data.length === 0) {
-        list.innerHTML = '<li class="text-center text-slate-500 text-sm py-4">Belum ada ucapan. Jadilah yang pertama!</li>';
-        return;
+      try {
+        const res = await fetch(`${supabaseUrl}/rest/v1/guestbook?select=*&order=created_at.desc`, {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`
+          }
+        });
+        const data = await res.json();
+        
+        const list = document.getElementById('guestList');
+        list.innerHTML = ''; 
+        if (!data || data.length === 0) {
+          list.innerHTML = '<li class="text-center text-slate-500 text-sm py-4">Belum ada ucapan. Jadilah yang pertama!</li>';
+          return;
+        }
+        
+        data.forEach(item => {
+          const li = document.createElement('li');
+          li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
+          const date = new Date(item.created_at);
+          const timeString = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+          li.innerHTML = `
+            <div class="flex justify-between items-start mb-1">
+              <p class="font-semibold text-white">${item.name}</p>
+              <span class="text-[10px] text-slate-500">${timeString}</span>
+            </div>
+            <p class="text-sm text-slate-300">${item.message}</p>
+          `;
+          list.appendChild(li);
+        });
+      } catch (err) {
+        console.error('Fetch Error:', err);
+        alert('Error Load: ' + err.message);
       }
-      
-      data.forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
-        const date = new Date(item.created_at);
-        const timeString = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-        li.innerHTML = `
-          <div class="flex justify-between items-start mb-1">
-            <p class="font-semibold text-white">${item.name}</p>
-            <span class="text-[10px] text-slate-500">${timeString}</span>
-          </div>
-          <p class="text-sm text-slate-300">${item.message}</p>
-        `;
-        list.appendChild(li);
-      });
     }
 
     document.getElementById('guestForm').addEventListener('submit', async (e) => {
@@ -360,16 +378,32 @@
       btn.textContent = 'Mengirim...';
       btn.disabled = true;
 
-      const { error } = await supabaseClient.from('guestbook').insert([{ name, message }]);
-      if (error) {
-        console.error('Error submitting:', error);
-        alert('Gagal mengirim ucapan. Error: ' + error.message);
-      } else {
+      try {
+        const res = await fetch(`${supabaseUrl}/rest/v1/guestbook`, {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ name, message })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.message || 'Gagal insert data');
+        }
+
         e.target.reset();
         await loadGuestbook();
+      } catch (err) {
+        console.error('Submit Error:', err);
+        alert('Gagal: ' + err.message);
+      } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
       }
-      btn.textContent = originalText;
-      btn.disabled = false;
     });
 
     loadGuestbook();

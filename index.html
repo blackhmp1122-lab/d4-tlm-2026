@@ -162,7 +162,6 @@
 
       <!-- Committee -->
       <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Pengurus Kelas</h3>
-      
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24">
         
         <!-- ID Card 1 -->
@@ -337,8 +336,8 @@
       const card = document.createElement('div');
       card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition';
       card.innerHTML = `
-        <img src="https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=80"
-             alt="Anggota ${i}" class="w-16 h-16 rounded-full mx-auto mb-3">
+        <img src="https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=120"
+             alt="Anggota ${i}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600">
         <p class="text-sm font-medium text-white">Nama Anggota ${i}</p>
         <p class="text-xs text-slate-400">NIM: 00000${i}</p>`;
       memberGrid.appendChild(card);

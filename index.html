@@ -289,15 +289,15 @@
       });
     });
 
-    // Generate Committee Grid (Data Papan Tulis)
+    // Generate Committee Grid (Data Papan Tulis & Foto)
     const committeeData = [
-      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000" }, 
-      { name: "Nur Azizah", role: "Sekretaris", nim: "00000000" },
-      { name: "Viera Nada", role: "Bendahara 1", nim: "00000000" },
-      { name: "Rizka Oktaviani", role: "Bendahara 2", nim: "00000000" },
-      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "00000000" },
-      { name: "Trealyta", role: "Dokumentasi 2", nim: "00000000" },
-      { name: "Veronica Laura", role: "Sarpras", nim: "00000000" }
+      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://i.imgur.com/FhGFDOB.jpeg" }, 
+      { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
+      { name: "Viera Nada", role: "Bendahara 1", nim: "00000000", img: "https://ui-avatars.com/api/?name=Viera+Nada&background=0f172a&color=00f0ff&size=120&bold=true" },
+      { name: "Rizka Oktaviani", role: "Bendahara 2", nim: "00000000", img: "https://ui-avatars.com/api/?name=Rizka+Oktaviani&background=0f172a&color=00f0ff&size=120&bold=true" },
+      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "00000000", img: "https://i.imgur.com/w9fly73.jpeg" },
+      { name: "Trealyta", role: "Dokumentasi 2", nim: "00000000", img: "https://ui-avatars.com/api/?name=Trealyta&background=0f172a&color=00f0ff&size=120&bold=true" },
+      { name: "Veronica Laura", role: "Sarpras", nim: "00000000", img: "https://ui-avatars.com/api/?name=Veronica+Laura&background=0f172a&color=00f0ff&size=120&bold=true" }
     ];
 
     const committeeGrid = document.getElementById('committeeGrid');
@@ -309,7 +309,7 @@
         <div class="lanyard-clip"></div>
         <div class="glass rounded-2xl w-64 p-6 text-center shadow-neon mt-2">
           <div class="hole-punch"></div>
-          <img src="https://ui-avatars.com/api/?name=${data.name.replace(/ /g, '+')}&background=0f172a&color=00f0ff&size=120&bold=true" alt="${data.name}" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon">
+          <img src="${data.img}" alt="${data.name}" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon object-cover object-top">
           <h4 class="font-bold text-white">${data.name}</h4>
           <p class="text-neon text-sm mb-1">${data.role}</p>
           <p class="text-xs text-slate-400">NIM: ${data.nim}</p>
@@ -319,14 +319,19 @@
       revealObserver.observe(card);
     });
 
-    // Generate Member Grid (Anggota)
+    // Generate Member Grid (Anggota dengan foto spesifik di nomor 6, 7, 9)
     const memberGrid = document.getElementById('memberGrid');
     for (let i = 1; i <= 24; i++) {
+      let imgSrc = `https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=120`;
+      
+      if (i === 6) imgSrc = "https://i.imgur.com/1op71vB.jpeg"; // Dania
+      if (i === 7) imgSrc = "https://i.imgur.com/QgjXFig.jpeg"; // Devita
+      if (i === 9) imgSrc = "https://i.imgur.com/GgRzhQl.jpeg"; // Helena
+
       const card = document.createElement('div');
       card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition';
       card.innerHTML = `
-        <img src="https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=120"
-             alt="Anggota ${i}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600">
+        <img src="${imgSrc}" alt="Anggota ${i}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600 object-cover object-top">
         <p class="text-sm font-medium text-white">Nama Anggota ${i}</p>
         <p class="text-xs text-slate-400">NIM: 00000${i}</p>`;
       memberGrid.appendChild(card);

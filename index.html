@@ -152,9 +152,12 @@
   </footer>
 
   <script>
-    // KONFIGURASI SUPABASE (URL UDAH DIGANTI JADI IP ADDRESS)
-    const supabaseUrl = 'https://104.18.38.146'; 
+    // KONFIGURASI SUPABASE
+    const supabaseUrl = 'https://pwyzpsiyymhbpvaazbd.supabase.co'; 
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXpwc2lpeXltaGJwdmFhemJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MzYzNjksImV4cCI6MjEwOTAxMjM2OX0.7RRXB0Th0vJrV6SVPvT5c-8VNRF_EVLKnRY3GScSq24';
+
+    // CORS PROXY (Biar nembus blokir jaringan)
+    const proxyUrl = 'https://corsproxy.io/?';
 
     // Render Elemen Visual
     const revealObserver = new IntersectionObserver((entries) => {
@@ -262,30 +265,30 @@
     });
 
     // ==========================================
-    // LOGIKA BUKU TAMU (BYPASS DNS VIA IP)
+    // LOGIKA BUKU TAMU (PAKAI CORS PROXY)
     // ==========================================
     
     async function fetchData() {
       try {
-        const res = await fetch(`${supabaseUrl}/rest/v1/guestbook?select=*`, {
+        const targetUrl = `${supabaseUrl}/rest/v1/guestbook?select=*`;
+        const fetchUrl = proxyUrl + encodeURIComponent(targetUrl);
+        
+        const res = await fetch(fetchUrl, {
           method: 'GET',
           headers: {
             'apikey': supabaseKey,
             'Authorization': `Bearer ${supabaseKey}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Content-Type': 'application/json'
           }
         });
 
-        if (!res.ok) {
-          throw new Error('Network error');
-        }
+        if (!res.ok) throw new Error('Gagal konek ke database');
 
         const data = await res.json();
         const list = document.getElementById('guestList');
         list.innerHTML = ''; 
 
-        if (data.length === 0) {
+        if (!data || data.length === 0) {
           list.innerHTML = '<li class="text-center text-slate-500 text-sm py-4">Belum ada ucapan.</li>';
           return;
         }
@@ -304,10 +307,11 @@
 
       } catch (error) {
         console.error('Gagal:', error);
-        document.getElementById('guestList').innerHTML = `<li class="text-center text-red-500 text-sm py-4">Gagal memuat data. (Gunakan VPN atau jaringan lain)</li>`;
+        document.getElementById('guestList').innerHTML = `<li class="text-center text-red-500 text-sm py-4">Gagal memuat data. (Error proxy)</li>`;
       }
     }
 
+    // Fungsi Kirim via Proxy
     document.getElementById('guestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = e.target.querySelector('button');
@@ -319,7 +323,10 @@
       const message = e.target.querySelector('textarea').value;
 
       try {
-        const res = await fetch(`${supabaseUrl}/rest/v1/guestbook`, {
+        const targetUrl = `${supabaseUrl}/rest/v1/guestbook`;
+        const fetchUrl = proxyUrl + encodeURIComponent(targetUrl);
+
+        const res = await fetch(fetchUrl, {
           method: 'POST',
           headers: {
             'apikey': supabaseKey,
@@ -330,10 +337,7 @@
           body: JSON.stringify({ name, message })
         });
 
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.message || 'Gagal insert');
-        }
+        if (!res.ok) throw new Error('Gagal kirim');
 
         e.target.reset();
         await fetchData(); // Refresh list

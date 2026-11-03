@@ -126,7 +126,7 @@
           <button type="submit" class="w-full py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 hover:shadow-neon transition">Tambahkan Ucapan</button>
         </form>
         <ul id="guestList" class="space-y-3 max-h-64 overflow-y-auto pr-2">
-          <li class="text-center text-slate-500 text-sm py-4">Memuat data...</li>
+          <li class="text-center text-slate-500 text-sm py-4">Loading data...</li>
         </ul>
       </div>
     </div>
@@ -151,7 +151,23 @@
     </div>
   </footer>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB6JYyXkD-PBxvw77HrbztnlOXkp_6iRWA",
+      authDomain: "web-tlm-26.firebaseapp.com",
+      projectId: "web-tlm-26",
+      storageBucket: "web-tlm-26.firebasestorage.app",
+      messagingSenderId: "581530598268",
+      appId: "1:581530598268:web:27546cb9b4f6b14df902f9",
+      measurementId: "G-G97BZJT5YX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -257,52 +273,66 @@
     });
 
     // ==========================================
-    // LOGIKA BUKU TAMU (LOCAL STORAGE - PASTI JALAN)
+    // LOGIKA BUKU TAMU (FIREBASE)
     // ==========================================
     
-    function fetchData() {
+    async function fetchData() {
       const list = document.getElementById('guestList');
       list.innerHTML = ''; 
 
-      // Ambil data dari localStorage
-      const data = JSON.parse(localStorage.getItem('guestbookData')) || [];
+      try {
+        const q = query(collection(db, "guestbook"), orderBy("created_at", "desc"));
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+          list.innerHTML = '<li class="text-center text-slate-500 text-sm py-4">Belum ada ucapan.</li>';
+          return;
+        }
 
-      if (data.length === 0) {
-        list.innerHTML = '<li class="text-center text-slate-500 text-sm py-4">Belum ada ucapan.</li>';
-        return;
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const li = document.createElement('li');
+          li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
+          li.innerHTML = `
+            <div class="flex justify-between items-start mb-1">
+              <p class="font-semibold text-white">${data.name}</p>
+            </div>
+            <p class="text-sm text-slate-300">${data.message}</p>
+          `;
+          list.appendChild(li);
+        });
+      } catch (error) {
+        console.error(error);
+        list.innerHTML = '<li class="text-center text-red-500 text-sm py-4">Gagal memuat data.</li>';
       }
-
-      // Urutkan dari yang terbaru
-      data.reverse().forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
-        li.innerHTML = `
-          <div class="flex justify-between items-start mb-1">
-            <p class="font-semibold text-white">${item.name}</p>
-          </div>
-          <p class="text-sm text-slate-300">${item.message}</p>
-        `;
-        list.appendChild(li);
-      });
     }
 
-    document.getElementById('guestForm').addEventListener('submit', (e) => {
+    document.getElementById('guestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const btn = e.target.querySelector('button');
+      const oldText = btn.textContent;
+      btn.textContent = 'Mengirim...';
+      btn.disabled = true;
+
       const name = e.target.querySelector('input').value;
       const message = e.target.querySelector('textarea').value;
 
-      // Ambil data lama, tambah data baru
-      let data = JSON.parse(localStorage.getItem('guestbookData')) || [];
-      data.push({ name, message });
-      
-      // Simpan ke localStorage
-      localStorage.setItem('guestbookData', JSON.stringify(data));
-
-      e.target.reset();
-      fetchData(); // Refresh list
+      try {
+        await addDoc(collection(db, "guestbook"), {
+          name: name,
+          message: message,
+          created_at: new Date()
+        });
+        e.target.reset();
+        await fetchData();
+      } catch (err) {
+        alert('Gagal kirim: ' + err.message);
+      } finally {
+        btn.textContent = oldText;
+        btn.disabled = false;
+      }
     });
 
-    // Panggil fungsi saat halaman dimuat
     fetchData();
   </script>
 </body>

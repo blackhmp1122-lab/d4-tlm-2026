@@ -29,13 +29,29 @@
     @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
     .slide { transition: transform 0.6s ease; }
+    
+    /* Efek Zoom Foto */
+    .zoomable { cursor: pointer; transition: transform 0.2s; }
+    .zoomable:hover { transform: scale(1.05); }
+    #lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+    #lightbox img { max-width: 90%; max-height: 90%; border-radius: 10px; border: 2px solid #00f0ff; box-shadow: 0 0 30px rgba(0,240,255,0.5); }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-200 font-sans antialiased overflow-x-hidden">
 
+  <!-- Lightbox (Pop-up Zoom) -->
+  <div id="lightbox" onclick="this.style.display='none'">
+    <img id="lightbox-img" src="" alt="Zoomed Image">
+  </div>
+
   <nav class="fixed top-0 inset-x-0 z-50 glass">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
+      <!-- LOGO STIKES -->
+      <div class="flex items-center gap-3">
+        <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-10 w-10 object-contain">
+        <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
+      </div>
+      
       <div class="hidden md:flex gap-6 text-sm">
         <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
         <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
@@ -185,14 +201,20 @@
       link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); });
     });
 
+    // FUNGSI ZOOM FOTO
+    window.zoomImage = function(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').style.display = 'flex';
+    }
+
     const committeeData = [
-      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/vns.jpg" }, 
+      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Viera Nada", role: "Bendahara 1", nim: "00000000", img: "https://ui-avatars.com/api/?name=Viera+Nada&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Rizka Oktaviani", role: "Bendahara 2", nim: "00000000", img: "https://ui-avatars.com/api/?name=Rizka+Oktaviani&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "00000000", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Phuan.jpg" },
       { name: "Trealyta", role: "Dokumentasi 2", nim: "00000000", img: "https://ui-avatars.com/api/?name=Trealyta&background=0f172a&color=00f0ff&size=120&bold=true" },
-      { name: "Veronica Laura", role: "Sarpras", nim: "00000000", img: "https://ui-avatars.com/api/?name=Veronica+Laura&background=0f172a&color=00f0ff&size=120&bold=true" }
+      { name: "Veronica Laura", role: "Sarpras", nim: "21", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vero.jpg?raw=true" }
     ];
 
     const committeeGrid = document.getElementById('committeeGrid');
@@ -204,7 +226,7 @@
         <div class="lanyard-clip"></div>
         <div class="glass rounded-2xl w-64 p-6 text-center shadow-neon mt-2">
           <div class="hole-punch"></div>
-          <img src="${data.img}" alt="${data.name}" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon object-cover object-top">
+          <img src="${data.img}" alt="${data.name}" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon object-cover object-top zoomable" onclick="zoomImage('${data.img}')">
           <h4 class="font-bold text-white">${data.name}</h4>
           <p class="text-neon text-sm mb-1">${data.role}</p>
           <p class="text-xs text-slate-400">NIM: ${data.nim}</p>
@@ -214,30 +236,45 @@
       revealObserver.observe(card);
     });
 
-    const memberNames = { 6: "Dania Rahma", 7: "Devita", 9: "Helena", 16: "Shafira" };
+    const memberNames = { 
+      3: "Aprelia", 
+      6: "Dania Rahma", 
+      7: "Devita", 
+      9: "Helena", 
+      10: "Jocelin", 
+      16: "Shafira", 
+      18: "Talita" 
+    };
     const memberImages = {
+      3: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/april.jpg?raw=true",
       6: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Dania.jpg",
       7: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Devita.jpg",
       9: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/helena.jpg",
-      16: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/saf.jpg"
+      10: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/celine.jpg?raw=true",
+      16: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/saf.jpg",
+      18: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/lita.jpg?raw=true"
     };
 
     const memberGrid = document.getElementById('memberGrid');
     for (let i = 1; i <= 24; i++) {
       let imgSrc = `https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=120`;
       let displayName = `Nama Anggota ${i}`;
+      let nimDisplay = `00000${i}`;
       
       if (memberImages[i]) {
         imgSrc = memberImages[i];
         displayName = memberNames[i];
+        if(i === 3 || i === 10 || i === 18) {
+             nimDisplay = "0" + i; 
+        }
       }
 
       const card = document.createElement('div');
       card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition';
       card.innerHTML = `
-        <img src="${imgSrc}" alt="${displayName}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600 object-cover object-top">
+        <img src="${imgSrc}" alt="${displayName}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600 object-cover object-top zoomable" onclick="zoomImage('${imgSrc}')">
         <p class="text-sm font-medium text-white">${displayName}</p>
-        <p class="text-xs text-slate-400">NIM: 00000${i}</p>`;
+        <p class="text-xs text-slate-400">NIM: ${nimDisplay}</p>`;
       memberGrid.appendChild(card);
       revealObserver.observe(card);
     }
@@ -272,10 +309,7 @@
       e.target.reset();
     });
 
-    // ==========================================
-    // LOGIKA BUKU TAMU (FIREBASE)
-    // ==========================================
-    
+    // LOGIKA BUKU TAMU
     async function fetchData() {
       const list = document.getElementById('guestList');
       list.innerHTML = ''; 

@@ -28,7 +28,6 @@
     .float-delay { animation-delay: -2s; }
     @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
-    .slide { transition: transform 0.6s ease; }
     
     /* Efek Zoom Foto */
     .zoomable { cursor: pointer; transition: transform 0.2s; }
@@ -46,7 +45,6 @@
 
   <nav class="fixed top-0 inset-x-0 z-50 glass">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <!-- LOGO STIKES -->
       <div class="flex items-center gap-3">
         <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-10 w-10 object-contain">
         <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
@@ -106,17 +104,28 @@
     </div>
   </section>
 
+  <!-- GALLERY SECTION (GRID) -->
   <section id="gallery" class="py-24 px-6">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-6xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi</h2>
-      <div class="reveal glass rounded-3xl p-4 relative overflow-hidden shadow-neon">
-        <div id="slides" class="flex slide">
-          <img src="https://ui-avatars.com/api/?name=Foto+1&background=1e293b&color=00f0ff&size=800" alt="Foto 1" class="w-full flex-shrink-0 rounded-2xl aspect-video object-cover">
-          <img src="https://ui-avatars.com/api/?name=Foto+2&background=1e293b&color=00f0ff&size=800" alt="Foto 2" class="w-full flex-shrink-0 rounded-2xl aspect-video object-cover">
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        
+        <!-- Foto 1 -->
+        <div class="reveal glass rounded-2xl p-2 shadow-neon zoomable overflow-hidden" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dokumentasi 1" class="w-full aspect-video object-cover rounded-xl">
         </div>
-        <button id="prevBtn" class="absolute left-4 top-1/2 -translate-y-1/2 glass w-10 h-10 rounded-full text-neon hover:shadow-neon transition">&#10094;</button>
-        <button id="nextBtn" class="absolute right-4 top-1/2 -translate-y-1/2 glass w-10 h-10 rounded-full text-neon hover:shadow-neon transition">&#10095;</button>
-        <div id="dots" class="flex justify-center gap-2 mt-4"></div>
+
+        <!-- Foto 2 -->
+        <div class="reveal glass rounded-2xl p-2 shadow-neon zoomable overflow-hidden" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true')">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dokumentasi 2" class="w-full aspect-video object-cover rounded-xl">
+        </div>
+
+        <!-- Foto 3 -->
+        <div class="reveal glass rounded-2xl p-2 shadow-neon zoomable overflow-hidden" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true')">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dokumentasi 3" class="w-full aspect-video object-cover rounded-xl">
+        </div>
+
       </div>
     </div>
   </section>
@@ -278,28 +287,6 @@
       memberGrid.appendChild(card);
       revealObserver.observe(card);
     }
-
-    const slides = document.getElementById('slides');
-    const total = slides.children.length;
-    const dotsWrap = document.getElementById('dots');
-    let current = 0;
-    for (let i = 0; i < total; i++) {
-      const dot = document.createElement('button');
-      dot.className = 'w-2.5 h-2.5 rounded-full bg-slate-600 transition';
-      dot.addEventListener('click', () => goTo(i));
-      dotsWrap.appendChild(dot);
-    }
-    function goTo(index) {
-      current = (index + total) % total;
-      slides.style.transform = `translateX(-${current * 100}%)`;
-      [...dotsWrap.children].forEach((d, i) => {
-        d.className = `w-2.5 h-2.5 rounded-full transition ${i === current ? 'bg-neon shadow-neon' : 'bg-slate-600'}`;
-      });
-    }
-    document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
-    document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
-    setInterval(() => goTo(current + 1), 5000);
-    goTo(0);
 
     document.getElementById('contactForm').addEventListener('submit', (e) => {
       e.preventDefault();

@@ -104,7 +104,7 @@
     </div>
   </section>
 
-  <!-- GALLERY SECTION (GRID) -->
+  <!-- GALLERY SECTION (FIX ASPECT RATIO) -->
   <section id="gallery" class="py-24 px-6">
     <div class="max-w-6xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi</h2>
@@ -113,17 +113,18 @@
         
         <!-- Foto 1 -->
         <div class="reveal glass rounded-2xl p-2 shadow-neon zoomable overflow-hidden" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dokumentasi 1" class="w-full aspect-video object-cover rounded-xl">
+          <!-- object-contain biar gambar utuh, bukan object-cover -->
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dokumentasi 1" class="w-full h-auto max-h-96 object-contain rounded-xl">
         </div>
 
         <!-- Foto 2 -->
         <div class="reveal glass rounded-2xl p-2 shadow-neon zoomable overflow-hidden" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true')">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dokumentasi 2" class="w-full aspect-video object-cover rounded-xl">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dokumentasi 2" class="w-full h-auto max-h-96 object-contain rounded-xl">
         </div>
 
         <!-- Foto 3 -->
         <div class="reveal glass rounded-2xl p-2 shadow-neon zoomable overflow-hidden" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true')">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dokumentasi 3" class="w-full aspect-video object-cover rounded-xl">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dokumentasi 3" class="w-full h-auto max-h-96 object-contain rounded-xl">
         </div>
 
       </div>

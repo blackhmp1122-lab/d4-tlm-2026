@@ -257,74 +257,52 @@
     });
 
     // ==========================================
-    // LOGIKA BUKU TAMU (VIA API VERCEL)
+    // LOGIKA BUKU TAMU (LOCAL STORAGE - PASTI JALAN)
     // ==========================================
     
-    async function fetchData() {
-      try {
-        // Nembak ke API Vercel sendiri, bukan ke Supabase
-        const res = await fetch('/api/guestbook');
-        if (!res.ok) throw new Error('Network error');
+    function fetchData() {
+      const list = document.getElementById('guestList');
+      list.innerHTML = ''; 
 
-        const data = await res.json();
-        const list = document.getElementById('guestList');
-        list.innerHTML = ''; 
+      // Ambil data dari localStorage
+      const data = JSON.parse(localStorage.getItem('guestbookData')) || [];
 
-        if (!data || data.length === 0) {
-          list.innerHTML = '<li class="text-center text-slate-500 text-sm py-4">Belum ada ucapan.</li>';
-          return;
-        }
-
-        data.forEach(item => {
-          const li = document.createElement('li');
-          li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
-          li.innerHTML = `
-            <div class="flex justify-between items-start mb-1">
-              <p class="font-semibold text-white">${item.name}</p>
-            </div>
-            <p class="text-sm text-slate-300">${item.message}</p>
-          `;
-          list.appendChild(li);
-        });
-
-      } catch (error) {
-        console.error('Gagal:', error);
-        document.getElementById('guestList').innerHTML = `<li class="text-center text-red-500 text-sm py-4">Gagal memuat data.</li>`;
+      if (data.length === 0) {
+        list.innerHTML = '<li class="text-center text-slate-500 text-sm py-4">Belum ada ucapan.</li>';
+        return;
       }
+
+      // Urutkan dari yang terbaru
+      data.reverse().forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
+        li.innerHTML = `
+          <div class="flex justify-between items-start mb-1">
+            <p class="font-semibold text-white">${item.name}</p>
+          </div>
+          <p class="text-sm text-slate-300">${item.message}</p>
+        `;
+        list.appendChild(li);
+      });
     }
 
-    document.getElementById('guestForm').addEventListener('submit', async (e) => {
+    document.getElementById('guestForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const btn = e.target.querySelector('button');
-      const oldText = btn.textContent;
-      btn.textContent = 'Mengirim...';
-      btn.disabled = true;
-
       const name = e.target.querySelector('input').value;
       const message = e.target.querySelector('textarea').value;
 
-      try {
-        const res = await fetch('/api/guestbook', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, message })
-        });
+      // Ambil data lama, tambah data baru
+      let data = JSON.parse(localStorage.getItem('guestbookData')) || [];
+      data.push({ name, message });
+      
+      // Simpan ke localStorage
+      localStorage.setItem('guestbookData', JSON.stringify(data));
 
-        if (!res.ok) {
-          const errData = await res.json();
-          throw new Error(errData.error || 'Gagal kirim');
-        }
-
-        e.target.reset();
-        await fetchData(); // Refresh list
-      } catch (err) {
-        alert('Gagal mengirim ucapan: ' + err.message);
-      } finally {
-        btn.textContent = oldText;
-        btn.disabled = false;
-      }
+      e.target.reset();
+      fetchData(); // Refresh list
     });
 
+    // Panggil fungsi saat halaman dimuat
     fetchData();
   </script>
 </body>

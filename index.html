@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D-IV TLM STIKES Nasional Surakarta Angkatan 2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Particles.js untuk Background Bergerak -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  
   <script>
     tailwind.config = {
       theme: {
@@ -17,10 +20,18 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-    .glass { background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
+    body { background-color: #0f172a; color: #e2e8f0; font-family: sans-serif; overflow-x: hidden; }
+    
+    /* Background Particles */
+    #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
+
+    .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
+    
     .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ID Card */
     .lanyard-wrap { display: flex; flex-direction: column; align-items: center; }
     .lanyard { width: 4px; height: 46px; background: linear-gradient(#00f0ff, #1e90ff); box-shadow: 0 0 8px rgba(0,240,255,0.6); }
     .lanyard-clip { width: 14px; height: 14px; border-radius: 3px; background: #94a3b8; margin-top: -4px; box-shadow: 0 0 6px rgba(148,163,184,0.6); }
@@ -28,51 +39,81 @@
     .float-delay { animation-delay: -2s; }
     @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
+
+    /* Preloader Animation */
+    #preloader { position: fixed; inset: 0; background-color: #0f172a; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; }
+    #preloader.hidden { opacity: 0; visibility: hidden; }
+    .lightning { position: absolute; width: 200px; height: 100%; background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Lightning_PNG_Image.png/240px-Lightning_PNG_Image.png') no-repeat center center; background-size: contain; opacity: 0.8; animation: flash 2s infinite alternate; z-index: -1; }
+    @keyframes flash { 0% { opacity: 0.1; } 50% { opacity: 0.9; filter: drop-shadow(0 0 20px #00f0ff); } 100% { opacity: 0.3; } }
+    .loading-bar-container { width: 250px; height: 4px; background: rgba(255,255,255,0.1); margin-top: 20px; border-radius: 2px; overflow: hidden; }
+    .loading-bar { height: 100%; width: 0%; background: #00f0ff; transition: width 0.1s linear; box-shadow: 0 0 10px #00f0ff; }
+    .loading-text { display: flex; justify-content: space-between; width: 250px; font-size: 12px; margin-top: 8px; color: #94a3b8; font-family: monospace; }
+
+    /* 3D Folder Dokumentasi */
+    .folder-container { perspective: 1000px; cursor: pointer; margin: 40px auto; width: 100%; max-width: 600px; position: relative; }
+    .folder-tab { width: 150px; height: 30px; background: #334155; border-radius: 15px 15px 0 0; margin-left: 20px; position: relative; z-index: 1; border: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
+    .folder-body { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 0 20px 20px 20px; padding: 40px; position: relative; z-index: 2; transition: transform 0.4s ease; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: flex-end; }
+    .folder-container:hover .folder-body { transform: translateY(-10px); }
+    .folder-content { position: absolute; top: -150px; left: 50%; transform: translateX(-50%); width: 90%; height: 180px; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 0; display: flex; justify-content: center; gap: 10px; }
     
-    /* Efek Zoom Foto */
+    /* Animasi buka folder */
+    .folder-open .folder-content { opacity: 1; pointer-events: auto; top: -200px; }
+    .folder-open .folder-body { transform: translateY(0); }
+    
+    .folder-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 2px solid #475569; box-shadow: 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.3s; cursor: pointer; }
+    .folder-photo:hover { transform: scale(1.05) rotate(2deg); border-color: #00f0ff; }
+
+    /* Lightbox */
+    #lightbox { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+    #lightbox img { max-width: 90%; max-height: 90%; border-radius: 10px; border: 2px solid #00f0ff; box-shadow: 0 0 30px rgba(0,240,255,0.5); }
+
     .zoomable { cursor: pointer; transition: transform 0.2s; }
     .zoomable:hover { transform: scale(1.05); }
-    #lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-    #lightbox img { max-width: 90%; max-height: 90%; border-radius: 10px; border: 2px solid #00f0ff; box-shadow: 0 0 30px rgba(0,240,255,0.5); }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-200 font-sans antialiased overflow-x-hidden">
+<body>
 
-  <!-- Lightbox (Pop-up Zoom) -->
+  <!-- 1. PRELOADER -->
+  <div id="preloader">
+    <div class="lightning"></div>
+    <h1 class="text-3xl md:text-5xl font-bold text-white neon-text text-center px-4" id="welcome-text" style="opacity: 0; transition: opacity 1s ease;">Welcome to D-IV TLM '26</h1>
+    <div id="loading-wrapper">
+      <div class="loading-bar-container">
+        <div class="loading-bar" id="progress-bar"></div>
+      </div>
+      <div class="loading-text">
+        <span>Loading</span>
+        <span id="progress-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Animasi -->
+  <div id="particles-js"></div>
+
+  <!-- Lightbox Pop-up -->
   <div id="lightbox" onclick="this.style.display='none'">
     <img id="lightbox-img" src="" alt="Zoomed Image">
   </div>
 
+  <!-- NAVBAR -->
   <nav class="fixed top-0 inset-x-0 z-50 glass">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-10 w-10 object-contain">
         <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
       </div>
-      
       <div class="hidden md:flex gap-6 text-sm">
         <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
         <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
         <a href="#gallery" class="hover:text-neon transition">Dokumentasi</a>
         <a href="#guestbook" class="hover:text-neon transition">Buku Tamu</a>
       </div>
-      <button id="menuBtn" class="md:hidden text-neon focus:outline-none">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-      </button>
-    </div>
-    <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 flex flex-col gap-4 text-sm bg-slate-800/90 backdrop-blur-md">
-      <a href="#about" class="hover:text-neon transition block">Tentang Kami</a>
-      <a href="#directory" class="hover:text-neon transition block">Struktur & Anggota</a>
-      <a href="#gallery" class="hover:text-neon transition block">Dokumentasi</a>
-      <a href="#guestbook" class="hover:text-neon transition block">Buku Tamu</a>
     </div>
   </nav>
 
+  <!-- HERO -->
   <section class="relative min-h-screen flex items-center justify-center px-6 pt-24">
-    <div class="absolute inset-0 overflow-hidden -z-10">
-      <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-1/4 right-1/4 w-72 h-72 bg-cyan-400/10 rounded-full blur-3xl"></div>
-    </div>
     <div class="reveal text-center max-w-3xl">
       <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
       <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
@@ -81,10 +122,11 @@
     </div>
   </section>
 
-  <section id="about" class="py-24 px-6">
+  <!-- ABOUT -->
+  <section id="about" class="py-24 px-6 relative z-10">
     <div class="reveal max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12">
       <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
-      <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta. Dengan semangat kebersamaan dan dedikasi pada ilmu laboratorium medis, kami berkomitmen untuk membangun kompetensi, integritas, dan ketelitian yang menjadi fondasi pelayanan kesehatan yang akurat dan terpercaya.</p>
+      <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
       <div class="grid grid-cols-2 gap-4">
         <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6"><p class="text-slate-400 text-sm mb-1">JUMLAH MAHASISWA</p><p class="text-white text-2xl font-bold">24</p></div>
         <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6"><p class="text-slate-400 text-sm mb-1">PRODI</p><p class="text-white text-2xl font-bold">D-IV TLM</p></div>
@@ -94,7 +136,8 @@
     </div>
   </section>
 
-  <section id="directory" class="py-24 px-6">
+  <!-- DIRECTORY (Pengurus & Anggota) -->
+  <section id="directory" class="py-24 px-6 relative z-10">
     <div class="max-w-6xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-16">Struktur & Anggota</h2>
       <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Pengurus Kelas</h3>
@@ -104,43 +147,43 @@
     </div>
   </section>
 
-  <!-- GALLERY SECTION (FIX ASPECT RATIO) -->
-  <section id="gallery" class="py-24 px-6">
-    <div class="max-w-6xl mx-auto">
-      <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi</h2>
+  <!-- DOKUMENTASI (3D Folder) -->
+  <section id="gallery" class="py-24 px-6 relative z-10">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi Kelas</h2>
       
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <!-- 3D Folder Interactive -->
+      <div class="folder-container reveal" onclick="this.classList.toggle('folder-open')">
+        <!-- Foto yang berhamburan keluar -->
+        <div class="folder-content">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
+        </div>
         
-        <!-- Foto 1 -->
-        <div class="reveal glass rounded-2xl p-2 shadow-neon zoomable overflow-hidden" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
-          <!-- object-contain biar gambar utuh, bukan object-cover -->
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dokumentasi 1" class="w-full h-auto max-h-96 object-contain rounded-xl">
+        <!-- Body Folder -->
+        <div class="folder-tab"></div>
+        <div class="folder-body">
+          <div class="text-4xl font-bold text-white">3 <span class="text-lg font-normal text-slate-400">Photos</span></div>
+          <div class="bg-slate-700/50 p-3 rounded-xl border border-slate-600">
+            <!-- Ikon titik tiga -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" /></svg>
+          </div>
         </div>
-
-        <!-- Foto 2 -->
-        <div class="reveal glass rounded-2xl p-2 shadow-neon zoomable overflow-hidden" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true')">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dokumentasi 2" class="w-full h-auto max-h-96 object-contain rounded-xl">
-        </div>
-
-        <!-- Foto 3 -->
-        <div class="reveal glass rounded-2xl p-2 shadow-neon zoomable overflow-hidden" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true')">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dokumentasi 3" class="w-full h-auto max-h-96 object-contain rounded-xl">
-        </div>
-
       </div>
+      <p class="text-center text-slate-500 text-sm mt-4">Klik folder untuk membuka dokumentasi</p>
     </div>
   </section>
 
-  <section id="guestbook" class="py-24 px-6">
+  <!-- BUKU TAMU -->
+  <section id="guestbook" class="py-24 px-6 relative z-10">
     <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
       <div class="reveal glass rounded-3xl p-8 shadow-neon">
         <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
         <form id="contactForm" class="space-y-4">
           <input type="text" placeholder="Nama Lengkap" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
-          <input type="email" placeholder="Email" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
           <textarea rows="4" placeholder="Pesan Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
           <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold hover:shadow-neon transition">Kirim Pesan</button>
-          <p id="contactMsg" class="text-sm text-neon hidden"></p>
         </form>
       </div>
 
@@ -158,26 +201,77 @@
     </div>
   </section>
 
-  <footer class="glass mt-12 py-10 px-6">
+  <!-- FOOTER -->
+  <footer class="glass mt-12 py-10 px-6 relative z-10">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="text-center md:text-left">
         <p class="text-slate-400 text-sm mb-2">Ikuti Media Sosial Kami:</p>
         <p class="text-slate-500 text-xs">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
       </div>
-      <div class="flex flex-col gap-4 w-full max-w-xs">
-        <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" rel="noopener" class="flex items-center justify-center gap-3 w-full py-3 px-6 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-          @d4tlm.stikesnas26
-        </a>
-        <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" rel="noopener" class="flex items-center justify-center gap-3 w-full py-3 px-6 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon hover:bg-neon/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
-          @d4tlm_stikesnas26
-        </a>
+      <div class="flex gap-4 w-full max-w-xs justify-center md:justify-end">
+        <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center justify-center p-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+        <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center justify-center p-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg></a>
       </div>
     </div>
   </footer>
 
   <script type="module">
+    // --- LOGIKA PRELOADER ---
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.floor(Math.random() * 10) + 5;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        
+        // Sembunyikan loading bar, munculkan teks welcome
+        setTimeout(() => {
+          document.getElementById('loading-wrapper').style.display = 'none';
+          const welcomeText = document.getElementById('welcome-text');
+          welcomeText.style.opacity = '1';
+          
+          // Hilangkan seluruh preloader setelah 2 detik
+          setTimeout(() => {
+            document.getElementById('preloader').classList.add('hidden');
+            document.body.style.overflow = 'auto'; // Bisa di-scroll lagi
+          }, 2000);
+        }, 500);
+      }
+      document.getElementById('progress-bar').style.width = progress + '%';
+      document.getElementById('progress-percent').innerText = progress + '%';
+    }, 150);
+
+    document.body.style.overflow = 'hidden'; // Lock scroll saat loading
+
+    // --- BACKGROUND PARTICLES ---
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#00f0ff" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.5, "random": false, "anim": { "enable": false } },
+        "size": { "value": 3, "random": true, "anim": { "enable": false } },
+        "line_linked": { "enable": true, "distance": 150, "color": "#1e90ff", "opacity": 0.4, "width": 1 },
+        "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": { "enable": true, "mode": "grab" },
+          "onclick": { "enable": true, "mode": "push" }
+        },
+        "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } } }
+      },
+      "retina_detect": true
+    });
+
+    // --- FUNGSI ZOOM FOTO ---
+    window.zoomImage = function(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').style.display = 'flex';
+    }
+
+    // --- LOGIKA FIREBASE (BUKU TAMU) ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -194,6 +288,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // Animasi Reveal
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -204,19 +299,7 @@
     }, { threshold: 0.15 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); });
-    });
-
-    // FUNGSI ZOOM FOTO
-    window.zoomImage = function(src) {
-      document.getElementById('lightbox-img').src = src;
-      document.getElementById('lightbox').style.display = 'flex';
-    }
-
+    // Render Pengurus
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -246,15 +329,8 @@
       revealObserver.observe(card);
     });
 
-    const memberNames = { 
-      3: "Aprelia", 
-      6: "Dania Rahma", 
-      7: "Devita", 
-      9: "Helena", 
-      10: "Jocelin", 
-      16: "Shafira", 
-      18: "Talita" 
-    };
+    // Render Anggota
+    const memberNames = { 3: "Aprelia", 6: "Dania Rahma", 7: "Devita", 9: "Helena", 10: "Jocelin", 16: "Shafira", 18: "Talita" };
     const memberImages = {
       3: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/april.jpg?raw=true",
       6: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Dania.jpg",
@@ -274,9 +350,7 @@
       if (memberImages[i]) {
         imgSrc = memberImages[i];
         displayName = memberNames[i];
-        if(i === 3 || i === 10 || i === 18) {
-             nimDisplay = "0" + i; 
-        }
+        if(i === 3 || i === 10 || i === 18) nimDisplay = "0" + i; 
       }
 
       const card = document.createElement('div');
@@ -289,42 +363,25 @@
       revealObserver.observe(card);
     }
 
-    document.getElementById('contactForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const msg = document.getElementById('contactMsg');
-      msg.textContent = 'Terima kasih! Pesan Anda telah diterima.';
-      msg.classList.remove('hidden');
-      e.target.reset();
-    });
-
-    // LOGIKA BUKU TAMU
+    // Firebase Buku Tamu
     async function fetchData() {
       const list = document.getElementById('guestList');
       list.innerHTML = ''; 
-
       try {
         const q = query(collection(db, "guestbook"), orderBy("created_at", "desc"));
         const querySnapshot = await getDocs(q);
-        
         if (querySnapshot.empty) {
           list.innerHTML = '<li class="text-center text-slate-500 text-sm py-4">Belum ada ucapan.</li>';
           return;
         }
-
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           const li = document.createElement('li');
           li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
-          li.innerHTML = `
-            <div class="flex justify-between items-start mb-1">
-              <p class="font-semibold text-white">${data.name}</p>
-            </div>
-            <p class="text-sm text-slate-300">${data.message}</p>
-          `;
+          li.innerHTML = `<div class="flex justify-between items-start mb-1"><p class="font-semibold text-white">${data.name}</p></div><p class="text-sm text-slate-300">${data.message}</p>`;
           list.appendChild(li);
         });
       } catch (error) {
-        console.error(error);
         list.innerHTML = '<li class="text-center text-red-500 text-sm py-4">Gagal memuat data.</li>';
       }
     }
@@ -335,16 +392,10 @@
       const oldText = btn.textContent;
       btn.textContent = 'Mengirim...';
       btn.disabled = true;
-
       const name = e.target.querySelector('input').value;
       const message = e.target.querySelector('textarea').value;
-
       try {
-        await addDoc(collection(db, "guestbook"), {
-          name: name,
-          message: message,
-          created_at: new Date()
-        });
+        await addDoc(collection(db, "guestbook"), { name, message, created_at: new Date() });
         e.target.reset();
         await fetchData();
       } catch (err) {

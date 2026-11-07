@@ -30,10 +30,7 @@
     /* EFEK SCROLL GLOBAL */
     .reveal { opacity: 0; transform: translateY(60px) scale(0.95); transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
-    
-    /* Parallax pakai will-change biar GPU yang kerja, bukan CPU (anti macet) */
     .parallax-box { will-change: transform; transition: transform 0.1s ease-out; }
-    
     .zoom-scroll { transition: transform 0.4s ease, box-shadow 0.4s ease; }
     .zoom-scroll:hover { transform: scale(1.05) translateY(-8px); box-shadow: 0 20px 40px rgba(0, 240, 255, 0.3); z-index: 20; }
 
@@ -49,38 +46,16 @@
     /* =========================================
        PRELOADER INTERAKTIF
        ========================================= */
-    #preloader { 
-      position: fixed; inset: 0; 
-      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%, #020617 100%);
-      z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; 
-      transition: opacity 1s ease, visibility 1s ease; overflow: hidden;
-      cursor: crosshair;
-      /* Mencegah scroll saat disentuh di HP */
-      touch-action: none; 
-    }
-
-    #spotlight {
-      position: absolute; width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 60%);
-      border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
-      z-index: 1; transition: opacity 0.3s ease;
-    }
-
-    .preloader-stars {
-      position: absolute; inset: 0;
-      background-image: radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 160px 120px, #fff, rgba(0,0,0,0));
-      background-repeat: repeat; background-size: 200px 200px; opacity: 0.3; z-index: 0; animation: twinkle 3s infinite alternate;
-      transition: transform 0.1s ease-out;
-    }
+    #preloader { position: fixed; inset: 0; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%, #020617 100%); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; overflow: hidden; cursor: crosshair; touch-action: none; }
+    #spotlight { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 60%); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); z-index: 1; transition: opacity 0.3s ease; }
+    .preloader-stars { position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 160px 120px, #fff, rgba(0,0,0,0)); background-repeat: repeat; background-size: 200px 200px; opacity: 0.3; z-index: 0; animation: twinkle 3s infinite alternate; transition: transform 0.1s ease-out; }
     @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 0.6; } }
-
     .lightning-flash { position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 1; animation: flashAnim 4s infinite; }
     @keyframes flashAnim { 0%, 92%, 96%, 100% { opacity: 0; } 93%, 95% { opacity: 0.4; } 94% { opacity: 0; } }
     .lightning-bolt { position: absolute; top: 0; left: 50%; width: 4px; height: 100%; background: #fff; box-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff; z-index: 2; opacity: 0; transform: translateX(-50%) rotate(15deg); animation: strikeAnim 4s infinite; }
     .lightning-bolt::before { content: ''; position: absolute; top: 30%; left: 0; width: 60px; height: 3px; background: #fff; box-shadow: 0 0 10px #00f0ff; transform: rotate(-40deg); transform-origin: left center; }
     .lightning-bolt::after { content: ''; position: absolute; top: 60%; right: 0; width: 80px; height: 3px; background: #fff; box-shadow: 0 0 10px #00f0ff; transform: rotate(30deg); transform-origin: right center; }
     @keyframes strikeAnim { 0%, 90%, 96%, 100% { opacity: 0; transform: translateX(-50%) rotate(15deg) scaleY(0.5); } 91% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1); } 93% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1) scaleX(2); } 94% { opacity: 0.5; transform: translateX(-50%) rotate(15deg) scaleY(1); } }
-
     #loading-phase { display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10; }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
     .loading-container { width: 300px; display: flex; flex-direction: column; align-items: center; }
@@ -89,7 +64,6 @@
     .loading-text-wrapper { display: flex; justify-content: space-between; width: 100%; font-size: 0.85rem; color: #d1d5db; font-family: monospace; }
     .loading-label { margin-left: 5px; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; }
-
     #welcome-phase { position: absolute; text-align: center; opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; pointer-events: none; padding: 0 20px; width: 100%; z-index: 10; }
     #welcome-phase.show { opacity: 1; transform: translateY(0); }
     #welcome-phase .line-1 { display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5); margin-bottom: 10px; }
@@ -113,11 +87,8 @@
     .zoomable { cursor: pointer; transition: transform 0.2s; }
     .zoomable:hover { transform: scale(1.05); }
 
-    /* =========================================
-       OPTIMASI UNTUK HP (Mencegah Macet)
-       ========================================= */
+    /* Optimasi HP (Mencegah Macet) */
     @media (max-width: 768px) {
-      /* Matikan efek parallax geser di HP biar scroll enteng */
       .parallax-box { transform: none !important; }
       #hero-content { transform: none !important; opacity: 1 !important; }
     }
@@ -156,18 +127,42 @@
     <img id="lightbox-img" src="" alt="Zoomed Image">
   </div>
 
-  <!-- NAVBAR -->
+  <!-- =========================================
+       NAVBAR (UDAH DITAMBAH MENU TITIK TIGA UNTUK HP)
+       ========================================= -->
   <nav class="fixed top-0 inset-x-0 z-50 glass">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      
+      <!-- Logo Kiri -->
       <div class="flex items-center gap-3">
         <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-10 w-10 object-contain">
         <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
       </div>
+
+      <!-- Menu Desktop (Laptop) -->
       <div class="hidden md:flex gap-6 text-sm">
         <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
         <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
         <a href="#gallery" class="hover:text-neon transition">Dokumentasi</a>
         <a href="#guestbook" class="hover:text-neon transition">Buku Tamu</a>
+      </div>
+
+      <!-- Tombol Titik Tiga (Hanya Muncul di HP) -->
+      <button id="menu-btn" class="md:hidden text-slate-300 hover:text-neon focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- Menu Dropdown untuk HP (Tersembunyi awalnya) -->
+    <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-700 absolute w-full left-0">
+      <div class="flex flex-col px-6 py-4 space-y-4 text-sm">
+        <a href="#about" class="hover:text-neon transition" onclick="closeMenu()">Tentang Kami</a>
+        <a href="#directory" class="hover:text-neon transition" onclick="closeMenu()">Struktur & Anggota</a>
+        <a href="#gallery" class="hover:text-neon transition" onclick="closeMenu()">Dokumentasi</a>
+        <a href="#guestbook" class="hover:text-neon transition" onclick="closeMenu()">Buku Tamu</a>
       </div>
     </div>
   </nav>
@@ -270,7 +265,25 @@
   </footer>
 
   <script type="module">
+    // =========================================
+    // FITUR MENU TITIK TIGA (HP)
+    // =========================================
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    // Fungsi buka/tutup menu
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Fungsi tutup menu saat link diklik
+    window.closeMenu = function() {
+      mobileMenu.classList.add('hidden');
+    }
+
+    // =========================================
     // 1. LOGIKA PRELOADER & MOUSE INTERAKTIF
+    // =========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
@@ -282,61 +295,43 @@
 
     document.body.style.overflow = 'hidden'; 
 
-    // =========================================
-    // A. EFEK INTERAKTIF MOUSE & TOUCH (LAYAR SENTUH)
-    // =========================================
     function moveSpotlight(clientX, clientY) {
       spotlight.style.left = clientX + 'px';
       spotlight.style.top = clientY + 'px';
-      
       const x = (clientX / window.innerWidth - 0.5) * 20;
       const y = (clientY / window.innerHeight - 0.5) * 20;
       preloaderStars.style.transform = `translate(${x}px, ${y}px)`;
     }
 
-    // Event untuk Mouse (Laptop/PC)
-    preloader.addEventListener('mousemove', (e) => {
-      moveSpotlight(e.clientX, e.clientY);
-    });
-
-    // Event untuk Jari (HP) - Touchmove
+    preloader.addEventListener('mousemove', (e) => { moveSpotlight(e.clientX, e.clientY); });
     preloader.addEventListener('touchmove', (e) => {
-      // Ambil posisi jari pertama yang menyentuh layar
       const touch = e.touches[0];
-      if (touch) {
-        moveSpotlight(touch.clientX, touch.clientY);
-      }
-    }, { passive: true }); // passive: true bikin scroll lebih lancar di HP
+      if (touch) { moveSpotlight(touch.clientX, touch.clientY); }
+    }, { passive: true });
 
-    // Sembunyikan / Munculkan senter
     preloader.addEventListener('mouseleave', () => { spotlight.style.opacity = '0'; });
     preloader.addEventListener('mouseenter', () => { spotlight.style.opacity = '1'; });
 
-    // =========================================
-    // B. JALANKAN PROGRESS BAR
-    // =========================================
     const interval = setInterval(() => {
       progress += Math.floor(Math.random() * 4) + 1;
-      
       if (progress >= 100) {
         progress = 100;
         clearInterval(interval);
-        
         setTimeout(() => { loadingPhase.classList.add('hide'); }, 300);
         setTimeout(() => { welcomePhase.classList.add('show'); }, 800); 
-        
         setTimeout(() => {
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
           document.body.style.overflow = 'auto';
         }, 3000); 
       }
-      
       progressBar.style.width = progress + '%';
       progressPercent.innerText = progress + '%';
     }, 50);
 
-    // 2. BACKGROUND PARTICLES (Website Utama)
+    // =========================================
+    // 2. BACKGROUND PARTICLES
+    // =========================================
     particlesJS("particles-js", {
       "particles": {
         "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
@@ -355,13 +350,17 @@
       "retina_detect": true
     });
 
+    // =========================================
     // 3. FUNGSI ZOOM GAMBAR
+    // =========================================
     window.zoomImage = function(src) {
       document.getElementById('lightbox-img').src = src;
       document.getElementById('lightbox').style.display = 'flex';
     }
 
+    // =========================================
     // 4. LOGIKA FIREBASE
+    // =========================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -378,7 +377,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // =========================================
     // 5. ANIMASI REVEAL BERULANG
+    // =========================================
     const revealElements = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -399,11 +400,8 @@
 
     window.addEventListener('scroll', () => {
       lastScrollY = window.scrollY;
-      
-      // Cek jika layar HP (lebar < 768px), jangan jalankan parallax biar ga macet
       if (window.innerWidth < 768) return;
 
-      // Gunakan requestAnimationFrame agar pergerakan mulus 60fps
       if (!isTicking) {
         window.requestAnimationFrame(() => {
           const heroContent = document.getElementById('hero-content');
@@ -421,14 +419,15 @@
               box.style.transform = `translateY(${distanceToCenter * 0.05}px)`;
             }
           });
-
           isTicking = false;
         });
         isTicking = true;
       }
-    }, { passive: true }); // passive true wajib buat performa scroll di HP
+    }, { passive: true });
 
+    // =========================================
     // 7. RENDER DATA PENGURUS & ANGGOTA
+    // =========================================
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "13", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -491,7 +490,9 @@
       revealObserver.observe(card);
     }
 
-    // Firebase Buku Tamu
+    // =========================================
+    // 8. FIREBASE BUKU TAMU
+    // =========================================
     async function fetchData() {
       const list = document.getElementById('guestList');
       list.innerHTML = ''; 

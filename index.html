@@ -189,12 +189,10 @@
 </head>
 <body>
 
-  <!-- SCROLL PROGRESS BAR -->
   <div id="scroll-progress-container">
     <div id="scroll-progress"></div>
   </div>
 
-  <!-- TOMBOL BACK TO TOP -->
   <div id="back-to-top" title="Kembali ke Atas">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 19V5M5 12l7-7 7 7"/>
@@ -287,8 +285,8 @@
         <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
         <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
         <div class="grid grid-cols-2 gap-4">
-          <!-- ANIMASI ANGKA BERJALAN (COUNT-UP) -->
-          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll">
+          <!-- ANIMASI ANGKA (DIPERBAIKI) -->
+          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll count-up-trigger">
             <p class="text-slate-400 text-sm mb-1">JUMLAH MAHASISWA</p>
             <p class="text-white text-2xl font-bold counter" data-target="24">0</p>
           </div>
@@ -399,56 +397,74 @@
 
   </div> <!-- Penutup main-content-wrapper -->
 
-  <!-- AUDIO UNTUK SUARA KLIK (SUARA BEEP SCI-FI DARI PIXABAY) -->
-  <audio id="click-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=interface-124464.mp3" preload="auto"></audio>
   <audio id="thunder-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c497a88d0.mp3?filename=thunder-105237.mp3" preload="auto"></audio>
 
   <script type="module">
     // =========================================
-    // 1. FITUR SUARA KLIK (SCI-FI)
+    // 1. FITUR SUARA KLIK (PAKAI SYNTHESIZER BROWSER)
     // =========================================
-    const clickSound = document.getElementById('click-sound');
-    const clickableElements = document.querySelectorAll('a, button, .zoomable, .photo-card, .cursor-hover-target');
+    // Kita pakai Web Audio API biar nggak perlu download file MP3
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContext();
 
+    function playClickSound() {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      oscillator.type = 'sine'; // Suara beep halus
+      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); // Frekuensi tinggi
+      oscillator.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1); // Turun ke rendah
+      
+      gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      oscillator.start();
+      oscillator.stop(audioCtx.currentTime + 0.1);
+    }
+
+    const clickableElements = document.querySelectorAll('a, button, .zoomable, .photo-card, .cursor-hover-target');
     clickableElements.forEach(el => {
-      el.addEventListener('click', () => {
-        // Mainkan suara beep saat di-klik (volume dikecilin biar ga kaget)
-        clickSound.currentTime = 0;
-        clickSound.volume = 0.3;
-        clickSound.play().catch(e => {});
-      });
+      el.addEventListener('click', playClickSound);
     });
 
     // =========================================
     // 2. FITUR ANIMASI ANGKA BERJALAN (COUNT-UP)
     // =========================================
     const counters = document.querySelectorAll('.counter');
+    const countUpTriggers = document.querySelectorAll('.count-up-trigger');
     
-    // Gunakan IntersectionObserver agar animasi jalan saat di-scroll
     const counterObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const counter = entry.target;
-          const target = +counter.getAttribute('data-target');
-          let count = 0;
-          const speed = target / 50; // Kecepatan animasi
+          const counterElement = entry.target.querySelector('.counter');
+          if (counterElement) {
+            const target = +counterElement.getAttribute('data-target');
+            let count = 0;
+            const speed = target / 30; // Kecepatan animasi
 
-          const updateCount = () => {
-            count += speed;
-            if (count < target) {
-              counter.innerText = Math.ceil(count);
-              setTimeout(updateCount, 30);
-            } else {
-              counter.innerText = target;
-            }
-          };
-          updateCount();
-          observer.unobserve(counter); // Hentikan observasi setelah jalan sekali
+            const updateCount = () => {
+              count += speed;
+              if (count < target) {
+                counterElement.innerText = Math.ceil(count);
+                requestAnimationFrame(updateCount);
+              } else {
+                counterElement.innerText = target;
+              }
+            };
+            updateCount();
+          }
+          observer.unobserve(entry.target); // Jalan sekali aja
         }
       });
-    }, { threshold: 0.5 });
-    
-    counters.forEach(counter => counterObserver.observe(counter));
+    }, { threshold: 0.5 }); // Jalan kalau 50% kotak udah kelihatan
+
+    countUpTriggers.forEach(trigger => counterObserver.observe(trigger));
 
     // =========================================
     // 3. FITUR TOMBOL BACK TO TOP

@@ -28,8 +28,27 @@
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
     
-    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    /* Animasi Reveal (Fade Up) */
+    .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
     .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* =========================================
+       EFEK PARALLAX & ZOOM SCROLL (BARU)
+       ========================================= */
+    .parallax-section {
+      will-change: transform, opacity;
+      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+    }
+    
+    /* Efek Zoom untuk Foto/ID Card */
+    .zoom-scroll {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .zoom-scroll:hover {
+      transform: scale(1.05) translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 240, 255, 0.2);
+      z-index: 20;
+    }
 
     /* ID Card */
     .lanyard-wrap { display: flex; flex-direction: column; align-items: center; }
@@ -56,7 +75,6 @@
       overflow: hidden;
     }
 
-    /* Bintang-bintang di background preloader */
     .preloader-stars {
       position: absolute;
       inset: 0;
@@ -73,7 +91,6 @@
     }
     @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 0.6; } }
 
-    /* --- EFEK PETIR CSS MURNI --- */
     .lightning-flash {
       position: absolute;
       inset: 0;
@@ -133,7 +150,6 @@
       94% { opacity: 0.5; transform: translateX(-50%) rotate(15deg) scaleY(1); }
     }
 
-    /* --- FASE 1: LOADING BAR --- */
     #loading-phase {
       display: flex;
       flex-direction: column;
@@ -141,48 +157,15 @@
       transition: opacity 0.5s ease, transform 0.5s ease;
       z-index: 10;
     }
-    #loading-phase.hide {
-      opacity: 0;
-      transform: scale(0.9);
-    }
+    #loading-phase.hide { opacity: 0; transform: scale(0.9); }
 
-    .loading-container {
-      width: 300px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .loading-track {
-      width: 100%;
-      height: 3px;
-      background-color: rgba(255, 255, 255, 0.15);
-      position: relative;
-      border-radius: 3px;
-      margin-bottom: 10px;
-    }
-    .loading-progress {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 0%;
-      background-color: #fcebd5;
-      border-radius: 3px;
-      box-shadow: 0 0 10px rgba(252, 235, 213, 0.8);
-      transition: width 0.1s linear;
-    }
-    .loading-text-wrapper {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      font-size: 0.85rem;
-      color: #d1d5db;
-      font-family: monospace;
-    }
+    .loading-container { width: 300px; display: flex; flex-direction: column; align-items: center; }
+    .loading-track { width: 100%; height: 3px; background-color: rgba(255, 255, 255, 0.15); position: relative; border-radius: 3px; margin-bottom: 10px; }
+    .loading-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: #fcebd5; border-radius: 3px; box-shadow: 0 0 10px rgba(252, 235, 213, 0.8); transition: width 0.1s linear; }
+    .loading-text-wrapper { display: flex; justify-content: space-between; width: 100%; font-size: 0.85rem; color: #d1d5db; font-family: monospace; }
     .loading-label { margin-left: 5px; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; }
 
-    /* --- FASE 2: WELCOME TEXT (GLOW EFFECT) --- */
     #welcome-phase {
       position: absolute;
       text-align: center;
@@ -194,10 +177,7 @@
       width: 100%;
       z-index: 10;
     }
-    #welcome-phase.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    #welcome-phase.show { opacity: 1; transform: translateY(0); }
     
     #welcome-phase .line-1 {
       display: block;
@@ -220,8 +200,6 @@
       font-family: sans-serif;
     }
 
-    /* ========================================= */
-
     /* 3D Folder Dokumentasi */
     .folder-container { perspective: 1000px; cursor: pointer; margin: 40px auto; width: 100%; max-width: 600px; position: relative; }
     .folder-tab { width: 150px; height: 30px; background: #334155; border-radius: 15px 15px 0 0; margin-left: 20px; position: relative; z-index: 1; border: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
@@ -243,16 +221,12 @@
 </head>
 <body>
 
-  <!-- =========================================
-       PRELOADER (LOADING -> WELCOME -> WEB)
-       ========================================= -->
+  <!-- PRELOADER -->
   <div id="preloader">
-    
     <div class="preloader-stars"></div>
     <div class="lightning-flash"></div>
     <div class="lightning-bolt"></div>
 
-    <!-- FASE 1: LOADING BAR -->
     <div id="loading-phase">
       <div class="loading-container">
         <div class="loading-track">
@@ -265,25 +239,18 @@
       </div>
     </div>
 
-    <!-- FASE 2: TEKS WELCOME -->
     <div id="welcome-phase">
       <span class="line-1">Welcome to</span>
       <span class="line-2">D-IV Teknologi Laboratorium Medis</span>
     </div>
-
   </div>
 
-  <!-- Background Animasi Bintang Website Utama -->
   <div id="particles-js"></div>
 
-  <!-- Lightbox Pop-up -->
   <div id="lightbox" onclick="this.style.display='none'">
     <img id="lightbox-img" src="" alt="Zoomed Image">
   </div>
 
-  <!-- =========================================
-       ISI WEBSITE UTAMA KAMU (D-IV TLM)
-       ========================================= -->
   <!-- NAVBAR -->
   <nav class="fixed top-0 inset-x-0 z-50 glass">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -300,8 +267,8 @@
     </div>
   </nav>
 
-  <!-- HERO -->
-  <section class="relative min-h-screen flex items-center justify-center px-6 pt-24">
+  <!-- HERO (Dikasih Efek Parallax) -->
+  <section class="relative min-h-screen flex items-center justify-center px-6 pt-24 parallax-section" id="hero-section">
     <div class="reveal text-center max-w-3xl">
       <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
       <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
@@ -316,10 +283,10 @@
       <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
       <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
       <div class="grid grid-cols-2 gap-4">
-        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6"><p class="text-slate-400 text-sm mb-1">JUMLAH MAHASISWA</p><p class="text-white text-2xl font-bold">24</p></div>
-        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6"><p class="text-slate-400 text-sm mb-1">PRODI</p><p class="text-white text-2xl font-bold">D-IV TLM</p></div>
-        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6"><p class="text-slate-400 text-sm mb-1">INSTITUSI</p><p class="text-white text-2xl font-bold">STIKES Nasional</p></div>
-        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6"><p class="text-slate-400 text-sm mb-1">ANGKATAN</p><p class="text-white text-2xl font-bold">2026</p></div>
+        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">JUMLAH MAHASISWA</p><p class="text-white text-2xl font-bold">24</p></div>
+        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">PRODI</p><p class="text-white text-2xl font-bold">D-IV TLM</p></div>
+        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">INSTITUSI</p><p class="text-white text-2xl font-bold">STIKES Nasional</p></div>
+        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">ANGKATAN</p><p class="text-white text-2xl font-bold">2026</p></div>
       </div>
     </div>
   </section>
@@ -398,9 +365,7 @@
   </footer>
 
   <script type="module">
-    // =========================================
-    // 1. LOGIKA PRELOADER BERTAHAP
-    // =========================================
+    // 1. LOGIKA PRELOADER BERTAHAP (3 DETIK)
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
@@ -417,31 +382,21 @@
         progress = 100;
         clearInterval(interval);
         
-        // 1. Sembunyikan loading bar
-        setTimeout(() => {
-          loadingPhase.classList.add('hide');
-        }, 300);
+        setTimeout(() => { loadingPhase.classList.add('hide'); }, 300);
+        setTimeout(() => { welcomePhase.classList.add('show'); }, 800); 
         
-        // 2. Munculkan teks Welcome
-        setTimeout(() => {
-          welcomePhase.classList.add('show');
-        }, 800); 
-        
-        // 3. Hilangkan seluruh preloader (DIUBAH JADI 3 DETIK / 3000ms)
         setTimeout(() => {
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
           document.body.style.overflow = 'auto';
-        }, 3000); 
+        }, 3000); // Tepat 3 Detik
       }
       
       progressBar.style.width = progress + '%';
       progressPercent.innerText = progress + '%';
     }, 50);
 
-    // =========================================
-    // 2. BACKGROUND PARTICLES (BINTANG)
-    // =========================================
+    // 2. BACKGROUND PARTICLES
     particlesJS("particles-js", {
       "particles": {
         "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
@@ -454,26 +409,19 @@
       },
       "interactivity": {
         "detect_on": "canvas",
-        "events": {
-          "onhover": { "enable": true, "mode": "grab" },
-          "onclick": { "enable": true, "mode": "push" }
-        },
+        "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } },
         "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } } }
       },
       "retina_detect": true
     });
 
-    // =========================================
     // 3. FUNGSI ZOOM GAMBAR
-    // =========================================
     window.zoomImage = function(src) {
       document.getElementById('lightbox-img').src = src;
       document.getElementById('lightbox').style.display = 'flex';
     }
 
-    // =========================================
-    // 4. LOGIKA FIREBASE (BUKU TAMU)
-    // =========================================
+    // 4. LOGIKA FIREBASE & ANIMASI REVEAL
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -490,7 +438,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Animasi Reveal
+    // Animasi Reveal (Muncul saat masuk layar)
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -501,7 +449,21 @@
     }, { threshold: 0.15 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Render Pengurus (NIM SUDAH DIREVISI)
+    // =========================================
+    // 5. LOGIKA EFEK PARALLAX (BARU)
+    // =========================================
+    window.addEventListener('scroll', () => {
+      const scrollValue = window.scrollY;
+      const heroText = document.querySelector('#hero-section .reveal');
+      
+      // Efek Parallax: Teks Hero bergerak lebih lambat dan memudar saat di-scroll
+      if (heroText) {
+        heroText.style.transform = `translateY(${scrollValue * 0.4}px)`;
+        heroText.style.opacity = 1 - (scrollValue / 600); // Memudar setelah discroll 600px
+      }
+    });
+
+    // 6. RENDER DATA PENGURUS & ANGGOTA
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "13", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -515,7 +477,8 @@
     const committeeGrid = document.getElementById('committeeGrid');
     committeeData.forEach((data, index) => {
       const card = document.createElement('div');
-      card.className = `reveal lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''}`;
+      // Tambahan class zoom-scroll di sini biar ID card membesar saat di-hover
+      card.className = `reveal lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll`;
       card.innerHTML = `
         <div class="lanyard"></div>
         <div class="lanyard-clip"></div>
@@ -531,7 +494,6 @@
       revealObserver.observe(card);
     });
 
-    // Render Anggota
     const memberNames = { 3: "Aprelia", 6: "Dania Rahma", 7: "Devita", 9: "Helena", 10: "Jocelin", 16: "Shafira", 18: "Talita" };
     const memberImages = {
       3: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/april.jpg?raw=true",
@@ -556,7 +518,8 @@
       }
 
       const card = document.createElement('div');
-      card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition';
+      // Tambahan class zoom-scroll di sini juga
+      card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition zoom-scroll';
       card.innerHTML = `
         <img src="${imgSrc}" alt="${displayName}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600 object-cover object-top zoomable" onclick="zoomImage('${imgSrc}')">
         <p class="text-sm font-medium text-white">${displayName}</p>

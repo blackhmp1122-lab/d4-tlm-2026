@@ -325,8 +325,8 @@
 
   </div> <!-- Penutup main-content-wrapper -->
 
-  <!-- AUDIO SUARA PETIR ASLI -->
-  <audio id="thunder-audio" src="https://www.soundjay.com/nature/thunder-01.mp3" preload="auto"></audio>
+  <!-- SUARA PETIR DARI LINK KAMU -->
+  <audio id="thunder-audio" src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-petir.mp3" preload="auto"></audio>
 
   <script type="module">
     // =========================================
@@ -399,7 +399,7 @@
     backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
     // =========================================
-    // 4. PRELOADER LOGIC (SUARA PETIR ASLI)
+    // 4. PRELOADER LOGIC (SUARA PETIR DARI FILE KAMU)
     // =========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
@@ -414,14 +414,16 @@
 
     // Fungsi buat muter suara petir
     function playThunderSound() {
-      thunderAudio.volume = 0.6; // Volume suara petir
-      thunderAudio.currentTime = 0;
-      thunderAudio.play().catch(e => {
-        console.log("Audio diblokir, butuh interaksi user.");
-      });
+      if (thunderAudio) {
+        thunderAudio.volume = 0.6; // Volume suara petir
+        thunderAudio.currentTime = 0;
+        thunderAudio.play().catch(e => {
+          console.log("Audio nunggu interaksi user (tap layar).");
+        });
+      }
     }
 
-    // Pemicu suara petir pertama kali (pas layar loading di-klik/disentuh)
+    // Pemicu suara petir (pas layar loading di-tap/klik)
     let audioPlayed = false;
     function initThunder() {
       if (!audioPlayed) {
@@ -429,6 +431,7 @@
         audioPlayed = true;
       }
     }
+    
     // Pasang event listener ke seluruh layar preloader
     preloader.addEventListener('click', initThunder, { once: true });
     preloader.addEventListener('touchstart', initThunder, { once: true });

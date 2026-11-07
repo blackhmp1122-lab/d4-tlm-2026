@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D-IV TLM STIKES Nasional Surakarta Angkatan 2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Particles.js -->
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <!-- GANTI LIBRARY KE TSPARTICLES (VERSI MODERN) -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
   
   <script>
     tailwind.config = {
@@ -24,14 +24,14 @@
     /* FONT UTAMA WEBSITE */
     body { background-color: #0f172a; color: #e2e8f0; font-family: ui-sans-serif, system-ui, sans-serif; overflow-x: hidden; }
     
-    /* Background Particles Utama (DIPERBAIKI) */
+    /* Background Particles Utama */
     #particles-js { 
       position: fixed; 
       width: 100%; 
       height: 100%; 
       top: 0; 
       left: 0; 
-      z-index: 0; /* Dinaikkan agar tidak tertutup background body */
+      z-index: 0;
       pointer-events: none; /* Biar ga ngehalangin klik tombol */
     }
     
@@ -387,73 +387,70 @@
     }, 50);
 
     // =========================================
-    // 2. KONFIGURASI PARTIKEL INTERAKTIF (FIX SENSITIF)
+    // 2. KONFIGURASI PARTIKEL INTERAKTIF (TSPARTICLES)
     // =========================================
-    particlesJS("particles-js", {
-      "particles": {
-        "number": { 
-          "value": 100, // Partikel diperbanyak biar rame
-          "density": { "enable": true, "value_area": 800 } 
+    // Kita pakai tsParticles agar efek "melebar" (repulse) bisa jalan
+    tsParticles.load("particles-js", {
+      fpsLimit: 60,
+      particles: {
+        number: {
+          value: 80, // Jumlah partikel
+          density: { enable: true, value_area: 800 }
         },
-        "color": { 
-          "value": ["#00f0ff", "#1e90ff", "#ffffff"] // Variasi warna
+        color: { value: ["#00f0ff", "#1e90ff", "#ffffff"] },
+        shape: { type: "circle" },
+        opacity: {
+          value: 0.7,
+          random: true,
+          anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
         },
-        "shape": { 
-          "type": "circle" 
+        size: {
+          value: 3,
+          random: true,
+          anim: { enable: true, speed: 2, size_min: 0.1, sync: false }
         },
-        "opacity": { 
-          "value": 0.8, 
-          "random": true, 
-          "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } 
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: "#1e90ff",
+          opacity: 0.5,
+          width: 1.5
         },
-        "size": { 
-          "value": 3, 
-          "random": true, 
-          "anim": { "enable": true, "speed": 2, "size_min": 0.1, "sync": false } 
-        },
-        "line_linked": { 
-          "enable": true, 
-          "distance": 150, 
-          "color": "#1e90ff", 
-          "opacity": 0.5, 
-          "width": 1.5 // Garis dipertebal
-        },
-        "move": { 
-          "enable": true, 
-          "speed": 2, 
-          "direction": "none", 
-          "random": false, 
-          "straight": false, 
-          "out_mode": "out", 
-          "bounce": false 
+        move: {
+          enable: true,
+          speed: 1.5,
+          direction: "none",
+          random: false,
+          straight: false,
+          out_mode: "out",
+          bounce: false
         }
       },
-      "interactivity": {
-        "detect_on": "canvas", // Deteksi di canvas
-        "events": {
-          "onhover": { 
-            "enable": true, 
-            "mode": "grab" 
+      interactivity: {
+        detectsOn: "window", // Deteksi interaksi di seluruh layar
+        events: {
+          onHover: {
+            enable: true,
+            mode: "grab" // Garis nyambung ke kursor
           },
-          "onclick": { 
-            "enable": true, 
-            "mode": "push" 
+          onClick: {
+            enable: true,
+            mode: "repulse" // EFEK MELEBAR SAAT DIKLIK/DISENTUH
           },
-          "resize": true
+          resize: true
         },
-        "modes": {
-          "grab": { 
-            "distance": 250, // Jarak tangkapan kursor diperjauh (biar efeknya berasa)
-            "line_linked": { 
-              "opacity": 1 
-            } 
+        modes: {
+          grab: {
+            distance: 200,
+            line_linked: { opacity: 1 }
           },
-          "push": { 
-            "particles_nb": 5 
+          repulse: {
+            distance: 150, // Seberapa jauh partikel terdorong (semakin besar semakin melebar)
+            duration: 0.4 // Durasi dorongan
           }
         }
       },
-      "retina_detect": true
+      detectRetina: true
     });
 
     // =========================================

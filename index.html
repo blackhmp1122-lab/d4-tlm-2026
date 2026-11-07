@@ -22,87 +22,23 @@
     html { scroll-behavior: smooth; }
     body { background-color: #0f172a; color: #e2e8f0; font-family: ui-sans-serif, system-ui, sans-serif; overflow-x: hidden; }
     
-    /* =========================================
-       SCROLL PROGRESS BAR
-       ========================================= */
-    #scroll-progress-container {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 100vw !important;
-      height: 6px !important;
-      background: rgba(15, 23, 42, 0.8) !important;
-      z-index: 2147483647 !important;
-      pointer-events: none;
-    }
-    #scroll-progress {
-      height: 100%;
-      background: #ffffff;
-      width: 0%;
-      position: relative;
-      box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
-    }
-    #scroll-progress::after {
-      content: '';
-      position: absolute;
-      right: -4px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 12px;
-      height: 12px;
-      background-color: #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
-    }
+    /* SCROLL PROGRESS BAR */
+    #scroll-progress-container { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 6px !important; background: rgba(15, 23, 42, 0.8) !important; z-index: 2147483647 !important; pointer-events: none; }
+    #scroll-progress { height: 100%; background: #ffffff; width: 0%; position: relative; box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; }
+    #scroll-progress::after { content: ''; position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; background-color: #ffffff; border-radius: 50%; box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; }
 
-    /* =========================================
-       TOMBOL BACK TO TOP
-       ========================================= */
-    #back-to-top {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 50px;
-      height: 50px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 2px solid #00f0ff;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #00f0ff;
-      cursor: pointer;
-      z-index: 9999;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 15px rgba(0,240,255,0.3);
-      backdrop-filter: blur(5px);
-    }
-    #back-to-top.show {
-      opacity: 1;
-      visibility: visible;
-    }
-    #back-to-top:hover {
-      background: #00f0ff;
-      color: #000;
-      transform: translateY(-5px) scale(1.1);
-      box-shadow: 0 0 25px rgba(0,240,255,0.8);
-    }
+    /* TOMBOL BACK TO TOP */
+    #back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: rgba(15, 23, 42, 0.8); border: 2px solid #00f0ff; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #00f0ff; cursor: pointer; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0,240,255,0.3); backdrop-filter: blur(5px); }
+    #back-to-top.show { opacity: 1; visibility: visible; }
+    #back-to-top:hover { background: #00f0ff; color: #000; transform: translateY(-5px) scale(1.1); box-shadow: 0 0 25px rgba(0,240,255,0.8); }
 
-    /* =========================================
-       CUSTOM CURSOR
-       ========================================= */
-    @media (min-width: 769px) {
-      body, a, button, .folder-container { cursor: none !important; }
-    }
+    /* CUSTOM CURSOR */
+    @media (min-width: 769px) { body, a, button, .folder-container { cursor: none !important; } }
     .cursor-outer { position: fixed; width: 30px; height: 30px; border: 2px solid #00f0ff; border-radius: 50%; pointer-events: none; z-index: 999999; transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s; transform: translate(-50%, -50%); box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
     .cursor-inner { position: fixed; width: 6px; height: 6px; background-color: #00f0ff; border-radius: 50%; pointer-events: none; z-index: 1000000; transform: translate(-50%, -50%); box-shadow: 0 0 10px #00f0ff; }
     .cursor-hover .cursor-outer { width: 50px; height: 50px; background-color: rgba(0, 240, 255, 0.1); border-color: #ffffff; }
 
-    /* =========================================
-       SISA CSS
-       ========================================= */
+    /* SISA CSS */
     #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
     #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; }
     #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button, .cursor-hover-target { pointer-events: auto; }
@@ -125,11 +61,7 @@
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
     .shine-effect { position: relative; overflow: hidden; }
-    .shine-effect::before {
-      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-      transform: skewX(-25deg); transition: left 0.7s ease; z-index: 5; pointer-events: none;
-    }
+    .shine-effect::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); transition: left 0.7s ease; z-index: 5; pointer-events: none; }
     .shine-effect:hover::before { left: 125%; }
 
     #lightbox { display: none; position: fixed; z-index: 999999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; backdrop-filter: blur(5px); padding: 20px; }
@@ -167,15 +99,12 @@
     .photo-card { position: absolute; width: 280px; height: 180px; background: #1e293b; border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
     .photo-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
     .photo-card:hover img { transform: scale(1.1); }
-    
     .photo-card:nth-child(1) { transform: translateY(-20px) scale(0.9); z-index: 1; }
     .photo-card:nth-child(2) { transform: translateY(-10px) scale(0.95); z-index: 2; }
     .photo-card:nth-child(3) { transform: translateY(0) scale(1); z-index: 3; }
-    
     .photo-stack-container:hover .photo-card:nth-child(1) { transform: translateY(-40px) translateX(-60px) rotate(-10deg) scale(1); z-index: 1; }
     .photo-stack-container:hover .photo-card:nth-child(2) { transform: translateY(-20px) translateX(60px) rotate(10deg) scale(1); z-index: 2; }
     .photo-stack-container:hover .photo-card:nth-child(3) { transform: translateY(40px) scale(1.05); z-index: 3; }
-    
     .stack-label { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.85); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 16px; border-radius: 999px; font-size: 0.75rem; font-weight: bold; box-shadow: 0 0 15px rgba(0,240,255,0.4); z-index: 10; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; white-space: nowrap; backdrop-filter: blur(4px); }
     .photo-stack-container:hover .stack-label { transform: translateX(-50%) translateY(-5px) scale(1.05); background: #00f0ff; color: #000; }
 
@@ -285,7 +214,6 @@
         <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
         <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
         <div class="grid grid-cols-2 gap-4">
-          <!-- ANIMASI ANGKA (DIPERBAIKI) -->
           <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll count-up-trigger">
             <p class="text-slate-400 text-sm mb-1">JUMLAH MAHASISWA</p>
             <p class="text-white text-2xl font-bold counter" data-target="24">0</p>
@@ -397,37 +325,60 @@
 
   </div> <!-- Penutup main-content-wrapper -->
 
-  <audio id="thunder-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c497a88d0.mp3?filename=thunder-105237.mp3" preload="auto"></audio>
-
   <script type="module">
     // =========================================
-    // 1. FITUR SUARA KLIK (PAKAI SYNTHESIZER BROWSER)
+    // 1. SUARA KLIK & SUARA PETIR (SYNTHESIZER)
     // =========================================
-    // Kita pakai Web Audio API biar nggak perlu download file MP3
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
 
+    // Fungsi Suara Klik
     function playClickSound() {
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-      
-      oscillator.type = 'sine'; // Suara beep halus
-      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); // Frekuensi tinggi
-      oscillator.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1); // Turun ke rendah
-      
-      gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      
-      oscillator.start();
-      oscillator.stop(audioCtx.currentTime + 0.1);
+      if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.1);
     }
 
+    // Fungsi Suara Petir (Gemuruh)
+    function playThunderSound() {
+      if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+
+      // Frekuensi rendah untuk suara gemuruh
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(60, audioCtx.currentTime); // Nada dasar rendah
+      osc.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 1.5);
+
+      // Filter agar suaranya lebih "muffled" / gemuruh
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(200, audioCtx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 1.5);
+
+      // Volume naik turun (envelope)
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 1.5);
+    }
+
+    // Pasang Suara Klik ke semua elemen interaktif
     const clickableElements = document.querySelectorAll('a, button, .zoomable, .photo-card, .cursor-hover-target');
     clickableElements.forEach(el => {
       el.addEventListener('click', playClickSound);
@@ -446,7 +397,7 @@
           if (counterElement) {
             const target = +counterElement.getAttribute('data-target');
             let count = 0;
-            const speed = target / 30; // Kecepatan animasi
+            const speed = target / 30;
 
             const updateCount = () => {
               count += speed;
@@ -459,63 +410,25 @@
             };
             updateCount();
           }
-          observer.unobserve(entry.target); // Jalan sekali aja
+          observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.5 }); // Jalan kalau 50% kotak udah kelihatan
-
+    }, { threshold: 0.5 });
     countUpTriggers.forEach(trigger => counterObserver.observe(trigger));
 
     // =========================================
     // 3. FITUR TOMBOL BACK TO TOP
     // =========================================
     const backToTopBtn = document.getElementById('back-to-top');
-    
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) {
-        backToTopBtn.classList.add('show');
-      } else {
-        backToTopBtn.classList.remove('show');
-      }
+      if (window.scrollY > 300) { backToTopBtn.classList.add('show'); } 
+      else { backToTopBtn.classList.remove('show'); }
     });
-
-    backToTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
     // =========================================
-    // SISA LOGIKA (CURSOR, PRELOADER, PARTIKEL, DLL)
+    // 4. PRELOADER LOGIC (SUARA PETIR DI SINI)
     // =========================================
-    if (window.innerWidth > 768) {
-      const cursorOuter = document.querySelector('.cursor-outer');
-      const cursorInner = document.querySelector('.cursor-inner');
-      const hoverTargets = document.querySelectorAll('a, button, .zoomable, .cursor-hover-target, .photo-card');
-
-      document.addEventListener('mousemove', (e) => {
-        cursorOuter.style.left = e.clientX + 'px';
-        cursorOuter.style.top = e.clientY + 'px';
-        cursorInner.style.left = e.clientX + 'px';
-        cursorInner.style.top = e.clientY + 'px';
-      });
-
-      hoverTargets.forEach(target => {
-        target.addEventListener('mouseenter', () => { cursorOuter.classList.add('cursor-hover'); });
-        target.addEventListener('mouseleave', () => { cursorOuter.classList.remove('cursor-hover'); });
-      });
-    }
-
-    window.addEventListener('scroll', () => {
-      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrollPercentage = (scrollTop / scrollHeight) * 100;
-      document.getElementById('scroll-progress').style.width = scrollPercentage + '%';
-    });
-
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
-    window.closeMenu = function() { mobileMenu.classList.add('hidden'); }
-
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
@@ -523,22 +436,27 @@
     const welcomePhase = document.getElementById('welcome-phase');
     const preloader = document.getElementById('preloader');
     const spotlight = document.getElementById('spotlight');
-    const thunderSound = document.getElementById('thunder-sound');
 
     document.body.style.overflow = 'hidden'; 
 
+    // Putar suara petir tiap 2.5 detik selama loading (biar sinkron sama animasi video)
+    // Browser butuh interaksi user dulu, jadi kita tembak di klik pertama
     let audioPlayed = false;
-    function playThunder() {
-      if (!audioPlayed && thunderSound) {
-        thunderSound.volume = 0.5; 
-        thunderSound.play().then(() => { audioPlayed = true; }).catch(e => {});
+    function initAudio() {
+      if (!audioPlayed) {
+        playThunderSound();
+        audioPlayed = true;
       }
     }
-    document.addEventListener('click', playThunder, { once: true });
-    document.addEventListener('touchstart', playThunder, { once: true });
+    document.addEventListener('click', initAudio, { once: true });
+    document.addEventListener('touchstart', initAudio, { once: true });
+
+    // Interval suara petir
     setInterval(() => {
-      if (audioPlayed) { thunderSound.currentTime = 0; thunderSound.play().catch(e => {}); }
-    }, 4000); 
+      if (audioPlayed && progress < 100) {
+        playThunderSound();
+      }
+    }, 2500); 
 
     const fakeCodeEl = document.getElementById('hacker-fake-code');
     const hexChars = "0123456789ABCDEF";
@@ -576,6 +494,39 @@
       progressBar.style.width = progress + '%';
       progressPercent.innerText = progress + '%';
     }, 50);
+
+    // =========================================
+    // SISA LOGIKA (PARTIKEL, CURSOR, DLL)
+    // =========================================
+    if (window.innerWidth > 768) {
+      const cursorOuter = document.querySelector('.cursor-outer');
+      const cursorInner = document.querySelector('.cursor-inner');
+      const hoverTargets = document.querySelectorAll('a, button, .zoomable, .cursor-hover-target, .photo-card');
+
+      document.addEventListener('mousemove', (e) => {
+        cursorOuter.style.left = e.clientX + 'px';
+        cursorOuter.style.top = e.clientY + 'px';
+        cursorInner.style.left = e.clientX + 'px';
+        cursorInner.style.top = e.clientY + 'px';
+      });
+
+      hoverTargets.forEach(target => {
+        target.addEventListener('mouseenter', () => { cursorOuter.classList.add('cursor-hover'); });
+        target.addEventListener('mouseleave', () => { cursorOuter.classList.remove('cursor-hover'); });
+      });
+    }
+
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrollPercentage = (scrollTop / scrollHeight) * 100;
+      document.getElementById('scroll-progress').style.width = scrollPercentage + '%';
+    });
+
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+    window.closeMenu = function() { mobileMenu.classList.add('hidden'); }
 
     tsParticles.load("particles-preloader", {
       fpsLimit: 60,

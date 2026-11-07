@@ -20,7 +20,7 @@
   <style>
     html { scroll-behavior: smooth; }
     
-    /* FONT UTAMA WEBSITE DIKEMBALIKAN KE SANS-SERIF */
+    /* FONT UTAMA WEBSITE (SANS-SERIF) */
     body { background-color: #0f172a; color: #e2e8f0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; overflow-x: hidden; }
     
     /* Background Particles Utama */
@@ -64,9 +64,7 @@
     #loading-phase { display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10; width: 100%; max-width: 350px; }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
     
-    /* =========================================
-       ANIMASI TABUNG REAKSI PECAH
-       ========================================= */
+    /* Animasi Tabung Reaksi Pecah */
     .tube-smash-wrapper { position: relative; width: 100px; height: 120px; margin-bottom: 20px; display: flex; justify-content: center; align-items: flex-end; }
     .smash-tube { position: absolute; bottom: 0; width: 30px; height: 80px; border: 2px solid #00f0ff; border-top: none; border-radius: 0 0 15px 15px; box-shadow: 0 0 15px rgba(0,240,255,0.5); background: rgba(0,240,255,0.1); animation: throwTube 3s forwards; z-index: 2; }
     .smash-tube::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 34px; height: 4px; background: #00f0ff; border-radius: 5px; box-shadow: 0 0 10px #00f0ff; }
@@ -87,26 +85,23 @@
     @keyframes splashAnim { 0%, 35% { opacity: 0; transform: scale(0.5); } 45% { opacity: 1; transform: scale(1.5); } 100% { opacity: 0; transform: scale(2); } }
     @keyframes dropAnim { 0%, 35% { opacity: 0; transform: translateY(0); } 45% { opacity: 1; transform: translateY(-20px); } 100% { opacity: 0; transform: translateY(-50px); } }
 
-    /* =========================================
-       HACKER LOADING TEXT (FONT MONOSPACE KHUSUS DI SINI)
-       ========================================= */
-    .hacker-text-container { width: 100%; background: #000; border: 1px solid #00f0ff; padding: 15px; font-family: 'Courier New', Courier, monospace; /* <-- Font hacker cuma di sini */ color: #00f0ff; font-size: 0.85rem; box-shadow: 0 0 20px rgba(0,240,255,0.2); position: relative; overflow: hidden; margin-bottom: 15px; }
+    /* Hacker Loading Text */
+    .hacker-text-container { width: 100%; background: #000; border: 1px solid #00f0ff; padding: 15px; font-family: 'Courier New', Courier, monospace; color: #00f0ff; font-size: 0.85rem; box-shadow: 0 0 20px rgba(0,240,255,0.2); position: relative; overflow: hidden; margin-bottom: 15px; }
     .hacker-text-container::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none; }
     .hacker-line { margin-bottom: 5px; line-height: 1.2; white-space: nowrap; overflow: hidden; }
     .hacker-text-blur { color: rgba(0, 240, 255, 0.3); }
     .cursor-blink { display: inline-block; width: 8px; height: 14px; background-color: #00f0ff; margin-left: 3px; animation: blink 0.8s infinite; vertical-align: middle; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-    /* Progress Bar */
+    /* Progress Bar & Teks Bawah */
     .loading-track { width: 100%; height: 4px; background-color: rgba(255, 255, 255, 0.15); position: relative; border-radius: 3px; margin-bottom: 10px; }
     .loading-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: #00f0ff; border-radius: 3px; box-shadow: 0 0 15px rgba(0,240,255,0.8); transition: width 0.1s linear; }
     
-    /* Teks Loading & Persen */
     .loading-text-wrapper { display: flex; justify-content: space-between; width: 100%; font-size: 0.85rem; color: #d1d5db; font-family: monospace; }
     .loading-label { margin-left: 5px; color: #00f0ff; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; text-shadow: 0 0 8px rgba(0,240,255,0.8); }
 
-    /* Welcome Text (Font Sans-Serif) */
+    /* Welcome Text */
     #welcome-phase { position: absolute; text-align: center; opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; pointer-events: none; padding: 0 20px; width: 100%; z-index: 10; }
     #welcome-phase.show { opacity: 1; transform: translateY(0); }
     #welcome-phase .line-1 { display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5); margin-bottom: 10px; }
@@ -130,7 +125,7 @@
     .zoomable { cursor: pointer; transition: transform 0.2s; }
     .zoomable:hover { transform: scale(1.05); }
 
-    /* Optimasi HP (Mencegah Macet) */
+    /* Optimasi HP */
     @media (max-width: 768px) {
       .parallax-box { transform: none !important; }
       #hero-content { transform: none !important; opacity: 1 !important; }
@@ -147,7 +142,7 @@
     <div class="lightning-bolt"></div>
 
     <div id="loading-phase">
-      <!-- ANIMASI TABUNG REAKSI PECAH -->
+      <!-- Animasi Tabung Pecah -->
       <div class="tube-smash-wrapper">
         <div class="splash-effect"></div>
         <div class="splash-droplet"></div>
@@ -158,19 +153,20 @@
         </div>
       </div>
 
-      <!-- HACKER LOADING TEXT -->
+      <!-- Hacker Loading Text -->
       <div class="hacker-text-container">
         <div class="hacker-line hacker-text-blur" id="hacker-line-1">> INITIALIZING SYSTEM...</div>
         <div class="hacker-line hacker-text-blur" id="hacker-line-2">> LOADING LAB DATA...</div>
         <div class="hacker-line" id="hacker-line-3">> <span id="hacker-fake-code">0x00FF</span><span class="cursor-blink"></span></div>
       </div>
       
-      <!-- PROGRESS BAR -->
+      <!-- Progress Bar -->
       <div class="loading-track">
         <div class="loading-progress" id="progress-bar"></div>
       </div>
       <div class="loading-text-wrapper">
-        <span class="loading-label">STATUS</span>
+        <!-- TEKS DIGANTI JADI LOADING -->
+        <span class="loading-label">LOADING</span>
         <span class="loading-percentage" id="progress-percent">0%</span>
       </div>
 

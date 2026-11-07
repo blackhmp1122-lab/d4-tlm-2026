@@ -22,7 +22,45 @@
     html { scroll-behavior: smooth; }
     body { background-color: #0f172a; color: #e2e8f0; font-family: ui-sans-serif, system-ui, sans-serif; overflow-x: hidden; }
     
-    /* CUSTOM CURSOR */
+    /* =========================================
+       SCROLL PROGRESS BAR (FIX TOTAL)
+       ========================================= */
+    #scroll-progress-container {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important; /* Paksa selebar layar */
+      height: 6px !important;
+      background: rgba(15, 23, 42, 0.8) !important; /* Kasih background gelap biar kontras */
+      z-index: 2147483647 !important; /* Angka maksimal z-index di browser */
+      pointer-events: none;
+    }
+
+    #scroll-progress {
+      height: 100%;
+      background: #ffffff; /* WARNA PUTIH */
+      width: 0%;
+      position: relative;
+      box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; /* Glow Cyan */
+    }
+
+    /* Titik bulat di ujung garis */
+    #scroll-progress::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+    }
+
+    /* =========================================
+       SISA CSS (Sama seperti sebelumnya)
+       ========================================= */
     @media (min-width: 769px) {
       body, a, button, .folder-container { cursor: none !important; }
     }
@@ -30,47 +68,6 @@
     .cursor-inner { position: fixed; width: 6px; height: 6px; background-color: #00f0ff; border-radius: 50%; pointer-events: none; z-index: 1000000; transform: translate(-50%, -50%); box-shadow: 0 0 10px #00f0ff; }
     .cursor-hover .cursor-outer { width: 50px; height: 50px; background-color: rgba(0, 240, 255, 0.1); border-color: #ffffff; }
 
-    /* =========================================
-       SCROLL PROGRESS BAR (PUTIH & GLOW TEBAL)
-       ========================================= */
-    #scroll-progress-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 6px; /* Lebar garis */
-      background: rgba(15, 23, 42, 0.5); /* Background garis transparan */
-      z-index: 999999;
-    }
-
-    #scroll-progress {
-      height: 100%;
-      /* Warna diganti jadi PUTIH */
-      background: #ffffff; 
-      width: 0%;
-      position: relative;
-      /* Glow Cyan tebal biar kelihatan */
-      box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 30px #1e90ff; 
-      transition: width 0.1s ease-out;
-    }
-
-    /* Titik bulat di ujung garis */
-    #scroll-progress::after {
-      content: '';
-      position: absolute;
-      right: -6px; /* Biar titiknya pas di ujung */
-      top: 50%;
-      transform: translateY(-50%);
-      width: 12px;
-      height: 12px;
-      background-color: #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 30px #00f0ff;
-    }
-
-    /* =========================================
-       SISA CSS
-       ========================================= */
     #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
     #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; }
     #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button, .cursor-hover-target { pointer-events: auto; }
@@ -130,7 +127,6 @@
     #welcome-phase .line-1 { display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5); margin-bottom: 10px; }
     #welcome-phase .line-2 { display: block; color: #ffffff; font-size: 3rem; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 25px rgba(0, 240, 255, 0.6), 0 0 40px rgba(30, 144, 255, 0.5); }
 
-    /* DESAIN STACKED PHOTOS */
     .photo-stack-container { position: relative; width: 100%; max-width: 600px; height: 350px; margin: 40px auto; display: flex; justify-content: center; align-items: center; cursor: pointer; }
     .photo-card { position: absolute; width: 280px; height: 180px; background: #1e293b; border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
     .photo-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
@@ -157,7 +153,7 @@
 </head>
 <body>
 
-  <!-- SCROLL PROGRESS BAR (PUTIH) -->
+  <!-- SCROLL PROGRESS BAR (DI ATAS NAVBAR) -->
   <div id="scroll-progress-container">
     <div id="scroll-progress"></div>
   </div>
@@ -299,7 +295,6 @@
     <section id="guestbook" class="py-24 px-6 relative z-10">
       <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
         
-        <!-- HUBUNGI KAMI -->
         <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
           <form id="contactForm" class="space-y-4 cursor-hover-target">

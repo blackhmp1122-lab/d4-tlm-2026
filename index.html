@@ -41,12 +41,12 @@
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
     /* =========================================
-       REVISI PRELOADER (MENGGUNAKAN CSS PETIR)
+       PRELOADER (VIDEO PETIR & TEKS STATIS)
        ========================================= */
     #preloader { 
       position: fixed; 
       inset: 0; 
-      background: radial-gradient(circle at center, #2c2f45 0%, #1e2033 60%, #151623 100%);
+      background-color: #000;
       z-index: 99999; 
       display: flex; 
       flex-direction: column; 
@@ -56,110 +56,95 @@
     }
     #preloader.hidden { opacity: 0; visibility: hidden; }
 
+    /* Video Petir */
+    .bg-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translateX(-50%) translateY(-50%);
+      z-index: -2;
+      object-fit: cover;
+      opacity: 0.6;
+    }
+    
+    /* Overlay gelap */
+    .preloader-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+      z-index: -1;
+    }
+
     /* Teks Welcome Statis */
     .preloader-welcome {
-      font-size: 2.5rem;
-      font-weight: 400;
-      color: #fcebd5;
-      letter-spacing: 8px;
-      margin-bottom: 50px;
-      text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(252, 235, 213, 0.2);
       text-align: center;
-    }
-
-    /* Wadah Garis & Petir */
-    .preloader-loading-container {
-      width: 100%;
-      max-width: 450px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    /* Garis Kiri (Cyan) */
-    .preloader-progress-left {
-      width: 50%;
-      height: 6px;
-      background-color: #00d2ff;
-      border-top-left-radius: 3px;
-      border-bottom-left-radius: 3px;
-      box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
-    }
-
-    /* Garis Kanan (Abu-abu) */
-    .preloader-progress-right {
-      width: 50%;
-      height: 6px;
-      background-color: #4a4c63;
-      border-top-right-radius: 3px;
-      border-bottom-right-radius: 3px;
-      position: relative;
-    }
-
-    /* Ikon Petir Tengah */
-    .preloader-lightning-circle {
-      width: 70px;
-      height: 70px;
-      background-color: #1a1b26;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: absolute;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 30px;
       z-index: 10;
-      box-shadow: 0 0 15px rgba(255, 165, 0, 0.4), inset 0 0 10px rgba(255, 165, 0, 0.1);
-      border: 1px solid rgba(255, 165, 0, 0.3);
+      padding: 0 20px;
+    }
+    .preloader-welcome .line-1 {
+      display: block;
+      color: #ffffff;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+      margin-bottom: 5px;
+    }
+    .preloader-welcome .line-2 {
+      display: block;
+      color: #3b82f6;
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+      text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
     }
 
-    /* Bentuk Petir */
-    .preloader-lightning-bolt {
-      width: 24px;
-      height: 38px;
-      background: #ffb300;
-      clip-path: polygon(
-        55% 0%, 100% 0%, 65% 40%, 95% 40%, 
-        45% 100%, 55% 55%, 15% 55%
-      );
-      animation: flicker 2s infinite;
+    /* Loading Bar Minimalis */
+    .preloader-loading-container {
+      width: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
     }
-
-    /* Titik kecil di samping petir */
-    .preloader-dot {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background-color: #ffb300;
-      border-radius: 50%;
-      opacity: 0.8;
-    }
-    .preloader-dot:nth-child(2) { top: 25px; right: 16px; }
-    .preloader-dot:nth-child(3) { bottom: 25px; left: 16px; width: 3px; height: 3px; opacity: 0.5; }
-
-    /* Teks Bawah Loading & Persen */
-    .preloader-text-container {
+    .preloader-track {
       width: 100%;
-      max-width: 450px;
+      height: 2px;
+      background-color: rgba(255, 255, 255, 0.3);
+      position: relative;
+      border-radius: 2px;
+      margin-bottom: 8px;
+    }
+    .preloader-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      background-color: #ffffff;
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+      transition: width 0.1s linear;
+    }
+    .preloader-text-wrapper {
       display: flex;
       justify-content: space-between;
-      margin-top: 25px;
-      font-size: 1rem;
-      color: #b0b3c6;
-      padding: 0 10px;
-    }
-
-    .preloader-percentage {
-      font-weight: bold;
-      color: #ffffff;
+      width: 100%;
+      font-size: 0.75rem;
+      color: #d1d5db;
       font-family: monospace;
+      letter-spacing: 1px;
     }
-
-    @keyframes flicker {
-      0%, 100% { opacity: 1; filter: drop-shadow(0 0 5px #ffb300); }
-      50% { opacity: 0.7; filter: drop-shadow(0 0 15px #ffb300); transform: scale(0.95); }
-    }
-    /* ========================================= */
+    .preloader-label { margin-left: 5px; }
+    .preloader-percentage { margin-right: 5px; }
 
     /* 3D Folder Dokumentasi */
     .folder-container { perspective: 1000px; cursor: pointer; margin: 40px auto; width: 100%; max-width: 600px; position: relative; }
@@ -185,34 +170,33 @@
 </head>
 <body>
 
-  <!-- 1. PRELOADER (TELAH DIREVISI) -->
+  <!-- 1. PRELOADER (VIDEO PETIR) -->
   <div id="preloader">
-    <!-- Teks Welcome (Statis) -->
-    <h1 class="preloader-welcome">WELCOME</h1>
+    <!-- Video Background Petir (URL dari Pixabay) -->
+    <video autoplay loop muted playsinline class="bg-video">
+      <source src="https://cdn.pixabay.com/video/2022/12/11/143135-780275540_large.mp4" type="video/mp4">
+    </video>
+    <div class="preloader-overlay"></div>
 
-    <!-- Area Garis dan Petir -->
-    <div class="preloader-loading-container">
-      <div class="preloader-progress-left"></div>
-      
-      <div class="preloader-lightning-circle">
-        <div class="preloader-dot"></div>
-        <div class="preloader-dot"></div>
-        <div class="preloader-lightning-bolt"></div>
-      </div>
-
-      <div class="preloader-progress-right">
-        <!-- Bagian isi bar kanan (jika diperlukan) -->
-      </div>
+    <!-- Teks Welcome -->
+    <div class="preloader-welcome">
+      <span class="line-1">Welcome to</span>
+      <span class="line-2">D-IV Teknik Laboratorium Medis Class</span>
     </div>
 
-    <!-- Teks Bawah -->
-    <div class="preloader-text-container">
-      <span>Loading</span>
-      <span class="preloader-percentage" id="progress-percent">0%</span>
+    <!-- Loading Bar -->
+    <div class="preloader-loading-container">
+      <div class="preloader-track">
+        <div class="preloader-progress" id="progress-bar"></div>
+      </div>
+      <div class="preloader-text-wrapper">
+        <span class="preloader-label">Loading</span>
+        <span class="preloader-percentage" id="progress-percent">0%</span>
+      </div>
     </div>
   </div>
 
-  <!-- Background Animasi -->
+  <!-- Background Animasi Bintang -->
   <div id="particles-js"></div>
 
   <!-- Lightbox Pop-up -->
@@ -340,29 +324,38 @@
   </footer>
 
   <script type="module">
-    // --- LOGIKA PRELOADER (DIPERBARUI) ---
+    // =========================================
+    // 1. LOGIKA PRELOADER (PROGRESS BAR & HILANG)
+    // =========================================
     let progress = 0;
+    const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
-    
-    // Lock scroll saat loading
+    const preloader = document.getElementById('preloader');
+
+    // Kunci scroll layar saat loading
     document.body.style.overflow = 'hidden'; 
 
     const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 10) + 5;
+      progress += Math.floor(Math.random() * 5) + 1; // Acak 1-5%
+      
       if (progress >= 100) {
         progress = 100;
         clearInterval(interval);
         
-        // Tampilkan 100% sebentar sebelum menghilang
+        // Tunggu sebentar di 100% lalu sembunyikan preloader
         setTimeout(() => {
-          document.getElementById('preloader').classList.add('hidden');
-          document.body.style.overflow = 'auto'; // Bisa di-scroll lagi
-        }, 800); // Jeda 800ms setelah mencapai 100%
+          preloader.classList.add('hidden');
+          document.body.style.overflow = 'auto'; // Izinkan scroll lagi
+        }, 800); 
       }
+      
+      progressBar.style.width = progress + '%';
       progressPercent.innerText = progress + '%';
-    }, 150);
+    }, 50);
 
-    // --- BACKGROUND PARTICLES ---
+    // =========================================
+    // 2. BACKGROUND PARTICLES (BINTANG)
+    // =========================================
     particlesJS("particles-js", {
       "particles": {
         "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
@@ -384,13 +377,17 @@
       "retina_detect": true
     });
 
-    // --- FUNGSI ZOOM FOTO ---
+    // =========================================
+    // 3. FUNGSI ZOOM GAMBAR (LIGHTBOX)
+    // =========================================
     window.zoomImage = function(src) {
       document.getElementById('lightbox-img').src = src;
       document.getElementById('lightbox').style.display = 'flex';
     }
 
-    // --- LOGIKA FIREBASE (BUKU TAMU) ---
+    // =========================================
+    // 4. LOGIKA FIREBASE (BUKU TAMU)
+    // =========================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -407,7 +404,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Animasi Reveal
+    // Animasi Reveal (Elemen muncul saat di-scroll)
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -418,7 +415,7 @@
     }, { threshold: 0.15 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Render Pengurus
+    // Render Data Pengurus (ID Card)
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -448,7 +445,7 @@
       revealObserver.observe(card);
     });
 
-    // Render Anggota
+    // Render Data Anggota Biasa
     const memberNames = { 3: "Aprelia", 6: "Dania Rahma", 7: "Devita", 9: "Helena", 10: "Jocelin", 16: "Shafira", 18: "Talita" };
     const memberImages = {
       3: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/april.jpg?raw=true",
@@ -482,7 +479,9 @@
       revealObserver.observe(card);
     }
 
-    // Firebase Buku Tamu
+    // =========================================
+    // 5. LOGIKA BUKU TAMU (FIREBASE CRUD)
+    // =========================================
     async function fetchData() {
       const list = document.getElementById('guestList');
       list.innerHTML = ''; 

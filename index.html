@@ -325,14 +325,17 @@
 
   </div> <!-- Penutup main-content-wrapper -->
 
+  <!-- AUDIO SUARA PETIR ASLI -->
+  <audio id="thunder-audio" src="https://www.soundjay.com/nature/thunder-01.mp3" preload="auto"></audio>
+
   <script type="module">
     // =========================================
-    // 1. SUARA KLIK & SUARA PETIR (SYNTHESIZER)
+    // 1. SUARA KLIK & SUARA PETIR
     // =========================================
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
-
-    // Fungsi Suara Klik
+    
+    // Suara Klik (Synthesizer)
     function playClickSound() {
       if (audioCtx.state === 'suspended') { audioCtx.resume(); }
       const osc = audioCtx.createOscillator();
@@ -348,37 +351,6 @@
       osc.stop(audioCtx.currentTime + 0.1);
     }
 
-    // Fungsi Suara Petir (Gemuruh)
-    function playThunderSound() {
-      if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      const filter = audioCtx.createBiquadFilter();
-
-      // Frekuensi rendah untuk suara gemuruh
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(60, audioCtx.currentTime); // Nada dasar rendah
-      osc.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 1.5);
-
-      // Filter agar suaranya lebih "muffled" / gemuruh
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(200, audioCtx.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 1.5);
-
-      // Volume naik turun (envelope)
-      gain.gain.setValueAtTime(0, audioCtx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 0.1);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc.start();
-      osc.stop(audioCtx.currentTime + 1.5);
-    }
-
-    // Pasang Suara Klik ke semua elemen interaktif
     const clickableElements = document.querySelectorAll('a, button, .zoomable, .photo-card, .cursor-hover-target');
     clickableElements.forEach(el => {
       el.addEventListener('click', playClickSound);
@@ -427,7 +399,7 @@
     backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
     // =========================================
-    // 4. PRELOADER LOGIC (SUARA PETIR DI SINI)
+    // 4. PRELOADER LOGIC (SUARA PETIR ASLI)
     // =========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
@@ -436,28 +408,39 @@
     const welcomePhase = document.getElementById('welcome-phase');
     const preloader = document.getElementById('preloader');
     const spotlight = document.getElementById('spotlight');
+    const thunderAudio = document.getElementById('thunder-audio');
 
     document.body.style.overflow = 'hidden'; 
 
-    // Putar suara petir tiap 2.5 detik selama loading (biar sinkron sama animasi video)
-    // Browser butuh interaksi user dulu, jadi kita tembak di klik pertama
+    // Fungsi buat muter suara petir
+    function playThunderSound() {
+      thunderAudio.volume = 0.6; // Volume suara petir
+      thunderAudio.currentTime = 0;
+      thunderAudio.play().catch(e => {
+        console.log("Audio diblokir, butuh interaksi user.");
+      });
+    }
+
+    // Pemicu suara petir pertama kali (pas layar loading di-klik/disentuh)
     let audioPlayed = false;
-    function initAudio() {
+    function initThunder() {
       if (!audioPlayed) {
         playThunderSound();
         audioPlayed = true;
       }
     }
-    document.addEventListener('click', initAudio, { once: true });
-    document.addEventListener('touchstart', initAudio, { once: true });
+    // Pasang event listener ke seluruh layar preloader
+    preloader.addEventListener('click', initThunder, { once: true });
+    preloader.addEventListener('touchstart', initThunder, { once: true });
 
-    // Interval suara petir
+    // Interval suara petir (tiap 3 detik selama loading belum 100%)
     setInterval(() => {
       if (audioPlayed && progress < 100) {
         playThunderSound();
       }
-    }, 2500); 
+    }, 3000); 
 
+    // Animasi Teks Hacker
     const fakeCodeEl = document.getElementById('hacker-fake-code');
     const hexChars = "0123456789ABCDEF";
     setInterval(() => {

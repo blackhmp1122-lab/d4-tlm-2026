@@ -44,28 +44,67 @@
     #preloader { position: fixed; inset: 0; background-color: #0f172a; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; }
     #preloader.hidden { opacity: 0; visibility: hidden; }
     
-    /* Efek Petir SVG (Animasi) */
-    .lightning-container {
+    /* Efek Petir Menyambar */
+    .lightning-wrap {
       position: absolute;
       top: 0;
-      bottom: 0;
-      width: 200px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 100vh;
       z-index: 1;
+      overflow: hidden;
     }
-    .lightning {
-      width: 120px;
-      height: 450px;
-      filter: drop-shadow(0 0 20px #00f0ff) drop-shadow(0 0 40px #1e90ff);
-      animation: strike 3s infinite;
-      opacity: 0;
+    .lightning-bolt {
+      width: 4px;
+      height: 100%;
+      background: #fff;
+      box-shadow: 0 0 15px #00f0ff, 0 0 30px #1e90ff, 0 0 50px #00f0ff;
+      margin: 0 auto;
+      animation: strikeDown 2s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
+      transform-origin: top;
     }
-    @keyframes strike {
-      0%, 10%, 20% { opacity: 0; transform: scale(0.95); }
-      15%, 25% { opacity: 1; transform: scale(1); }
-      30%, 100% { opacity: 0.2; transform: scale(1); }
+    .lightning-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 100%;
+      background: rgba(0, 240, 255, 0.2);
+      filter: blur(20px);
+      animation: flashGlow 2s infinite;
+    }
+
+    @keyframes strikeDown {
+      0%, 10% { transform: scaleY(0); opacity: 0; }
+      15% { transform: scaleY(1); opacity: 1; }
+      20% { opacity: 0.5; }
+      25% { opacity: 1; }
+      35%, 100% { transform: scaleY(1); opacity: 0; }
+    }
+    @keyframes flashGlow {
+      0%, 10% { opacity: 0; }
+      15% { opacity: 1; }
+      30%, 100% { opacity: 0; }
+    }
+    
+    /* Efek Getar untuk Teks Welcome */
+    #welcome-text {
+      animation: shake 0.5s infinite;
+    }
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(1deg); }
+      30% { transform: translate(3px, 2px) rotate(0deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: translate(-3px, 1px) rotate(0deg); }
+      70% { transform: translate(3px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(1deg); }
+      90% { transform: translate(1px, 2px) rotate(0deg); }
+      100% { transform: translate(1px, -2px) rotate(-1deg); }
     }
 
     .loading-bar-container { width: 250px; height: 4px; background: rgba(255,255,255,0.1); margin-top: 20px; border-radius: 2px; overflow: hidden; }
@@ -98,13 +137,12 @@
 
   <!-- 1. PRELOADER -->
   <div id="preloader">
-    <div class="lightning-container">
-      <svg class="lightning" viewBox="0 0 100 300" xmlns="http://www.w3.org/2000/svg">
-        <path d="M50 0 L30 130 L60 140 L20 300 L80 160 L40 150 L70 20 Z" fill="#00f0ff" />
-      </svg>
+    <div class="lightning-wrap">
+      <div class="lightning-bolt"></div>
+      <div class="lightning-glow"></div>
     </div>
     
-    <h1 class="text-3xl md:text-5xl font-bold text-white neon-text text-center px-4" id="welcome-text" style="opacity: 0; transition: opacity 1s ease; z-index: 10;">Welcome to D-IV TLM'26 CLASS</h1>
+    <h1 class="text-3xl md:text-5xl font-bold text-white text-center px-4" id="welcome-text" style="opacity: 0; transition: opacity 1s ease; z-index: 10;">Welcome to D-IV TLM'26 CLASS</h1>
     
     <div id="loading-wrapper" style="z-index: 10;">
       <div class="loading-bar-container">
@@ -406,35 +444,4 @@
           const data = doc.data();
           const li = document.createElement('li');
           li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
-          li.innerHTML = `<div class="flex justify-between items-start mb-1"><p class="font-semibold text-white">${data.name}</p></div><p class="text-sm text-slate-300">${data.message}</p>`;
-          list.appendChild(li);
-        });
-      } catch (error) {
-        list.innerHTML = '<li class="text-center text-red-500 text-sm py-4">Gagal memuat data.</li>';
-      }
-    }
-
-    document.getElementById('guestForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = e.target.querySelector('button');
-      const oldText = btn.textContent;
-      btn.textContent = 'Mengirim...';
-      btn.disabled = true;
-      const name = e.target.querySelector('input').value;
-      const message = e.target.querySelector('textarea').value;
-      try {
-        await addDoc(collection(db, "guestbook"), { name, message, created_at: new Date() });
-        e.target.reset();
-        await fetchData();
-      } catch (err) {
-        alert('Gagal kirim: ' + err.message);
-      } finally {
-        btn.textContent = oldText;
-        btn.disabled = false;
-      }
-    });
-
-    fetchData();
-  </script>
-</body>
-</html>
+          li.innerHTML

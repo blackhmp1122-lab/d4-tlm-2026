@@ -41,12 +41,12 @@
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
     /* =========================================
-       PRELOADER (VIDEO PETIR & TEKS STATIS)
+       PRELOADER BERTAHAP (PETIR -> LOADING -> WELCOME)
        ========================================= */
     #preloader { 
       position: fixed; 
       inset: 0; 
-      background-color: #000;
+      background-color: #0b0c10;
       z-index: 99999; 
       display: flex; 
       flex-direction: column; 
@@ -54,7 +54,6 @@
       align-items: center; 
       transition: opacity 1s ease, visibility 1s ease; 
     }
-    #preloader.hidden { opacity: 0; visibility: hidden; }
 
     /* Video Petir */
     .bg-video {
@@ -78,73 +77,90 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+      background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
       z-index: -1;
     }
 
-    /* Teks Welcome Statis */
-    .preloader-welcome {
-      text-align: center;
-      font-weight: 700;
-      line-height: 1.4;
-      margin-bottom: 30px;
-      z-index: 10;
-      padding: 0 20px;
-    }
-    .preloader-welcome .line-1 {
-      display: block;
-      color: #ffffff;
-      font-size: 2.2rem;
-      letter-spacing: 1px;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-      margin-bottom: 5px;
-    }
-    .preloader-welcome .line-2 {
-      display: block;
-      color: #3b82f6;
-      font-size: 2.5rem;
-      letter-spacing: 1px;
-      text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
-    }
-
-    /* Loading Bar Minimalis */
-    .preloader-loading-container {
-      width: 260px;
+    /* --- FASE 1: LOADING BAR --- */
+    #loading-phase {
       display: flex;
       flex-direction: column;
       align-items: center;
-      z-index: 10;
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    .preloader-track {
+    #loading-phase.hide {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    .loading-container {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .loading-track {
       width: 100%;
-      height: 2px;
-      background-color: rgba(255, 255, 255, 0.3);
+      height: 3px;
+      background-color: rgba(255, 255, 255, 0.2);
       position: relative;
-      border-radius: 2px;
-      margin-bottom: 8px;
+      border-radius: 3px;
+      margin-bottom: 10px;
     }
-    .preloader-progress {
+    .loading-progress {
       position: absolute;
       top: 0;
       left: 0;
       height: 100%;
       width: 0%;
       background-color: #ffffff;
-      border-radius: 2px;
+      border-radius: 3px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
       transition: width 0.1s linear;
     }
-    .preloader-text-wrapper {
+    .loading-text-wrapper {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       color: #d1d5db;
       font-family: monospace;
-      letter-spacing: 1px;
     }
-    .preloader-label { margin-left: 5px; }
-    .preloader-percentage { margin-right: 5px; }
+    .loading-label { margin-left: 5px; }
+    .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; }
+
+    /* --- FASE 2: WELCOME TEXT --- */
+    #welcome-phase {
+      position: absolute;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease, transform 1s ease;
+      pointer-events: none;
+      padding: 0 20px;
+    }
+    #welcome-phase.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    #welcome-phase .line-1 {
+      display: block;
+      color: #ffffff;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+      margin-bottom: 5px;
+    }
+    #welcome-phase .line-2 {
+      display: block;
+      color: #3b82f6; 
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+    }
+    /* ========================================= */
 
     /* 3D Folder Dokumentasi */
     .folder-container { perspective: 1000px; cursor: pointer; margin: 40px auto; width: 100%; max-width: 600px; position: relative; }
@@ -152,11 +168,8 @@
     .folder-body { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 0 20px 20px 20px; padding: 40px; position: relative; z-index: 2; transition: transform 0.4s ease; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: flex-end; }
     .folder-container:hover .folder-body { transform: translateY(-10px); }
     .folder-content { position: absolute; top: -150px; left: 50%; transform: translateX(-50%); width: 90%; height: 180px; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 0; display: flex; justify-content: center; gap: 10px; }
-    
-    /* Animasi buka folder */
     .folder-open .folder-content { opacity: 1; pointer-events: auto; top: -200px; }
     .folder-open .folder-body { transform: translateY(0); }
-    
     .folder-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 2px solid #475569; box-shadow: 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.3s; cursor: pointer; }
     .folder-photo:hover { transform: scale(1.05) rotate(2deg); border-color: #00f0ff; }
 
@@ -170,29 +183,33 @@
 </head>
 <body>
 
-  <!-- 1. PRELOADER (VIDEO PETIR) -->
+  <!-- =========================================
+       PRELOADER LENGKAP (FASE 1 & FASE 2)
+       ========================================= -->
   <div id="preloader">
-    <!-- Video Background Petir (URL dari Pixabay) -->
+    <!-- Video Petir -->
     <video autoplay loop muted playsinline class="bg-video">
       <source src="https://cdn.pixabay.com/video/2022/12/11/143135-780275540_large.mp4" type="video/mp4">
     </video>
     <div class="preloader-overlay"></div>
 
-    <!-- Teks Welcome -->
-    <div class="preloader-welcome">
-      <span class="line-1">Welcome to</span>
-      <span class="line-2">D-IV Teknik Laboratorium Medis Class</span>
+    <!-- FASE 1: LOADING BAR (0-100%) -->
+    <div id="loading-phase">
+      <div class="loading-container">
+        <div class="loading-track">
+          <div class="loading-progress" id="progress-bar"></div>
+        </div>
+        <div class="loading-text-wrapper">
+          <span class="loading-label">Loading</span>
+          <span class="loading-percentage" id="progress-percent">0%</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Loading Bar -->
-    <div class="preloader-loading-container">
-      <div class="preloader-track">
-        <div class="preloader-progress" id="progress-bar"></div>
-      </div>
-      <div class="preloader-text-wrapper">
-        <span class="preloader-label">Loading</span>
-        <span class="preloader-percentage" id="progress-percent">0%</span>
-      </div>
+    <!-- FASE 2: TEKS WELCOME (Muncul setelah loading 100%) -->
+    <div id="welcome-phase">
+      <span class="line-1">Welcome to</span>
+      <span class="line-2">D-IV Teknik Laboratorium Medis Class</span>
     </div>
   </div>
 
@@ -204,6 +221,9 @@
     <img id="lightbox-img" src="" alt="Zoomed Image">
   </div>
 
+  <!-- =========================================
+       ISI WEBSITE UTAMA KAMU (D-IV TLM)
+       ========================================= -->
   <!-- NAVBAR -->
   <nav class="fixed top-0 inset-x-0 z-50 glass">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -244,7 +264,7 @@
     </div>
   </section>
 
-  <!-- DIRECTORY (Pengurus & Anggota) -->
+  <!-- DIRECTORY -->
   <section id="directory" class="py-24 px-6 relative z-10">
     <div class="max-w-6xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-16">Struktur & Anggota</h2>
@@ -255,26 +275,20 @@
     </div>
   </section>
 
-  <!-- DOKUMENTASI (3D Folder) -->
+  <!-- DOKUMENTASI -->
   <section id="gallery" class="py-24 px-6 relative z-10">
     <div class="max-w-4xl mx-auto">
       <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi Kelas</h2>
-      
-      <!-- 3D Folder Interactive -->
       <div class="folder-container reveal" onclick="this.classList.toggle('folder-open')">
-        <!-- Foto yang berhamburan keluar -->
         <div class="folder-content">
           <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
           <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
           <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
         </div>
-        
-        <!-- Body Folder -->
         <div class="folder-tab"></div>
         <div class="folder-body">
           <div class="text-4xl font-bold text-white">3 <span class="text-lg font-normal text-slate-400">Photos</span></div>
           <div class="bg-slate-700/50 p-3 rounded-xl border border-slate-600">
-            <!-- Ikon titik tiga -->
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" /></svg>
           </div>
         </div>
@@ -325,28 +339,41 @@
 
   <script type="module">
     // =========================================
-    // 1. LOGIKA PRELOADER (PROGRESS BAR & HILANG)
+    // 1. LOGIKA PRELOADER BERTAHAP
     // =========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
+    const loadingPhase = document.getElementById('loading-phase');
+    const welcomePhase = document.getElementById('welcome-phase');
     const preloader = document.getElementById('preloader');
 
-    // Kunci scroll layar saat loading
+    // Sembunyikan scroll saat preloader jalan
     document.body.style.overflow = 'hidden'; 
 
     const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 5) + 1; // Acak 1-5%
+      progress += Math.floor(Math.random() * 4) + 1; // Tambah 1-4%
       
       if (progress >= 100) {
         progress = 100;
         clearInterval(interval);
         
-        // Tunggu sebentar di 100% lalu sembunyikan preloader
+        // 1. Bar loading 100%, sembunyikan Fase 1
         setTimeout(() => {
-          preloader.classList.add('hidden');
-          document.body.style.overflow = 'auto'; // Izinkan scroll lagi
+          loadingPhase.classList.add('hide');
+        }, 300);
+        
+        // 2. Munculkan teks Welcome (Fase 2)
+        setTimeout(() => {
+          welcomePhase.classList.add('show');
         }, 800); 
+        
+        // 3. Sembunyikan seluruh Preloader dan munculkan Website Utama
+        setTimeout(() => {
+          preloader.style.opacity = '0';
+          preloader.style.visibility = 'hidden';
+          document.body.style.overflow = 'auto'; // Bisa scroll lagi
+        }, 4000); // Teks Welcome tampil selama 3.2 detik sebelum hilang
       }
       
       progressBar.style.width = progress + '%';
@@ -378,7 +405,7 @@
     });
 
     // =========================================
-    // 3. FUNGSI ZOOM GAMBAR (LIGHTBOX)
+    // 3. FUNGSI ZOOM GAMBAR
     // =========================================
     window.zoomImage = function(src) {
       document.getElementById('lightbox-img').src = src;
@@ -404,7 +431,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Animasi Reveal (Elemen muncul saat di-scroll)
+    // Animasi Reveal
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -415,7 +442,7 @@
     }, { threshold: 0.15 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Render Data Pengurus (ID Card)
+    // Render Pengurus
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -445,7 +472,7 @@
       revealObserver.observe(card);
     });
 
-    // Render Data Anggota Biasa
+    // Render Anggota
     const memberNames = { 3: "Aprelia", 6: "Dania Rahma", 7: "Devita", 9: "Helena", 10: "Jocelin", 16: "Shafira", 18: "Talita" };
     const memberImages = {
       3: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/april.jpg?raw=true",
@@ -479,9 +506,7 @@
       revealObserver.observe(card);
     }
 
-    // =========================================
-    // 5. LOGIKA BUKU TAMU (FIREBASE CRUD)
-    // =========================================
+    // Firebase Buku Tamu
     async function fetchData() {
       const list = document.getElementById('guestList');
       list.innerHTML = ''; 

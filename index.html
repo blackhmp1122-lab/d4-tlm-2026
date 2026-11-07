@@ -27,34 +27,12 @@
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
     
-    /* =========================================
-       EFEK SCROLL GLOBAL (REPEATABLE)
-       ========================================= */
-    .reveal { 
-      opacity: 0; 
-      transform: translateY(60px) scale(0.95); 
-      transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); 
-    }
-    .reveal.visible { 
-      opacity: 1; 
-      transform: translateY(0) scale(1); 
-    }
-
-    /* Efek Parallax (Kotak melayang pelan saat discroll) */
-    .parallax-box {
-      will-change: transform;
-      transition: transform 0.1s ease-out;
-    }
-
-    /* Efek Zoom untuk Foto/ID Card */
-    .zoom-scroll {
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-    }
-    .zoom-scroll:hover {
-      transform: scale(1.05) translateY(-8px);
-      box-shadow: 0 20px 40px rgba(0, 240, 255, 0.3);
-      z-index: 20;
-    }
+    /* EFEK SCROLL GLOBAL (REPEATABLE) */
+    .reveal { opacity: 0; transform: translateY(60px) scale(0.95); transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
+    .parallax-box { will-change: transform; transition: transform 0.1s ease-out; }
+    .zoom-scroll { transition: transform 0.4s ease, box-shadow 0.4s ease; }
+    .zoom-scroll:hover { transform: scale(1.05) translateY(-8px); box-shadow: 0 20px 40px rgba(0, 240, 255, 0.3); z-index: 20; }
 
     /* ID Card */
     .lanyard-wrap { display: flex; flex-direction: column; align-items: center; }
@@ -66,20 +44,39 @@
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
     /* =========================================
-       PRELOADER
+       PRELOADER DENGAN EFEK INTERAKTIF MOUSE
        ========================================= */
     #preloader { 
       position: fixed; inset: 0; 
       background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%, #020617 100%);
       z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; 
       transition: opacity 1s ease, visibility 1s ease; overflow: hidden;
+      cursor: crosshair;
     }
+
+    /* Efek Senter (Spotlight) yang mengikuti kursor */
+    #spotlight {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 60%);
+      border-radius: 50%;
+      pointer-events: none; /* Biar ga ngehalangin klik */
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Bintang-bintang di background preloader */
     .preloader-stars {
       position: absolute; inset: 0;
       background-image: radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 160px 120px, #fff, rgba(0,0,0,0));
       background-repeat: repeat; background-size: 200px 200px; opacity: 0.3; z-index: 0; animation: twinkle 3s infinite alternate;
+      transition: transform 0.1s ease-out; /* Untuk parallax bintang */
     }
     @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 0.6; } }
+
+    /* Lightning CSS */
     .lightning-flash { position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 1; animation: flashAnim 4s infinite; }
     @keyframes flashAnim { 0%, 92%, 96%, 100% { opacity: 0; } 93%, 95% { opacity: 0.4; } 94% { opacity: 0; } }
     .lightning-bolt {
@@ -89,6 +86,7 @@
     .lightning-bolt::after { content: ''; position: absolute; top: 60%; right: 0; width: 80px; height: 3px; background: #fff; box-shadow: 0 0 10px #00f0ff; transform: rotate(30deg); transform-origin: right center; }
     @keyframes strikeAnim { 0%, 90%, 96%, 100% { opacity: 0; transform: translateX(-50%) rotate(15deg) scaleY(0.5); } 91% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1); } 93% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1) scaleX(2); } 94% { opacity: 0.5; transform: translateX(-50%) rotate(15deg) scaleY(1); } }
 
+    /* Konten Loading */
     #loading-phase { display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10; }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
     .loading-container { width: 300px; display: flex; flex-direction: column; align-items: center; }
@@ -98,6 +96,7 @@
     .loading-label { margin-left: 5px; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; }
 
+    /* Konten Welcome */
     #welcome-phase { position: absolute; text-align: center; opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; pointer-events: none; padding: 0 20px; width: 100%; z-index: 10; }
     #welcome-phase.show { opacity: 1; transform: translateY(0); }
     #welcome-phase .line-1 { display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5); margin-bottom: 10px; }
@@ -124,9 +123,14 @@
 </head>
 <body>
 
-  <!-- PRELOADER -->
+  <!-- PRELOADER INTERAKTIF -->
   <div id="preloader">
-    <div class="preloader-stars"></div>
+    <!-- Efek Senter -->
+    <div id="spotlight"></div>
+
+    <!-- Bintang Parallax -->
+    <div class="preloader-stars" id="preloader-stars"></div>
+    
     <div class="lightning-flash"></div>
     <div class="lightning-bolt"></div>
 
@@ -268,16 +272,46 @@
   </footer>
 
   <script type="module">
-    // 1. LOGIKA PRELOADER BERTAHAP
+    // 1. LOGIKA PRELOADER & MOUSE INTERAKTIF
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
     const loadingPhase = document.getElementById('loading-phase');
     const welcomePhase = document.getElementById('welcome-phase');
     const preloader = document.getElementById('preloader');
+    const spotlight = document.getElementById('spotlight');
+    const preloaderStars = document.getElementById('preloader-stars');
 
     document.body.style.overflow = 'hidden'; 
 
+    // =========================================
+    // A. EFEK INTERAKTIF MOUSE DI PRELOADER (BARU)
+    // =========================================
+    preloader.addEventListener('mousemove', (e) => {
+      // 1. Gerakkan efek senter mengikuti kursor
+      spotlight.style.left = e.clientX + 'px';
+      spotlight.style.top = e.clientY + 'px';
+
+      // 2. Efek Parallax: Bintang-bintang bergeser sedikit berlawanan arah dengan kursor
+      // Menghitung seberapa jauh kursor dari tengah layar
+      const x = (e.clientX / window.innerWidth - 0.5) * 20; // Nilai 20 adalah seberapa jauh pergeserannya
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+      
+      // Aplikasikan pergeseran ke layer bintang
+      preloaderStars.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    // Sembunyikan senter saat kursor keluar dari layar preloader
+    preloader.addEventListener('mouseleave', () => {
+      spotlight.style.opacity = '0';
+    });
+    preloader.addEventListener('mouseenter', () => {
+      spotlight.style.opacity = '1';
+    });
+
+    // =========================================
+    // B. JALANKAN PROGRESS BAR
+    // =========================================
     const interval = setInterval(() => {
       progress += Math.floor(Math.random() * 4) + 1;
       
@@ -299,7 +333,7 @@
       progressPercent.innerText = progress + '%';
     }, 50);
 
-    // 2. BACKGROUND PARTICLES
+    // 2. BACKGROUND PARTICLES (Website Utama)
     particlesJS("particles-js", {
       "particles": {
         "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
@@ -341,44 +375,32 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // =========================================
-    // 5. ANIMASI REVEAL YANG BISA BERULANG KALI (SCROLL UP/DOWN)
-    // =========================================
+    // 5. ANIMASI REVEAL YANG BISA BERULANG KALI
     const revealElements = document.querySelectorAll('.reveal');
-    
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Kalau masuk layar, munculkan
           entry.target.classList.add('visible');
         } else {
-          // Kalau keluar layar (di-scroll lewat), sembunyikan lagi biar bisa muncul lagi nanti
           entry.target.classList.remove('visible');
         }
       });
     }, { threshold: 0.15 });
-
     revealElements.forEach(el => revealObserver.observe(el));
 
-    // =========================================
-    // 6. LOGIKA EFEK PARALLAX (GLOBAL & BERULANG)
-    // =========================================
+    // 6. LOGIKA EFEK PARALLAX SCROLL
     window.addEventListener('scroll', () => {
       const scrollValue = window.scrollY;
-
-      // A. Parallax untuk Teks Hero
       const heroContent = document.getElementById('hero-content');
       if (heroContent) {
         heroContent.style.transform = `translateY(${scrollValue * 0.4}px)`;
         heroContent.style.opacity = 1 - (scrollValue / 600);
       }
 
-      // B. Parallax untuk Kotak-kotak Glass (Tentang Kami & Buku Tamu)
       const parallaxBoxes = document.querySelectorAll('.parallax-box');
       parallaxBoxes.forEach(box => {
         const boxTop = box.getBoundingClientRect().top;
         const windowHeight = window.innerHeight;
-        
         if (boxTop < windowHeight && boxTop > -windowHeight) {
           const distanceToCenter = boxTop - (windowHeight / 2);
           box.style.transform = `translateY(${distanceToCenter * 0.05}px)`;
@@ -413,7 +435,6 @@
         </div>
       `;
       committeeGrid.appendChild(card);
-      // Daftarkan elemen baru ini ke observer agar bisa beranimasi
       revealObserver.observe(card);
     });
 
@@ -447,7 +468,6 @@
         <p class="text-sm font-medium text-white">${displayName}</p>
         <p class="text-xs text-slate-400">NIM: ${nimDisplay}</p>`;
       memberGrid.appendChild(card);
-      // Daftarkan elemen baru ini ke observer
       revealObserver.observe(card);
     }
 

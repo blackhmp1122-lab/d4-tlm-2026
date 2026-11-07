@@ -41,7 +41,7 @@
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
     /* =========================================
-       PRELOADER BERTAHAP (PETIR -> LOADING -> WELCOME)
+       PRELOADER (LOADING -> WELCOME -> WEB)
        ========================================= */
     #preloader { 
       position: fixed; 
@@ -55,30 +55,26 @@
       transition: opacity 1s ease, visibility 1s ease; 
     }
 
-    /* Video Petir */
-    .bg-video {
+    /* EFEK PETIR CSS (Biar pasti muncul tanpa perlu video) */
+    .lightning-bg {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      transform: translateX(-50%) translateY(-50%);
-      z-index: -2;
-      object-fit: cover;
-      opacity: 0.6;
-    }
-    
-    /* Overlay gelap */
-    .preloader-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
+      inset: 0;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Lightning_PNG_Image.png/240px-Lightning_PNG_Image.png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
       z-index: -1;
+      animation: flashLightning 3s infinite;
+      filter: brightness(1.5) drop-shadow(0 0 20px #00d2ff);
+    }
+
+    @keyframes flashLightning {
+      0%, 100% { opacity: 0; }
+      5% { opacity: 0.6; }
+      10% { opacity: 0; }
+      15% { opacity: 0.8; }
+      20% { opacity: 0.1; }
+      50% { opacity: 0; }
     }
 
     /* --- FASE 1: LOADING BAR --- */
@@ -113,9 +109,9 @@
       left: 0;
       height: 100%;
       width: 0%;
-      background-color: #ffffff;
+      background-color: #fcebd5; /* Warna putih cream */
       border-radius: 3px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 10px rgba(252, 235, 213, 0.8);
       transition: width 0.1s linear;
     }
     .loading-text-wrapper {
@@ -129,7 +125,7 @@
     .loading-label { margin-left: 5px; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; }
 
-    /* --- FASE 2: WELCOME TEXT --- */
+    /* --- FASE 2: WELCOME TEXT (Desain Sesuai Foto) --- */
     #welcome-phase {
       position: absolute;
       text-align: center;
@@ -138,28 +134,36 @@
       transition: opacity 1s ease, transform 1s ease;
       pointer-events: none;
       padding: 0 20px;
+      width: 100%;
     }
     #welcome-phase.show {
       opacity: 1;
       transform: translateY(0);
     }
+    
+    /* Baris Pertama (Kuning/Cream) */
     #welcome-phase .line-1 {
       display: block;
-      color: #ffffff;
-      font-size: 2.2rem;
+      color: #fcebd5; 
+      font-size: 2rem;
       font-weight: 700;
-      letter-spacing: 1px;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-      margin-bottom: 5px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px rgba(252, 235, 213, 0.4);
+      margin-bottom: 10px;
+      font-family: sans-serif;
     }
+    
+    /* Baris Kedua (Putih Tebal) */
     #welcome-phase .line-2 {
       display: block;
-      color: #3b82f6; 
-      font-size: 2.5rem;
-      font-weight: 700;
+      color: #ffffff; 
+      font-size: 3rem;
+      font-weight: 900; /* Sangat tebal */
       letter-spacing: 1px;
-      text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+      font-family: sans-serif;
     }
+
     /* ========================================= */
 
     /* 3D Folder Dokumentasi */
@@ -184,16 +188,14 @@
 <body>
 
   <!-- =========================================
-       PRELOADER LENGKAP (FASE 1 & FASE 2)
+       PRELOADER (EFEK PETIR + LOADING + WELCOME)
        ========================================= -->
   <div id="preloader">
-    <!-- Video Petir -->
-    <video autoplay loop muted playsinline class="bg-video">
-      <source src="https://cdn.pixabay.com/video/2022/12/11/143135-780275540_large.mp4" type="video/mp4">
-    </video>
-    <div class="preloader-overlay"></div>
+    
+    <!-- Efek Petir CSS -->
+    <div class="lightning-bg"></div>
 
-    <!-- FASE 1: LOADING BAR (0-100%) -->
+    <!-- FASE 1: LOADING BAR -->
     <div id="loading-phase">
       <div class="loading-container">
         <div class="loading-track">
@@ -206,11 +208,12 @@
       </div>
     </div>
 
-    <!-- FASE 2: TEKS WELCOME (Muncul setelah loading 100%) -->
+    <!-- FASE 2: TEKS WELCOME (Sesuai Desain Foto) -->
     <div id="welcome-phase">
       <span class="line-1">Welcome to</span>
-      <span class="line-2">D-IV Teknik Laboratorium Medis Class</span>
+      <span class="line-2">D-IV Teknologi Laboratorium Medis</span>
     </div>
+
   </div>
 
   <!-- Background Animasi Bintang -->
@@ -339,7 +342,7 @@
 
   <script type="module">
     // =========================================
-    // 1. LOGIKA PRELOADER BERTAHAP
+    // 1. LOGIKA PRELOADER BERTAHAP (CSS PETIR)
     // =========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D-IV TLM STIKES Nasional Surakarta Angkatan 2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- GANTI LIBRARY KE TSPARTICLES (VERSI MODERN) -->
+  <!-- Pakai tsParticles untuk efek sentuhan yang lebih responsif -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
   
   <script>
@@ -32,7 +32,7 @@
       top: 0; 
       left: 0; 
       z-index: 0;
-      pointer-events: none; /* Biar ga ngehalangin klik tombol */
+      pointer-events: none; /* Biar ga ngehalangin klik tombol web */
     }
     
     /* Konten Web Dinaikkan z-index nya di atas partikel */
@@ -387,66 +387,67 @@
     }, 50);
 
     // =========================================
-    // 2. KONFIGURASI PARTIKEL INTERAKTIF (TSPARTICLES)
+    // 2. KONFIGURASI PARTIKEL INTERAKTIF (BANYAK TITIK & REPULSE)
     // =========================================
-    // Kita pakai tsParticles agar efek "melebar" (repulse) bisa jalan
     tsParticles.load("particles-js", {
       fpsLimit: 60,
       particles: {
         number: {
-          value: 80, // Jumlah partikel
+          value: 200, // TITIK SANGAT BANYAK (seperti di foto referensi)
           density: { enable: true, value_area: 800 }
         },
-        color: { value: ["#00f0ff", "#1e90ff", "#ffffff"] },
-        shape: { type: "circle" },
+        color: { 
+          value: ["#00f0ff", "#1e90ff", "#ffffff"] // Warna neon dan putih
+        },
+        shape: { 
+          type: "circle" // Bentuk bundar murni
+        },
         opacity: {
-          value: 0.7,
+          value: 0.8,
           random: true,
           anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
         },
         size: {
-          value: 3,
+          value: 3, // Ukuran titik
           random: true,
           anim: { enable: true, speed: 2, size_min: 0.1, sync: false }
         },
         line_linked: {
-          enable: true,
-          distance: 150,
-          color: "#1e90ff",
-          opacity: 0.5,
-          width: 1.5
+          enable: false // DIMATIKAN: Kita cuma mau titik bulat, tanpa garis jaring
         },
         move: {
           enable: true,
-          speed: 1.5,
+          speed: 1,
           direction: "none",
-          random: false,
+          random: true, // Bergerak random
           straight: false,
           out_mode: "out",
           bounce: false
         }
       },
       interactivity: {
-        detectsOn: "window", // Deteksi interaksi di seluruh layar
+        detectsOn: "window",
         events: {
           onHover: {
             enable: true,
-            mode: "grab" // Garis nyambung ke kursor
+            mode: "bubble" // Saat kursor lewat, titik membesar
           },
           onClick: {
             enable: true,
-            mode: "repulse" // EFEK MELEBAR SAAT DIKLIK/DISENTUH
+            mode: "repulse" // SAAT DISENTUH/KLIK: Titik-titik terdorong melebar
           },
           resize: true
         },
         modes: {
-          grab: {
+          bubble: {
             distance: 200,
-            line_linked: { opacity: 1 }
+            size: 5,
+            duration: 2,
+            opacity: 1
           },
           repulse: {
-            distance: 150, // Seberapa jauh partikel terdorong (semakin besar semakin melebar)
-            duration: 0.4 // Durasi dorongan
+            distance: 200, // Seberapa jauh titik terdorong (melebar)
+            duration: 0.4
           }
         }
       },

@@ -22,7 +22,7 @@
     html { scroll-behavior: smooth; }
     body { background-color: #0f172a; color: #e2e8f0; font-family: sans-serif; overflow-x: hidden; }
     
-    /* Background Particles */
+    /* Background Particles Utama */
     #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
 
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
@@ -41,40 +41,101 @@
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
     /* =========================================
-       PRELOADER (LOADING -> WELCOME -> WEB)
+       PRELOADER (BIRU GELAP + PETIR CSS + WELCOME GLOW)
        ========================================= */
     #preloader { 
       position: fixed; 
       inset: 0; 
-      background-color: #0b0c10;
+      /* Background biru gelap, bukan hitam polos */
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%, #020617 100%);
       z-index: 99999; 
       display: flex; 
       flex-direction: column; 
       justify-content: center; 
       align-items: center; 
       transition: opacity 1s ease, visibility 1s ease; 
+      overflow: hidden;
     }
 
-    /* EFEK PETIR CSS (Biar pasti muncul tanpa perlu video) */
-    .lightning-bg {
+    /* Bintang-bintang di background preloader */
+    .preloader-stars {
       position: absolute;
       inset: 0;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Lightning_PNG_Image.png/240px-Lightning_PNG_Image.png');
-      background-size: cover;
-      background-position: center;
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 160px 120px, #fff, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      opacity: 0.3;
+      z-index: 0;
+      animation: twinkle 3s infinite alternate;
+    }
+    @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 0.6; } }
+
+    /* --- EFEK PETIR CSS MURNI --- */
+    /* 1. Kilatan cahaya satu layar */
+    .lightning-flash {
+      position: absolute;
+      inset: 0;
+      background: #fff;
       opacity: 0;
-      z-index: -1;
-      animation: flashLightning 3s infinite;
-      filter: brightness(1.5) drop-shadow(0 0 20px #00d2ff);
+      z-index: 1;
+      animation: flashAnim 4s infinite;
+    }
+    @keyframes flashAnim {
+      0%, 92%, 96%, 100% { opacity: 0; }
+      93%, 95% { opacity: 0.4; } /* Kilatan terang */
+      94% { opacity: 0; }
     }
 
-    @keyframes flashLightning {
-      0%, 100% { opacity: 0; }
-      5% { opacity: 0.6; }
-      10% { opacity: 0; }
-      15% { opacity: 0.8; }
-      20% { opacity: 0.1; }
-      50% { opacity: 0; }
+    /* 2. Bentuk petir bercabang */
+    .lightning-bolt {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 4px;
+      height: 100%;
+      background: #fff;
+      box-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff;
+      z-index: 2;
+      opacity: 0;
+      transform: translateX(-50%) rotate(15deg);
+      animation: strikeAnim 4s infinite;
+    }
+    /* Cabang petir ke kiri */
+    .lightning-bolt::before {
+      content: '';
+      position: absolute;
+      top: 30%;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: #fff;
+      box-shadow: 0 0 10px #00f0ff;
+      transform: rotate(-40deg);
+      transform-origin: left center;
+    }
+    /* Cabang petir ke kanan */
+    .lightning-bolt::after {
+      content: '';
+      position: absolute;
+      top: 60%;
+      right: 0;
+      width: 80px;
+      height: 3px;
+      background: #fff;
+      box-shadow: 0 0 10px #00f0ff;
+      transform: rotate(30deg);
+      transform-origin: right center;
+    }
+
+    @keyframes strikeAnim {
+      0%, 90%, 96%, 100% { opacity: 0; transform: translateX(-50%) rotate(15deg) scaleY(0.5); }
+      91% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1); }
+      93% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1) scaleX(2); }
+      94% { opacity: 0.5; transform: translateX(-50%) rotate(15deg) scaleY(1); }
     }
 
     /* --- FASE 1: LOADING BAR --- */
@@ -83,6 +144,7 @@
       flex-direction: column;
       align-items: center;
       transition: opacity 0.5s ease, transform 0.5s ease;
+      z-index: 10;
     }
     #loading-phase.hide {
       opacity: 0;
@@ -98,7 +160,7 @@
     .loading-track {
       width: 100%;
       height: 3px;
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.15);
       position: relative;
       border-radius: 3px;
       margin-bottom: 10px;
@@ -109,7 +171,7 @@
       left: 0;
       height: 100%;
       width: 0%;
-      background-color: #fcebd5; /* Warna putih cream */
+      background-color: #fcebd5;
       border-radius: 3px;
       box-shadow: 0 0 10px rgba(252, 235, 213, 0.8);
       transition: width 0.1s linear;
@@ -125,7 +187,7 @@
     .loading-label { margin-left: 5px; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; }
 
-    /* --- FASE 2: WELCOME TEXT (Desain Sesuai Foto) --- */
+    /* --- FASE 2: WELCOME TEXT (GLOW EFFECT) --- */
     #welcome-phase {
       position: absolute;
       text-align: center;
@@ -135,32 +197,35 @@
       pointer-events: none;
       padding: 0 20px;
       width: 100%;
+      z-index: 10;
     }
     #welcome-phase.show {
       opacity: 1;
       transform: translateY(0);
     }
     
-    /* Baris Pertama (Kuning/Cream) */
+    /* Baris Pertama (Kuning/Cream dengan Glow) */
     #welcome-phase .line-1 {
       display: block;
       color: #fcebd5; 
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 700;
       letter-spacing: 2px;
-      text-shadow: 0 0 15px rgba(252, 235, 213, 0.4);
+      /* Efek Glow Kuning/Cream */
+      text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5);
       margin-bottom: 10px;
       font-family: sans-serif;
     }
     
-    /* Baris Kedua (Putih Tebal) */
+    /* Baris Kedua (Putih dengan Glow Biru/Cyan) */
     #welcome-phase .line-2 {
       display: block;
       color: #ffffff; 
       font-size: 3rem;
-      font-weight: 900; /* Sangat tebal */
+      font-weight: 900;
       letter-spacing: 1px;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+      /* Efek Glow Cyan/Neon */
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 25px rgba(0, 240, 255, 0.6), 0 0 40px rgba(30, 144, 255, 0.5);
       font-family: sans-serif;
     }
 
@@ -188,12 +253,16 @@
 <body>
 
   <!-- =========================================
-       PRELOADER (EFEK PETIR + LOADING + WELCOME)
+       PRELOADER (LOADING -> WELCOME -> WEB)
        ========================================= -->
   <div id="preloader">
     
-    <!-- Efek Petir CSS -->
-    <div class="lightning-bg"></div>
+    <!-- Background Bintang -->
+    <div class="preloader-stars"></div>
+
+    <!-- Efek Petir CSS Murni -->
+    <div class="lightning-flash"></div>
+    <div class="lightning-bolt"></div>
 
     <!-- FASE 1: LOADING BAR -->
     <div id="loading-phase">
@@ -208,7 +277,7 @@
       </div>
     </div>
 
-    <!-- FASE 2: TEKS WELCOME (Sesuai Desain Foto) -->
+    <!-- FASE 2: TEKS WELCOME (GLOW) -->
     <div id="welcome-phase">
       <span class="line-1">Welcome to</span>
       <span class="line-2">D-IV Teknologi Laboratorium Medis</span>
@@ -216,7 +285,7 @@
 
   </div>
 
-  <!-- Background Animasi Bintang -->
+  <!-- Background Animasi Bintang Website Utama -->
   <div id="particles-js"></div>
 
   <!-- Lightbox Pop-up -->
@@ -342,7 +411,7 @@
 
   <script type="module">
     // =========================================
-    // 1. LOGIKA PRELOADER BERTAHAP (CSS PETIR)
+    // 1. LOGIKA PRELOADER BERTAHAP
     // =========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
@@ -376,7 +445,7 @@
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
           document.body.style.overflow = 'auto'; // Bisa scroll lagi
-        }, 4000); // Teks Welcome tampil selama 3.2 detik sebelum hilang
+        }, 4500); // Teks Welcome tampil selama 3.7 detik sebelum hilang
       }
       
       progressBar.style.width = progress + '%';

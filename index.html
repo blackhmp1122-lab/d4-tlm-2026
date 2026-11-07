@@ -417,19 +417,22 @@
         progress = 100;
         clearInterval(interval);
         
+        // 1. Sembunyikan loading bar
         setTimeout(() => {
           loadingPhase.classList.add('hide');
         }, 300);
         
+        // 2. Munculkan teks Welcome
         setTimeout(() => {
           welcomePhase.classList.add('show');
         }, 800); 
         
+        // 3. Hilangkan seluruh preloader (DIUBAH JADI 3 DETIK / 3000ms)
         setTimeout(() => {
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
           document.body.style.overflow = 'auto';
-        }, 4500);
+        }, 3000); 
       }
       
       progressBar.style.width = progress + '%';

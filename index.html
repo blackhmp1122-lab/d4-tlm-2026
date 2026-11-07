@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D-IV TLM STIKES Nasional Surakarta Angkatan 2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- tsParticles untuk efek partikel -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
-  <!-- Vanilla Tilt untuk Efek 3D -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
   
   <script>
@@ -22,28 +20,15 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-    
-    /* FONT UTAMA WEBSITE */
     body { background-color: #0f172a; color: #e2e8f0; font-family: ui-sans-serif, system-ui, sans-serif; overflow-x: hidden; }
     
-    /* Wadah Partikel Utama */
-    #particles-main { 
-      position: fixed; 
-      width: 100%; 
-      height: 100%; 
-      top: 0; 
-      left: 0; 
-      z-index: 0;
-    }
-    
-    /* Konten Web Dinaikkan z-index nya di atas partikel */
+    #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
     #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; }
     #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button { pointer-events: auto; }
 
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
     
-    /* EFEK SCROLL GLOBAL */
     .reveal { opacity: 0; transform: translateY(60px) scale(0.95); transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
     .parallax-box { will-change: transform; transition: transform 0.1s ease-out; }
@@ -62,71 +47,90 @@
     /* EFEK KILAU KACA (SHINE) */
     .shine-effect { position: relative; overflow: hidden; }
     .shine-effect::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 50%;
-      height: 100%;
+      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
       background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-      transform: skewX(-25deg);
-      transition: left 0.7s ease;
-      z-index: 5;
-      pointer-events: none;
+      transform: skewX(-25deg); transition: left 0.7s ease; z-index: 5; pointer-events: none;
     }
     .shine-effect:hover::before { left: 125%; }
 
     /* =========================================
-       PRELOADER
+       LIGHTBOX (POP-UP FOTO) - DIPERBAIKI
        ========================================= */
-    #preloader { 
+    #lightbox { 
+      display: none; 
       position: fixed; 
-      inset: 0; 
-      background-color: #0f172a; 
-      z-index: 99999; 
-      display: flex; 
-      flex-direction: column; 
+      z-index: 999999; /* Paling atas */
+      top: 0; left: 0; 
+      width: 100%; height: 100%; 
+      background: rgba(0,0,0,0.9); 
       justify-content: center; 
       align-items: center; 
-      transition: opacity 1s ease, visibility 1s ease; 
-      overflow: hidden; 
-      cursor: crosshair; 
-      touch-action: none; 
+      backdrop-filter: blur(5px); 
+      padding: 20px;
+    }
+    /* Gambar di dalam lightbox */
+    #lightbox-img { 
+      max-width: 90%; 
+      max-height: 85%; 
+      border-radius: 10px; 
+      border: 2px solid #00f0ff; 
+      box-shadow: 0 0 30px rgba(0,240,255,0.5); 
+      object-fit: contain;
+      /* Animasi zoom-in */
+      animation: zoomIn 0.3s ease-out;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    /* Tombol Tutup (X) */
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #00f0ff;
+      border-radius: 50%;
+      color: #00f0ff;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 1000000;
+    }
+    .close-btn:hover {
+      background: #00f0ff;
+      color: #000;
+      transform: rotate(90deg);
     }
 
-    /* Video Background Petir */
+    /* =========================================
+       PRELOADER
+       ========================================= */
+    #preloader { position: fixed; inset: 0; background-color: #0f172a; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; overflow: hidden; cursor: crosshair; touch-action: none; }
     .bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translateX(-50%) translateY(-50%); z-index: 1; object-fit: cover; opacity: 0.6; }
     .video-overlay { position: absolute; inset: 0; background: radial-gradient(circle, rgba(15,23,42,0.3) 0%, rgba(15,23,42,0.8) 100%); z-index: 2; }
-    
-    /* Partikel Khusus Loading (Diatas Video) */
     #particles-preloader { position: absolute; inset: 0; z-index: 3; }
-    
-    /* Efek Senter (Spotlight) */
     #spotlight { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 60%); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); z-index: 4; transition: opacity 0.3s ease; }
 
     #loading-phase { display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10; width: 100%; max-width: 350px; }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
-    
-    /* Hacker Loading Text */
     .hacker-text-container { width: 100%; background: rgba(0, 0, 0, 0.85); border: 1px solid #00f0ff; padding: 15px; font-family: 'Courier New', Courier, monospace; color: #00f0ff; font-size: 0.85rem; box-shadow: 0 0 20px rgba(0,240,255,0.2); position: relative; overflow: hidden; margin-bottom: 15px; backdrop-filter: blur(5px); }
     .hacker-text-container::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none; }
     .hacker-line { margin-bottom: 5px; line-height: 1.2; white-space: nowrap; overflow: hidden; }
-    
-    /* TEKS HACKER DIPERJELAS */
     .hacker-text-blur { color: rgba(0, 240, 255, 0.8); text-shadow: 0 0 5px rgba(0, 240, 255, 0.5); }
-    
     .cursor-blink { display: inline-block; width: 8px; height: 14px; background-color: #00f0ff; margin-left: 3px; animation: blink 0.8s infinite; vertical-align: middle; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-    /* Progress Bar & Teks Bawah */
     .loading-track { width: 100%; height: 4px; background-color: rgba(255, 255, 255, 0.15); position: relative; border-radius: 3px; margin-bottom: 10px; }
     .loading-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: #00f0ff; border-radius: 3px; box-shadow: 0 0 15px rgba(0,240,255,0.8); transition: width 0.1s linear; }
-    
     .loading-text-wrapper { display: flex; justify-content: space-between; width: 100%; font-size: 0.85rem; color: #d1d5db; font-family: monospace; }
     .loading-label { margin-left: 5px; color: #00f0ff; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; text-shadow: 0 0 8px rgba(0,240,255,0.8); }
-
-    /* Welcome Text */
     #welcome-phase { position: absolute; text-align: center; opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; pointer-events: none; padding: 0 20px; width: 100%; z-index: 10; }
     #welcome-phase.show { opacity: 1; transform: translateY(0); }
     #welcome-phase .line-1 { display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5); margin-bottom: 10px; }
@@ -143,10 +147,6 @@
     .folder-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 2px solid #475569; box-shadow: 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.3s; cursor: pointer; }
     .folder-photo:hover { transform: scale(1.05) rotate(2deg); border-color: #00f0ff; }
 
-    /* Lightbox */
-    #lightbox { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-    #lightbox img { max-width: 90%; max-height: 90%; border-radius: 10px; border: 2px solid #00f0ff; box-shadow: 0 0 30px rgba(0,240,255,0.5); }
-
     .zoomable { cursor: pointer; transition: transform 0.2s; }
     .zoomable:hover { transform: scale(1.05); }
 
@@ -157,6 +157,14 @@
   </style>
 </head>
 <body>
+
+  <!-- LIGHTBOX POP-UP (DIPERBAIKI) -->
+  <div id="lightbox" onclick="closeLightbox()">
+    <!-- Tombol X -->
+    <div class="close-btn" onclick="closeLightbox()">×</div>
+    <!-- Gambar -->
+    <img id="lightbox-img" src="" alt="Zoomed Image" onclick="event.stopPropagation()">
+  </div>
 
   <!-- PRELOADER INTERAKTIF -->
   <div id="preloader">
@@ -189,15 +197,9 @@
     </div>
   </div>
 
-  <!-- WADAH PARTIKEL BACKGROUND UTAMA WEB -->
   <div id="particles-main"></div>
 
-  <!-- BUNGKUS SEMUA KONTEN AGAR DI ATAS PARTIKEL -->
   <div id="main-content-wrapper">
-
-    <div id="lightbox" onclick="this.style.display='none'">
-      <img id="lightbox-img" src="" alt="Zoomed Image">
-    </div>
 
     <!-- NAVBAR -->
     <nav class="fixed top-0 inset-x-0 z-50 glass">
@@ -269,6 +271,7 @@
         <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi Kelas</h2>
         <div class="folder-container reveal" onclick="this.classList.toggle('folder-open')">
           <div class="folder-content">
+            <!-- Foto Dokumentasi dikasih fungsi zoomImage dan stopPropagation -->
             <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1" class="folder-photo shine-effect" onclick="event.stopPropagation(); zoomImage(this.src)">
             <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2" class="folder-photo shine-effect" onclick="event.stopPropagation(); zoomImage(this.src)">
             <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3" class="folder-photo shine-effect" onclick="event.stopPropagation(); zoomImage(this.src)">
@@ -441,8 +444,6 @@
     // =========================================
     // 2. KONFIGURASI PARTIKEL (WEB UTAMA & PRELOADER)
     // =========================================
-    
-    // A. Partikel di Preloader (Loading & Welcome)
     tsParticles.load("particles-preloader", {
       fpsLimit: 60,
       particles: {
@@ -469,84 +470,48 @@
       detectRetina: true
     });
 
-    // B. Partikel di Web Utama (BESAR & MELEBAR)
     tsParticles.load("particles-main", {
       fpsLimit: 60,
       particles: {
-        number: {
-          value: 100,
-          density: { enable: true, value_area: 800 }
-        },
-        color: { 
-          value: ["#00f0ff", "#1e90ff", "#ffffff"] 
-        },
+        number: { value: 100, density: { enable: true, value_area: 800 } },
+        color: { value: ["#00f0ff", "#1e90ff", "#ffffff"] },
         shape: { type: "circle" },
-        opacity: {
-          value: 0.7,
-          random: true,
-          anim: { enable: true, speed: 1, opacity_min: 0.2, sync: false }
-        },
-        size: {
-          value: 8, // UKURAN TITIK SANGAT BESAR
-          random: true,
-          anim: { enable: true, speed: 2, size_min: 0.5, sync: false }
-        },
-        line_linked: {
-          enable: true,
-          distance: 150,
-          color: "#1e90ff",
-          opacity: 0.3,
-          width: 1
-        },
-        move: {
-          enable: true,
-          speed: 1.5,
-          direction: "none",
-          random: true,
-          straight: false,
-          out_mode: "out",
-          bounce: false
-        }
+        opacity: { value: 0.7, random: true, anim: { enable: true, speed: 1, opacity_min: 0.2, sync: false } },
+        size: { value: 8, random: true, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } },
+        line_linked: { enable: true, distance: 150, color: "#1e90ff", opacity: 0.3, width: 1 },
+        move: { enable: true, speed: 1.5, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
       },
       interactivity: {
         detectsOn: "window",
         events: {
-          onHover: {
-            enable: true,
-            mode: ["grab", "bubble"]
-          },
-          onClick: {
-            enable: true,
-            mode: "repulse"
-          },
+          onHover: { enable: true, mode: ["grab", "bubble"] },
+          onClick: { enable: true, mode: "repulse" },
           resize: true
         },
         modes: {
-          grab: {
-            distance: 200,
-            line_linked: { opacity: 0.8 }
-          },
-          bubble: {
-            distance: 200,
-            size: 12,
-            duration: 2,
-            opacity: 1
-          },
-          repulse: {
-            distance: 300,
-            duration: 0.4
-          }
+          grab: { distance: 200, line_linked: { opacity: 0.8 } },
+          bubble: { distance: 200, size: 12, duration: 2, opacity: 1 },
+          repulse: { distance: 300, duration: 0.4 }
         }
       },
       detectRetina: true
     });
 
     // =========================================
-    // FUNGSI ZOOM GAMBAR
+    // 3. FUNGSI ZOOM GAMBAR (LIGHTBOX)
     // =========================================
     window.zoomImage = function(src) {
+      const lightbox = document.getElementById('lightbox');
       document.getElementById('lightbox-img').src = src;
-      document.getElementById('lightbox').style.display = 'flex';
+      lightbox.style.display = 'flex';
+      // Kunci scroll body saat foto dibuka
+      document.body.style.overflow = 'hidden';
+    }
+
+    window.closeLightbox = function() {
+      document.getElementById('lightbox').style.display = 'none';
+      // Kembalikan scroll body
+      document.body.style.overflow = 'auto';
     }
 
     // =========================================
@@ -628,7 +593,6 @@
     const committeeGrid = document.getElementById('committeeGrid');
     committeeData.forEach((data, index) => {
       const card = document.createElement('div');
-      // Tambahan class shine-effect untuk efek kilau
       card.className = `reveal lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll shine-effect`;
       card.innerHTML = `
         <div class="lanyard"></div>
@@ -645,12 +609,8 @@
       revealObserver.observe(card);
     });
 
-    // Terapkan Efek 3D Tilt ke ID Card Pengurus
     VanillaTilt.init(document.querySelectorAll(".lanyard-wrap"), {
-      max: 15,
-      speed: 400,
-      glare: true,
-      "max-glare": 0.3,
+      max: 15, speed: 400, glare: true, "max-glare": 0.3,
     });
 
     const memberNames = { 3: "Aprelia", 6: "Dania Rahma", 7: "Devita", 9: "Helena", 10: "Jocelin", 16: "Shafira", 18: "Talita" };
@@ -686,12 +646,8 @@
       revealObserver.observe(card);
     }
 
-    // Terapkan Efek 3D Tilt ke Kartu Anggota Biasa
     VanillaTilt.init(document.querySelectorAll("#memberGrid > div"), {
-      max: 15,
-      speed: 400,
-      glare: true,
-      "max-glare": 0.3,
+      max: 15, speed: 400, glare: true, "max-glare": 0.3,
     });
 
     // FIREBASE BUKU TAMU

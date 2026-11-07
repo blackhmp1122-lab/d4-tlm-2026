@@ -94,6 +94,26 @@
     #welcome-phase .line-1 { display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5); margin-bottom: 10px; }
     #welcome-phase .line-2 { display: block; color: #ffffff; font-size: 3rem; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 25px rgba(0, 240, 255, 0.6), 0 0 40px rgba(30, 144, 255, 0.5); }
 
+    /* HINT UNTUK SUARA */
+    .sound-hint {
+      position: absolute;
+      bottom: 20px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid #00f0ff;
+      color: #00f0ff;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      animation: pulseHint 2s infinite;
+      z-index: 20;
+      pointer-events: none;
+    }
+    @keyframes pulseHint {
+      0%, 100% { opacity: 0.5; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
     /* DESAIN STACKED PHOTOS */
     .photo-stack-container { position: relative; width: 100%; max-width: 600px; height: 350px; margin: 40px auto; display: flex; justify-content: center; align-items: center; cursor: pointer; }
     .photo-card { position: absolute; width: 280px; height: 180px; background: #1e293b; border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
@@ -143,6 +163,11 @@
     <div class="video-overlay"></div>
     <div id="particles-preloader"></div>
     <div id="spotlight"></div>
+
+    <!-- HINT (TEKS PETUNJUK) -->
+    <div class="sound-hint" id="sound-hint">
+      🔊 Ketuk Layar untuk Nyalakan Suara
+    </div>
 
     <div id="loading-phase">
       <div class="hacker-text-container">
@@ -399,7 +424,7 @@
     backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
     // =========================================
-    // 4. PRELOADER LOGIC (AUTO-PLAY SUARA TANPA KLIK)
+    // 4. PRELOADER LOGIC & HINT SUARA
     // =========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
@@ -409,6 +434,7 @@
     const preloader = document.getElementById('preloader');
     const spotlight = document.getElementById('spotlight');
     const thunderAudio = document.getElementById('thunder-audio');
+    const soundHint = document.getElementById('sound-hint');
 
     document.body.style.overflow = 'hidden'; 
 
@@ -417,37 +443,28 @@
       if (thunderAudio) {
         thunderAudio.volume = 0.6; 
         thunderAudio.currentTime = 0;
-        thunderAudio.play().catch(e => {
-          console.log("Audio diblokir sama browser, nunggu interaksi dikit.");
-        });
+        thunderAudio.play().catch(e => {});
       }
     }
 
-    // TRIK: Pancingan Autoplay (Mute dulu)
-    // Coba puter suara dengan volume 0 pas web dimuat
-    thunderAudio.volume = 0;
-    thunderAudio.play().then(() => {
-      // Kalau berhasil diputer (walau mute), langsung set volume normal!
-      // Browser bakal ngebolehin karena statusnya udah "playing"
-      thunderAudio.volume = 0.6;
-    }).catch(e => {
-      // Kalau browser tetap blokir, kita pancing pakai interaksi pertama
-      // (misal user scroll sedikit atau geser mouse)
-      const unlockAudio = () => {
-        thunderAudio.volume = 0.6;
-        thunderAudio.play().catch(err => {});
-        document.removeEventListener('scroll', unlockAudio);
-        document.removeEventListener('mousemove', unlockAudio);
-        document.removeEventListener('touchstart', unlockAudio);
-      };
-      document.addEventListener('scroll', unlockAudio, { once: true });
-      document.addEventListener('mousemove', unlockAudio, { once: true });
-      document.addEventListener('touchstart', unlockAudio, { once: true });
-    });
+    // Pemicu suara petir (pas layar loading di-tap/klik)
+    let audioPlayed = false;
+    function initThunder() {
+      if (!audioPlayed) {
+        playThunderSound();
+        audioPlayed = true;
+        // Sembunyikan hint kalau sudah ditekan
+        soundHint.style.opacity = '0';
+      }
+    }
+    
+    // Pasang event listener ke seluruh layar preloader
+    preloader.addEventListener('click', initThunder, { once: true });
+    preloader.addEventListener('touchstart', initThunder, { once: true });
 
     // Interval suara petir (tiap 3 detik selama loading belum 100%)
     setInterval(() => {
-      if (progress < 100) {
+      if (audioPlayed && progress < 100) {
         playThunderSound();
       }
     }, 3000); 

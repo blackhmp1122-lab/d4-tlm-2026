@@ -7,6 +7,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- tsParticles untuk efek partikel -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
+  <!-- Vanilla Tilt untuk Efek 3D -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
   
   <script>
     tailwind.config = {
@@ -49,13 +51,30 @@
     .zoom-scroll:hover { transform: scale(1.05) translateY(-8px); box-shadow: 0 20px 40px rgba(0, 240, 255, 0.3); z-index: 20; }
 
     /* ID Card */
-    .lanyard-wrap { display: flex; flex-direction: column; align-items: center; }
+    .lanyard-wrap { display: flex; flex-direction: column; align-items: center; perspective: 1000px; }
     .lanyard { width: 4px; height: 46px; background: linear-gradient(#00f0ff, #1e90ff); box-shadow: 0 0 8px rgba(0,240,255,0.6); }
     .lanyard-clip { width: 14px; height: 14px; border-radius: 3px; background: #94a3b8; margin-top: -4px; box-shadow: 0 0 6px rgba(148,163,184,0.6); }
     .float { animation: floatY 4s ease-in-out infinite; }
     .float-delay { animation-delay: -2s; }
     @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
+
+    /* EFEK KILAU KACA (SHINE) */
+    .shine-effect { position: relative; overflow: hidden; }
+    .shine-effect::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg);
+      transition: left 0.7s ease;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .shine-effect:hover::before { left: 125%; }
 
     /* =========================================
        PRELOADER
@@ -146,15 +165,12 @@
     </video>
     <div class="video-overlay"></div>
     
-    <!-- Partikel Loading (Tetap Ada) -->
     <div id="particles-preloader"></div>
-
     <div id="spotlight"></div>
 
     <div id="loading-phase">
       <div class="hacker-text-container">
         <div class="hacker-line hacker-text-blur" id="hacker-line-1">> INITIALIZING SYSTEM...</div>
-        <!-- TEKS DIUBAH DI SINI -->
         <div class="hacker-line hacker-text-blur" id="hacker-line-2">> LOADING WEB CLASS...</div>
         <div class="hacker-line" id="hacker-line-3">> <span id="hacker-fake-code">0x00FF</span><span class="cursor-blink"></span></div>
       </div>
@@ -253,9 +269,9 @@
         <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi Kelas</h2>
         <div class="folder-container reveal" onclick="this.classList.toggle('folder-open')">
           <div class="folder-content">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1" class="folder-photo shine-effect" onclick="event.stopPropagation(); zoomImage(this.src)">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2" class="folder-photo shine-effect" onclick="event.stopPropagation(); zoomImage(this.src)">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3" class="folder-photo shine-effect" onclick="event.stopPropagation(); zoomImage(this.src)">
           </div>
           <div class="folder-tab"></div>
           <div class="folder-body">
@@ -501,7 +517,7 @@
           },
           onClick: {
             enable: true,
-            mode: "repulse" // Efek melebar saat disentuh
+            mode: "repulse"
           },
           resize: true
         },
@@ -512,12 +528,12 @@
           },
           bubble: {
             distance: 200,
-            size: 12, // Membesar 1.5x lipat saat didekati
+            size: 12,
             duration: 2,
             opacity: 1
           },
           repulse: {
-            distance: 300, // JARAK MELEBAR SANGAT JAUH
+            distance: 300,
             duration: 0.4
           }
         }
@@ -596,7 +612,9 @@
       }
     }, { passive: true });
 
-    // RENDER DATA PENGURUS & ANGGOTA
+    // =========================================
+    // RENDER DATA PENGURUS & ANGGOTA (DENGAN 3D TILT & SHINE)
+    // =========================================
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "13", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -610,7 +628,8 @@
     const committeeGrid = document.getElementById('committeeGrid');
     committeeData.forEach((data, index) => {
       const card = document.createElement('div');
-      card.className = `reveal lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll`;
+      // Tambahan class shine-effect untuk efek kilau
+      card.className = `reveal lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll shine-effect`;
       card.innerHTML = `
         <div class="lanyard"></div>
         <div class="lanyard-clip"></div>
@@ -624,6 +643,14 @@
       `;
       committeeGrid.appendChild(card);
       revealObserver.observe(card);
+    });
+
+    // Terapkan Efek 3D Tilt ke ID Card Pengurus
+    VanillaTilt.init(document.querySelectorAll(".lanyard-wrap"), {
+      max: 15,
+      speed: 400,
+      glare: true,
+      "max-glare": 0.3,
     });
 
     const memberNames = { 3: "Aprelia", 6: "Dania Rahma", 7: "Devita", 9: "Helena", 10: "Jocelin", 16: "Shafira", 18: "Talita" };
@@ -650,7 +677,7 @@
       }
 
       const card = document.createElement('div');
-      card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition zoom-scroll';
+      card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition zoom-scroll shine-effect';
       card.innerHTML = `
         <img src="${imgSrc}" alt="${displayName}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600 object-cover object-top zoomable" onclick="zoomImage('${imgSrc}')">
         <p class="text-sm font-medium text-white">${displayName}</p>
@@ -658,6 +685,14 @@
       memberGrid.appendChild(card);
       revealObserver.observe(card);
     }
+
+    // Terapkan Efek 3D Tilt ke Kartu Anggota Biasa
+    VanillaTilt.init(document.querySelectorAll("#memberGrid > div"), {
+      max: 15,
+      speed: 400,
+      glare: true,
+      "max-glare": 0.3,
+    });
 
     // FIREBASE BUKU TAMU
     async function fetchData() {

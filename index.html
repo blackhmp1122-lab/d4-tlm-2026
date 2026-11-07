@@ -22,9 +22,67 @@
     html { scroll-behavior: smooth; }
     body { background-color: #0f172a; color: #e2e8f0; font-family: ui-sans-serif, system-ui, sans-serif; overflow-x: hidden; }
     
+    /* =========================================
+       1. CUSTOM CURSOR (KURSOR KHUSUS)
+       ========================================= */
+    /* Sembunyikan kursor bawaan (khusus laptop) */
+    @media (min-width: 769px) {
+      body, a, button, .folder-container { cursor: none !important; }
+    }
+
+    /* Lingkaran luar */
+    .cursor-outer {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      border: 2px solid #00f0ff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 999999;
+      transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    }
+    /* Titik di tengah */
+    .cursor-inner {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background-color: #00f0ff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1000000;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 10px #00f0ff;
+    }
+    /* Efek saat kursor diarahkan ke tombol/foto */
+    .cursor-hover .cursor-outer {
+      width: 50px;
+      height: 50px;
+      background-color: rgba(0, 240, 255, 0.1);
+      border-color: #ffffff;
+    }
+
+    /* =========================================
+       2. SCROLL PROGRESS BAR (GARIS DI ATAS)
+       ========================================= */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(to right, #00f0ff, #1e90ff);
+      width: 0%;
+      z-index: 999999;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+    }
+
+    /* =========================================
+       SISA CSS
+       ========================================= */
     #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
     #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; }
-    #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button { pointer-events: auto; }
+    #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button, .cursor-hover-target { pointer-events: auto; }
 
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
@@ -35,7 +93,6 @@
     .zoom-scroll { transition: transform 0.4s ease, box-shadow 0.4s ease; }
     .zoom-scroll:hover { transform: scale(1.05) translateY(-8px); box-shadow: 0 20px 40px rgba(0, 240, 255, 0.3); z-index: 20; }
 
-    /* ID Card */
     .lanyard-wrap { display: flex; flex-direction: column; align-items: center; perspective: 1000px; }
     .lanyard { width: 4px; height: 46px; background: linear-gradient(#00f0ff, #1e90ff); box-shadow: 0 0 8px rgba(0,240,255,0.6); }
     .lanyard-clip { width: 14px; height: 14px; border-radius: 3px; background: #94a3b8; margin-top: -4px; box-shadow: 0 0 6px rgba(148,163,184,0.6); }
@@ -44,7 +101,6 @@
     @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
-    /* EFEK KILAU KACA (SHINE) */
     .shine-effect { position: relative; overflow: hidden; }
     .shine-effect::before {
       content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
@@ -53,65 +109,12 @@
     }
     .shine-effect:hover::before { left: 125%; }
 
-    /* =========================================
-       LIGHTBOX (POP-UP FOTO) - DIPERBAIKI
-       ========================================= */
-    #lightbox { 
-      display: none; 
-      position: fixed; 
-      z-index: 999999; /* Paling atas */
-      top: 0; left: 0; 
-      width: 100%; height: 100%; 
-      background: rgba(0,0,0,0.9); 
-      justify-content: center; 
-      align-items: center; 
-      backdrop-filter: blur(5px); 
-      padding: 20px;
-    }
-    /* Gambar di dalam lightbox */
-    #lightbox-img { 
-      max-width: 90%; 
-      max-height: 85%; 
-      border-radius: 10px; 
-      border: 2px solid #00f0ff; 
-      box-shadow: 0 0 30px rgba(0,240,255,0.5); 
-      object-fit: contain;
-      /* Animasi zoom-in */
-      animation: zoomIn 0.3s ease-out;
-    }
-    @keyframes zoomIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    /* Tombol Tutup (X) */
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 40px;
-      height: 40px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 2px solid #00f0ff;
-      border-radius: 50%;
-      color: #00f0ff;
-      font-size: 24px;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      z-index: 1000000;
-    }
-    .close-btn:hover {
-      background: #00f0ff;
-      color: #000;
-      transform: rotate(90deg);
-    }
+    #lightbox { display: none; position: fixed; z-index: 999999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; backdrop-filter: blur(5px); padding: 20px; }
+    #lightbox-img { max-width: 90%; max-height: 85%; border-radius: 10px; border: 2px solid #00f0ff; box-shadow: 0 0 30px rgba(0,240,255,0.5); object-fit: contain; animation: zoomIn 0.3s ease-out; }
+    @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .close-btn { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(0, 0, 0, 0.5); border: 2px solid #00f0ff; border-radius: 50%; color: #00f0ff; font-size: 24px; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s ease; z-index: 1000000; }
+    .close-btn:hover { background: #00f0ff; color: #000; transform: rotate(90deg); }
 
-    /* =========================================
-       PRELOADER
-       ========================================= */
     #preloader { position: fixed; inset: 0; background-color: #0f172a; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; overflow: hidden; cursor: crosshair; touch-action: none; }
     .bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translateX(-50%) translateY(-50%); z-index: 1; object-fit: cover; opacity: 0.6; }
     .video-overlay { position: absolute; inset: 0; background: radial-gradient(circle, rgba(15,23,42,0.3) 0%, rgba(15,23,42,0.8) 100%); z-index: 2; }
@@ -136,7 +139,6 @@
     #welcome-phase .line-1 { display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5); margin-bottom: 10px; }
     #welcome-phase .line-2 { display: block; color: #ffffff; font-size: 3rem; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 25px rgba(0, 240, 255, 0.6), 0 0 40px rgba(30, 144, 255, 0.5); }
 
-    /* 3D Folder Dokumentasi */
     .folder-container { perspective: 1000px; cursor: pointer; margin: 40px auto; width: 100%; max-width: 600px; position: relative; }
     .folder-tab { width: 150px; height: 30px; background: #334155; border-radius: 15px 15px 0 0; margin-left: 20px; position: relative; z-index: 1; border: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
     .folder-body { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 0 20px 20px 20px; padding: 40px; position: relative; z-index: 2; transition: transform 0.4s ease; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: flex-end; }
@@ -158,11 +160,16 @@
 </head>
 <body>
 
-  <!-- LIGHTBOX POP-UP (DIPERBAIKI) -->
+  <!-- SCROLL PROGRESS BAR -->
+  <div id="scroll-progress"></div>
+
+  <!-- CUSTOM CURSOR (Hanya Muncul di Laptop) -->
+  <div class="cursor-outer hidden md:block"></div>
+  <div class="cursor-inner hidden md:block"></div>
+
+  <!-- LIGHTBOX POP-UP -->
   <div id="lightbox" onclick="closeLightbox()">
-    <!-- Tombol X -->
     <div class="close-btn" onclick="closeLightbox()">×</div>
-    <!-- Gambar -->
     <img id="lightbox-img" src="" alt="Zoomed Image" onclick="event.stopPropagation()">
   </div>
 
@@ -208,13 +215,13 @@
           <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-10 w-10 object-contain">
           <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
         </div>
-        <div class="hidden md:flex gap-6 text-sm">
+        <div class="hidden md:flex gap-6 text-sm cursor-hover-target">
           <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
           <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
           <a href="#gallery" class="hover:text-neon transition">Dokumentasi</a>
           <a href="#guestbook" class="hover:text-neon transition">Buku Tamu</a>
         </div>
-        <button id="menu-btn" class="md:hidden text-slate-300 hover:text-neon focus:outline-none">
+        <button id="menu-btn" class="md:hidden text-slate-300 hover:text-neon focus:outline-none cursor-hover-target">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
@@ -236,7 +243,7 @@
         <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
         <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
         <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
-        <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition">Jelajahi Kelas</a>
+        <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition cursor-hover-target">Jelajahi Kelas</a>
       </div>
     </section>
 
@@ -269,12 +276,11 @@
     <section id="gallery" class="py-24 px-6 relative z-10">
       <div class="max-w-4xl mx-auto">
         <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi Kelas</h2>
-        <div class="folder-container reveal" onclick="this.classList.toggle('folder-open')">
+        <div class="folder-container reveal cursor-hover-target" onclick="this.classList.toggle('folder-open')">
           <div class="folder-content">
-            <!-- Foto Dokumentasi dikasih fungsi zoomImage dan stopPropagation -->
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1" class="folder-photo shine-effect" onclick="event.stopPropagation(); zoomImage(this.src)">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2" class="folder-photo shine-effect" onclick="event.stopPropagation(); zoomImage(this.src)">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3" class="folder-photo shine-effect" onclick="event.stopPropagation(); zoomImage(this.src)">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1" class="folder-photo shine-effect cursor-hover-target" onclick="event.stopPropagation(); zoomImage(this.src)">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2" class="folder-photo shine-effect cursor-hover-target" onclick="event.stopPropagation(); zoomImage(this.src)">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3" class="folder-photo shine-effect cursor-hover-target" onclick="event.stopPropagation(); zoomImage(this.src)">
           </div>
           <div class="folder-tab"></div>
           <div class="folder-body">
@@ -293,19 +299,19 @@
       <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
         <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
-          <form id="contactForm" class="space-y-4">
+          <form id="contactForm" class="space-y-4 cursor-hover-target">
             <input type="text" placeholder="Nama Lengkap" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
             <textarea rows="4" placeholder="Pesan Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
-            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold hover:shadow-neon transition">Kirim Pesan</button>
+            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold hover:shadow-neon transition cursor-hover-target">Kirim Pesan</button>
           </form>
         </div>
 
         <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
-          <form id="guestForm" class="space-y-4 mb-6">
+          <form id="guestForm" class="space-y-4 mb-6 cursor-hover-target">
             <input type="text" placeholder="Nama Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
             <textarea rows="2" placeholder="Tulis ucapan..." required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
-            <button type="submit" class="w-full py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 hover:shadow-neon transition">Tambahkan Ucapan</button>
+            <button type="submit" class="w-full py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 hover:shadow-neon transition cursor-hover-target">Tambahkan Ucapan</button>
           </form>
           <ul id="guestList" class="space-y-3 max-h-64 overflow-y-auto pr-2">
             <li class="text-center text-slate-500 text-sm py-4">Loading data...</li>
@@ -323,12 +329,12 @@
         </div>
         
         <div class="flex flex-col md:flex-row gap-6 w-full justify-center items-center">
-          <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition">
+          <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             <span class="font-semibold text-sm">@d4tlm.stikesnas26</span>
           </a>
           
-          <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition">
+          <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
             <span class="font-semibold text-sm">@d4tlm_stikesnas26</span>
           </a>
@@ -342,7 +348,46 @@
 
   <script type="module">
     // =========================================
-    // FITUR MENU TITIK TIGA (HP)
+    // 1. CUSTOM CURSOR LOGIC (Hanya di Desktop)
+    // =========================================
+    if (window.innerWidth > 768) {
+      const cursorOuter = document.querySelector('.cursor-outer');
+      const cursorInner = document.querySelector('.cursor-inner');
+      const hoverTargets = document.querySelectorAll('a, button, .folder-container, .zoomable, .cursor-hover-target');
+
+      document.addEventListener('mousemove', (e) => {
+        // Lingkaran luar agak lambat (efek smooth)
+        cursorOuter.style.left = e.clientX + 'px';
+        cursorOuter.style.top = e.clientY + 'px';
+        
+        // Titik dalam langsung ikut kursor
+        cursorInner.style.left = e.clientX + 'px';
+        cursorInner.style.top = e.clientY + 'px';
+      });
+
+      // Efek membesar saat kursor diarahkan ke elemen interaktif
+      hoverTargets.forEach(target => {
+        target.addEventListener('mouseenter', () => {
+          cursorOuter.classList.add('cursor-hover');
+        });
+        target.addEventListener('mouseleave', () => {
+          cursorOuter.classList.remove('cursor-hover');
+        });
+      });
+    }
+
+    // =========================================
+    // 2. SCROLL PROGRESS BAR LOGIC
+    // =========================================
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrollPercentage = (scrollTop / scrollHeight) * 100;
+      document.getElementById('scroll-progress').style.width = scrollPercentage + '%';
+    });
+
+    // =========================================
+    // 3. SISA LOGIKA (Menu, Preloader, Firebase, dll)
     // =========================================
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -355,9 +400,6 @@
       mobileMenu.classList.add('hidden');
     }
 
-    // =========================================
-    // 1. LOGIKA PRELOADER & MOUSE INTERAKTIF
-    // =========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
@@ -369,22 +411,17 @@
 
     document.body.style.overflow = 'hidden'; 
 
-    // FITUR AUDIO PETIR
     let audioPlayed = false;
     function playThunder() {
       if (!audioPlayed && thunderSound) {
         thunderSound.volume = 0.5; 
         thunderSound.play().then(() => {
           audioPlayed = true;
-        }).catch(e => {
-          console.log("Autoplay diblokir, nunggu interaksi.");
-        });
+        }).catch(e => {});
       }
     }
-
     document.addEventListener('click', playThunder, { once: true });
     document.addEventListener('touchstart', playThunder, { once: true });
-
     setInterval(() => {
       if (audioPlayed) {
         thunderSound.currentTime = 0;
@@ -392,58 +429,43 @@
       }
     }, 4000); 
 
-    // FITUR HACKER TEXT ANIMATION
     const fakeCodeEl = document.getElementById('hacker-fake-code');
     const hexChars = "0123456789ABCDEF";
-    
     setInterval(() => {
       let randomHex = "0x";
-      for (let i = 0; i < 4; i++) {
-        randomHex += hexChars[Math.floor(Math.random() * 16)];
-      }
+      for (let i = 0; i < 4; i++) { randomHex += hexChars[Math.floor(Math.random() * 16)]; }
       fakeCodeEl.innerText = randomHex;
     }, 50);
 
-    // FITUR INTERAKSI MOUSE (SPOTLIGHT PRELOADER)
     function moveSpotlight(clientX, clientY) {
       spotlight.style.left = clientX + 'px';
       spotlight.style.top = clientY + 'px';
     }
-
     preloader.addEventListener('mousemove', (e) => { moveSpotlight(e.clientX, e.clientY); });
     preloader.addEventListener('touchmove', (e) => {
       const touch = e.touches[0];
       if (touch) { moveSpotlight(touch.clientX, touch.clientY); }
     }, { passive: true });
-
     preloader.addEventListener('mouseleave', () => { spotlight.style.opacity = '0'; });
     preloader.addEventListener('mouseenter', () => { spotlight.style.opacity = '1'; });
 
-    // PROSES LOADING BERJALAN
     const interval = setInterval(() => {
       progress += Math.floor(Math.random() * 4) + 1;
-      
       if (progress >= 100) {
         progress = 100;
         clearInterval(interval);
-        
         setTimeout(() => { loadingPhase.classList.add('hide'); }, 300);
         setTimeout(() => { welcomePhase.classList.add('show'); }, 800); 
-        
         setTimeout(() => {
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
           document.body.style.overflow = 'auto';
         }, 3000); 
       }
-      
       progressBar.style.width = progress + '%';
       progressPercent.innerText = progress + '%';
     }, 50);
 
-    // =========================================
-    // 2. KONFIGURASI PARTIKEL (WEB UTAMA & PRELOADER)
-    // =========================================
     tsParticles.load("particles-preloader", {
       fpsLimit: 60,
       particles: {
@@ -497,26 +519,17 @@
       detectRetina: true
     });
 
-    // =========================================
-    // 3. FUNGSI ZOOM GAMBAR (LIGHTBOX)
-    // =========================================
     window.zoomImage = function(src) {
       const lightbox = document.getElementById('lightbox');
       document.getElementById('lightbox-img').src = src;
       lightbox.style.display = 'flex';
-      // Kunci scroll body saat foto dibuka
       document.body.style.overflow = 'hidden';
     }
-
     window.closeLightbox = function() {
       document.getElementById('lightbox').style.display = 'none';
-      // Kembalikan scroll body
       document.body.style.overflow = 'auto';
     }
 
-    // =========================================
-    // LOGIKA FIREBASE
-    // =========================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -533,27 +546,20 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // ANIMASI REVEAL BERULANG
     const revealElements = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        } else {
-          entry.target.classList.remove('visible');
-        }
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); } 
+        else { entry.target.classList.remove('visible'); }
       });
     }, { threshold: 0.15 });
     revealElements.forEach(el => revealObserver.observe(el));
 
-    // LOGIKA EFEK PARALLAX SCROLL
     let isTicking = false;
     let lastScrollY = window.scrollY;
-
     window.addEventListener('scroll', () => {
       lastScrollY = window.scrollY;
       if (window.innerWidth < 768) return;
-
       if (!isTicking) {
         window.requestAnimationFrame(() => {
           const heroContent = document.getElementById('hero-content');
@@ -561,7 +567,6 @@
             heroContent.style.transform = `translateY(${lastScrollY * 0.4}px)`;
             heroContent.style.opacity = 1 - (lastScrollY / 600);
           }
-
           const parallaxBoxes = document.querySelectorAll('.parallax-box');
           parallaxBoxes.forEach(box => {
             const boxTop = box.getBoundingClientRect().top;
@@ -577,9 +582,6 @@
       }
     }, { passive: true });
 
-    // =========================================
-    // RENDER DATA PENGURUS & ANGGOTA (DENGAN 3D TILT & SHINE)
-    // =========================================
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "13", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -593,7 +595,7 @@
     const committeeGrid = document.getElementById('committeeGrid');
     committeeData.forEach((data, index) => {
       const card = document.createElement('div');
-      card.className = `reveal lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll shine-effect`;
+      card.className = `reveal lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll shine-effect cursor-hover-target`;
       card.innerHTML = `
         <div class="lanyard"></div>
         <div class="lanyard-clip"></div>
@@ -629,15 +631,13 @@
       let imgSrc = `https://ui-avatars.com/api/?name=Anggota+${i}&background=0f172a&color=00f0ff&size=120`;
       let displayName = `Nama Anggota ${i}`;
       let nimDisplay = `00000${i}`;
-      
       if (memberImages[i]) {
         imgSrc = memberImages[i];
         displayName = memberNames[i];
         if(i === 3 || i === 10 || i === 18) nimDisplay = "0" + i; 
       }
-
       const card = document.createElement('div');
-      card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition zoom-scroll shine-effect';
+      card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition zoom-scroll shine-effect cursor-hover-target';
       card.innerHTML = `
         <img src="${imgSrc}" alt="${displayName}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600 object-cover object-top zoomable" onclick="zoomImage('${imgSrc}')">
         <p class="text-sm font-medium text-white">${displayName}</p>
@@ -650,7 +650,6 @@
       max: 15, speed: 400, glare: true, "max-glare": 0.3,
     });
 
-    // FIREBASE BUKU TAMU
     async function fetchData() {
       const list = document.getElementById('guestList');
       list.innerHTML = ''; 

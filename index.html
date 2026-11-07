@@ -51,7 +51,7 @@
     #preloader { 
       position: fixed; 
       inset: 0; 
-      background-color: #000; 
+      background-color: #0f172a; /* Warna biru gelap */
       z-index: 99999; 
       display: flex; 
       flex-direction: column; 
@@ -75,14 +75,14 @@
       transform: translateX(-50%) translateY(-50%);
       z-index: -2;
       object-fit: cover;
-      opacity: 0.6;
+      opacity: 0.6; /* Sedikit transparan agar teks terbaca */
     }
 
     /* Overlay Gelap */
     .video-overlay {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
+      background: radial-gradient(circle, rgba(15,23,42,0.3) 0%, rgba(15,23,42,0.8) 100%);
       z-index: -1;
     }
 
@@ -146,10 +146,9 @@
        ========================================= -->
   <div id="preloader">
     
-    <!-- 1. VIDEO PETIR DARI GITHUB -->
-    <!-- PENTING: GANTI tulisan "USERNAME_GITHUB_KAMU" dengan username GitHub kamu yang asli! -->
+    <!-- 1. VIDEO PETIR DARI GITHUB (USERNAME SUDAH DIGANTI) -->
     <video class="bg-video" autoplay loop muted playsinline>
-      <source src="https://raw.githubusercontent.com/USERNAME_GITHUB_KAMU/d4-tlm-2026/main/video-petir.mp4" type="video/mp4">
+      <source src="https://media.githubusercontent.com/media/blackhmp1122-lab/d4-tlm-2026/main/video-petir.mp4" type="video/mp4">
       Browser Anda tidak mendukung video tag.
     </video>
 

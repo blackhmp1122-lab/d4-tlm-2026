@@ -399,7 +399,7 @@
     backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
     // =========================================
-    // 4. PRELOADER LOGIC (SUARA PETIR DARI FILE KAMU)
+    // 4. PRELOADER LOGIC (AUTO-PLAY SUARA TANPA KLIK)
     // =========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
@@ -412,33 +412,42 @@
 
     document.body.style.overflow = 'hidden'; 
 
-    // Fungsi buat muter suara petir
+    // Fungsi muter suara petir
     function playThunderSound() {
       if (thunderAudio) {
-        thunderAudio.volume = 0.6; // Volume suara petir
+        thunderAudio.volume = 0.6; 
         thunderAudio.currentTime = 0;
         thunderAudio.play().catch(e => {
-          console.log("Audio nunggu interaksi user (tap layar).");
+          console.log("Audio diblokir sama browser, nunggu interaksi dikit.");
         });
       }
     }
 
-    // Pemicu suara petir (pas layar loading di-tap/klik)
-    let audioPlayed = false;
-    function initThunder() {
-      if (!audioPlayed) {
-        playThunderSound();
-        audioPlayed = true;
-      }
-    }
-    
-    // Pasang event listener ke seluruh layar preloader
-    preloader.addEventListener('click', initThunder, { once: true });
-    preloader.addEventListener('touchstart', initThunder, { once: true });
+    // TRIK: Pancingan Autoplay (Mute dulu)
+    // Coba puter suara dengan volume 0 pas web dimuat
+    thunderAudio.volume = 0;
+    thunderAudio.play().then(() => {
+      // Kalau berhasil diputer (walau mute), langsung set volume normal!
+      // Browser bakal ngebolehin karena statusnya udah "playing"
+      thunderAudio.volume = 0.6;
+    }).catch(e => {
+      // Kalau browser tetap blokir, kita pancing pakai interaksi pertama
+      // (misal user scroll sedikit atau geser mouse)
+      const unlockAudio = () => {
+        thunderAudio.volume = 0.6;
+        thunderAudio.play().catch(err => {});
+        document.removeEventListener('scroll', unlockAudio);
+        document.removeEventListener('mousemove', unlockAudio);
+        document.removeEventListener('touchstart', unlockAudio);
+      };
+      document.addEventListener('scroll', unlockAudio, { once: true });
+      document.addEventListener('mousemove', unlockAudio, { once: true });
+      document.addEventListener('touchstart', unlockAudio, { once: true });
+    });
 
     // Interval suara petir (tiap 3 detik selama loading belum 100%)
     setInterval(() => {
-      if (audioPlayed && progress < 100) {
+      if (progress < 100) {
         playThunderSound();
       }
     }, 3000); 

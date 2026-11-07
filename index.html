@@ -46,7 +46,7 @@
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
     /* =========================================
-       PRELOADER: HACKER STYLE & TABUNG PECAH (V2)
+       PRELOADER: HACKER STYLE & TABUNG PECAH
        ========================================= */
     #preloader { position: fixed; inset: 0; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%, #020617 100%); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; overflow: hidden; cursor: crosshair; touch-action: none; }
     #spotlight { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 60%); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); z-index: 1; transition: opacity 0.3s ease; }
@@ -65,67 +65,35 @@
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
     
     /* =========================================
-       ANIMASI TABUNG PECAH V2 (LEBIH REALISTIS)
+       ANIMASI TABUNG PECAH (EFEK LAYAR PENUH)
        ========================================= */
     .lab-scene { position: relative; width: 100px; height: 120px; margin-bottom: 20px; display: flex; justify-content: center; align-items: flex-end; }
     
+    /* Flash Screen saat pecah */
+    .screen-flash { position: fixed; inset: 0; background: #00f0ff; opacity: 0; z-index: 9999; pointer-events: none; animation: screenFlashAnim 3s forwards; }
+    @keyframes screenFlashAnim { 0%, 34% { opacity: 0; } 35% { opacity: 0.6; } 38% { opacity: 0; } 100% { opacity: 0; } }
+
+    /* Retakan Kaca (Cracks) */
+    .crack-overlay { position: fixed; inset: 0; background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Lightning_PNG_Image.png/240px-Lightning_PNG_Image.png'); background-size: cover; background-position: center; opacity: 0; z-index: 9998; pointer-events: none; filter: contrast(200%) brightness(200%) hue-rotate(150deg); mix-blend-mode: screen; animation: crackAnim 3s forwards; }
+    @keyframes crackAnim { 0%, 34% { opacity: 0; transform: scale(1.2); } 35% { opacity: 0.8; transform: scale(1); } 100% { opacity: 0; transform: scale(1.1); } }
+
     /* Wadah Tabung */
     .glass-tube { position: absolute; bottom: 0; width: 34px; height: 85px; border: 2px solid rgba(0, 240, 255, 0.6); border-top: none; border-radius: 0 0 17px 17px; background: rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.2), 0 0 15px rgba(0,240,255,0.3); z-index: 2; animation: throwAndShatter 3s forwards; }
     .glass-tube::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 38px; height: 4px; background: rgba(0, 240, 255, 0.8); border-radius: 5px; box-shadow: 0 0 10px #00f0ff; }
-    
-    /* Cairan di dalam tabung */
     .tube-liquid { position: absolute; bottom: 0; width: 100%; height: 65%; background: linear-gradient(to top, #00f0ff, #1e90ff); opacity: 0.9; border-radius: 0 0 15px 15px; animation: liquidSlosh 3s forwards; }
     
-    /* Efek Ledakan (Splash) */
+    /* Ledakan Cairan (Splash) */
     .splash-burst { position: absolute; width: 150px; height: 150px; background: radial-gradient(circle, rgba(0,240,255,0.9) 0%, rgba(0,240,255,0) 70%); border-radius: 50%; opacity: 0; z-index: 1; animation: splashBurst 3s forwards; top: 15%; }
-    
-    /* Pecahan Kaca (Shards) */
-    .shard { position: absolute; width: 10px; height: 15px; background: rgba(0, 240, 255, 0.8); border: 1px solid #fff; opacity: 0; z-index: 3; box-shadow: 0 0 10px #00f0ff; }
-    .shard:nth-child(2) { clip-path: polygon(50% 0%, 100% 100%, 0% 100%); }
-    .shard:nth-child(3) { clip-path: polygon(0% 0%, 100% 50%, 0% 100%); }
-    .shard:nth-child(4) { clip-path: polygon(50% 0%, 100% 80%, 0% 100%); }
+    @keyframes splashBurst { 0%, 34% { opacity: 0; transform: scale(0.2); } 36% { opacity: 1; transform: scale(3); } 100% { opacity: 0; transform: scale(4); } }
 
-    /* Tetesan Cairan (Droplets) */
-    .droplet { position: absolute; width: 6px; height: 10px; background: #00f0ff; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; opacity: 0; z-index: 3; box-shadow: 0 0 8px #00f0ff; }
-    .droplet:nth-child(5) { left: 20%; }
-    .droplet:nth-child(6) { left: 50%; }
-    .droplet:nth-child(7) { left: 80%; }
-    .droplet:nth-child(8) { left: 40%; }
-
-    /* Keyframes Animasi Tabung */
     @keyframes throwAndShatter {
       0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
       25% { transform: translateY(0px) rotate(45deg); opacity: 1; }
       35% { transform: translateY(10px) rotate(60deg) scale(1.1); opacity: 1; border-color: #ff0055; box-shadow: 0 0 40px #ff0055; }
-      36%, 100% { transform: translateY(15px) rotate(70deg) scale(0); opacity: 0; } /* Hancur menghilang */
+      36%, 100% { transform: translateY(15px) rotate(70deg) scale(0); opacity: 0; }
     }
-
     @keyframes liquidSlosh {
-      0% { transform: skewX(0deg); }
-      20% { transform: skewX(-10deg); }
-      24% { transform: skewX(10deg); }
-      28% { transform: skewX(-5deg); }
-      32% { transform: skewX(5deg); }
-      36%, 100% { opacity: 1; }
-    }
-
-    /* Keyframes Pecahan & Ledakan */
-    @keyframes splashBurst {
-      0%, 34% { opacity: 0; transform: scale(0.2); }
-      36% { opacity: 1; transform: scale(1.5); } /* Ledakan cairan */
-      100% { opacity: 0; transform: scale(2.5); }
-    }
-
-    @keyframes shardFly1 { 0%, 35% { opacity: 0; transform: translate(0,0) rotate(0deg); } 36% { opacity: 1; transform: translate(-40px, -30px) rotate(45deg); } 60% { opacity: 1; transform: translate(-60px, 20px) rotate(90deg); } 100% { opacity: 0; transform: translate(-80px, 50px) rotate(180deg); } }
-    @keyframes shardFly2 { 0%, 35% { opacity: 0; transform: translate(0,0) rotate(0deg); } 36% { opacity: 1; transform: translate(40px, -40px) rotate(-45deg); } 60% { opacity: 1; transform: translate(70px, 10px) rotate(-90deg); } 100% { opacity: 0; transform: translate(90px, 40px) rotate(-180deg); } }
-    @keyframes shardFly3 { 0%, 35% { opacity: 0; transform: translate(0,0) rotate(0deg); } 36% { opacity: 1; transform: translate(10px, -60px) rotate(90deg); } 60% { opacity: 1; transform: translate(-20px, -40px) rotate(180deg); } 100% { opacity: 0; transform: translate(-40px, 80px) rotate(360deg); } }
-
-    /* Keyframes Tetesan Jatuh */
-    @keyframes dropFall {
-      0%, 35% { opacity: 0; transform: translateY(-20px) scale(0.5); }
-      36% { opacity: 1; transform: translateY(0px) scale(1); }
-      60% { opacity: 1; transform: translateY(30px); }
-      100% { opacity: 0; transform: translateY(80px) scale(1.5); }
+      0% { transform: skewX(0deg); } 20% { transform: skewX(-10deg); } 24% { transform: skewX(10deg); } 28% { transform: skewX(-5deg); } 32% { transform: skewX(5deg); } 36%, 100% { opacity: 1; }
     }
 
     /* Hacker Loading Text */
@@ -179,6 +147,10 @@
 
   <!-- PRELOADER INTERAKTIF -->
   <div id="preloader">
+    <!-- Efek Pecah Menutupi Layar -->
+    <div class="screen-flash"></div>
+    <div class="crack-overlay"></div>
+
     <div id="spotlight"></div>
     <div class="preloader-stars" id="preloader-stars"></div>
     <div class="lightning-flash"></div>
@@ -186,19 +158,9 @@
 
     <div id="loading-phase">
       
-      <!-- ANIMASI TABUNG PECAH V2 -->
+      <!-- ANIMASI TABUNG PECAH -->
       <div class="lab-scene">
-        <!-- Efek Ledakan & Tetesan -->
         <div class="splash-burst"></div>
-        <div class="shard" style="animation: shardFly1 3s forwards;"></div>
-        <div class="shard" style="animation: shardFly2 3s forwards;"></div>
-        <div class="shard" style="animation: shardFly3 3s forwards;"></div>
-        <div class="droplet" style="animation: dropFall 3s forwards 0.1s;"></div>
-        <div class="droplet" style="animation: dropFall 3s forwards 0.2s;"></div>
-        <div class="droplet" style="animation: dropFall 3s forwards 0.3s;"></div>
-        <div class="droplet" style="animation: dropFall 3s forwards 0.4s;"></div>
-
-        <!-- Tabung Utama -->
         <div class="glass-tube">
           <div class="tube-liquid"></div>
         </div>
@@ -346,16 +308,26 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- FOOTER (DENGAN USERNAME IG & TIKTOK) -->
   <footer class="glass mt-12 py-10 px-6 relative z-10">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-      <div class="text-center md:text-left">
+    <div class="max-w-6xl mx-auto flex flex-col items-center justify-center gap-6">
+      <div class="text-center">
         <p class="text-slate-400 text-sm mb-2">Ikuti Media Sosial Kami:</p>
-        <p class="text-slate-500 text-xs">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
+        <p class="text-slate-500 text-xs mb-6">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
       </div>
-      <div class="flex gap-4 w-full max-w-xs justify-center md:justify-end">
-        <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center justify-center p-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-        <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center justify-center p-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg></a>
+      
+      <div class="flex flex-col md:flex-row gap-6 w-full justify-center items-center">
+        <!-- Tombol Instagram -->
+        <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          <span class="font-semibold text-sm">@d4tlm.stikesnas26</span>
+        </a>
+        
+        <!-- Tombol TikTok -->
+        <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+          <span class="font-semibold text-sm">@d4tlm_stikesnas26</span>
+        </a>
       </div>
     </div>
   </footer>

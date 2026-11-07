@@ -282,7 +282,7 @@
   </footer>
 
   <script type="module">
-    // --- LOGIKA PRELOADER ---
+    // --- LOGIKA PRELOADER (FIX) ---
     let progress = 0;
     const interval = setInterval(() => {
       progress += Math.floor(Math.random() * 10) + 5;
@@ -290,24 +290,18 @@
         progress = 100;
         clearInterval(interval);
         
-        // Sembunyikan loading bar, munculkan teks welcome
         setTimeout(() => {
           document.getElementById('loading-wrapper').style.display = 'none';
-          const welcomeText = document.getElementById('welcome-text');
-          welcomeText.style.opacity = '1';
+          document.getElementById('welcome-text').style.opacity = '1';
           
-          // Hilangkan seluruh preloader setelah 2 detik
           setTimeout(() => {
             document.getElementById('preloader').classList.add('hidden');
-            document.body.style.overflow = 'auto'; // Bisa di-scroll lagi
           }, 2000);
         }, 500);
       }
       document.getElementById('progress-bar').style.width = progress + '%';
       document.getElementById('progress-percent').innerText = progress + '%';
     }, 150);
-
-    document.body.style.overflow = 'hidden'; // Lock scroll saat loading
 
     // --- BACKGROUND PARTICLES ---
     particlesJS("particles-js", {
@@ -443,4 +437,36 @@
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           const li = document.createElement('li');
-          li.className = 'bg-slate-900/50 rounded-xl p-4
+          li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
+          li.innerHTML = `<div class="flex justify-between items-start mb-1"><p class="font-semibold text-white">${data.name}</p></div><p class="text-sm text-slate-300">${data.message}</p>`;
+          list.appendChild(li);
+        });
+      } catch (error) {
+        list.innerHTML = '<li class="text-center text-red-500 text-sm py-4">Gagal memuat data.</li>';
+      }
+    }
+
+    document.getElementById('guestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      const oldText = btn.textContent;
+      btn.textContent = 'Mengirim...';
+      btn.disabled = true;
+      const name = e.target.querySelector('input').value;
+      const message = e.target.querySelector('textarea').value;
+      try {
+        await addDoc(collection(db, "guestbook"), { name, message, created_at: new Date() });
+        e.target.reset();
+        await fetchData();
+      } catch (err) {
+        alert('Gagal kirim: ' + err.message);
+      } finally {
+        btn.textContent = oldText;
+        btn.disabled = false;
+      }
+    });
+
+    fetchData();
+  </script>
+</body>
+</html>

@@ -31,24 +31,26 @@
     .cursor-hover .cursor-outer { width: 50px; height: 50px; background-color: rgba(0, 240, 255, 0.1); border-color: #ffffff; }
 
     /* =========================================
-       SCROLL PROGRESS BAR (DIPERJELAS)
+       SCROLL PROGRESS BAR (PUTIH & GLOW TEBAL)
        ========================================= */
     #scroll-progress-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 6px; /* Dipertebal */
-      background: rgba(15, 23, 42, 0.5); /* Warna background garis */
+      height: 6px; /* Lebar garis */
+      background: rgba(15, 23, 42, 0.5); /* Background garis transparan */
       z-index: 999999;
     }
 
     #scroll-progress {
       height: 100%;
-      background: linear-gradient(to right, #00f0ff, #1e90ff);
+      /* Warna diganti jadi PUTIH */
+      background: #ffffff; 
       width: 0%;
       position: relative;
-      box-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff; /* Glow lebih tebal */
+      /* Glow Cyan tebal biar kelihatan */
+      box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 30px #1e90ff; 
       transition: width 0.1s ease-out;
     }
 
@@ -56,14 +58,14 @@
     #scroll-progress::after {
       content: '';
       position: absolute;
-      right: -5px; /* Biar titiknya pas di ujung */
+      right: -6px; /* Biar titiknya pas di ujung */
       top: 50%;
       transform: translateY(-50%);
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       background-color: #ffffff;
       border-radius: 50%;
-      box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+      box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 30px #00f0ff;
     }
 
     /* =========================================
@@ -155,7 +157,7 @@
 </head>
 <body>
 
-  <!-- SCROLL PROGRESS BAR (DIPERJELAS) -->
+  <!-- SCROLL PROGRESS BAR (PUTIH) -->
   <div id="scroll-progress-container">
     <div id="scroll-progress"></div>
   </div>

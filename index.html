@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>D-IV TLM STIKES Nasional Surakarta Angkatan 2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Particles.js -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   
   <script>
@@ -20,11 +21,22 @@
   <style>
     html { scroll-behavior: smooth; }
     
-    /* FONT UTAMA WEBSITE (SANS-SERIF) */
-    body { background-color: #0f172a; color: #e2e8f0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; overflow-x: hidden; }
+    /* FONT UTAMA WEBSITE */
+    body { background-color: #0f172a; color: #e2e8f0; font-family: ui-sans-serif, system-ui, sans-serif; overflow-x: hidden; }
     
-    /* Background Particles Utama */
-    #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
+    /* Background Particles Utama (DIPERBAIKI) */
+    #particles-js { 
+      position: fixed; 
+      width: 100%; 
+      height: 100%; 
+      top: 0; 
+      left: 0; 
+      z-index: 0; /* Dinaikkan agar tidak tertutup background body */
+      pointer-events: none; /* Biar ga ngehalangin klik tombol */
+    }
+    
+    /* Konten Web Dinaikkan z-index nya di atas partikel */
+    #main-content-wrapper { position: relative; z-index: 10; }
 
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
@@ -46,69 +58,25 @@
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
     /* =========================================
-       PRELOADER: VIDEO PETIR & HACKER STYLE
+       PRELOADER
        ========================================= */
-    #preloader { 
-      position: fixed; 
-      inset: 0; 
-      background-color: #0f172a; /* Warna biru gelap */
-      z-index: 99999; 
-      display: flex; 
-      flex-direction: column; 
-      justify-content: center; 
-      align-items: center; 
-      transition: opacity 1s ease, visibility 1s ease; 
-      overflow: hidden; 
-      cursor: crosshair; 
-      touch-action: none; 
-    }
-
-    /* Video Background Petir */
-    .bg-video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      transform: translateX(-50%) translateY(-50%);
-      z-index: -2;
-      object-fit: cover;
-      opacity: 0.6; /* Sedikit transparan agar teks terbaca */
-    }
-
-    /* Overlay Gelap */
-    .video-overlay {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle, rgba(15,23,42,0.3) 0%, rgba(15,23,42,0.8) 100%);
-      z-index: -1;
-    }
-
-    /* Efek Senter (Spotlight) */
+    #preloader { position: fixed; inset: 0; background-color: #0f172a; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; overflow: hidden; cursor: crosshair; touch-action: none; }
+    .bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translateX(-50%) translateY(-50%); z-index: -2; object-fit: cover; opacity: 0.6; }
+    .video-overlay { position: absolute; inset: 0; background: radial-gradient(circle, rgba(15,23,42,0.3) 0%, rgba(15,23,42,0.8) 100%); z-index: -1; }
     #spotlight { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 60%); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); z-index: 1; transition: opacity 0.3s ease; }
-
     #loading-phase { display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10; width: 100%; max-width: 350px; }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
-    
-    /* Hacker Loading Text */
     .hacker-text-container { width: 100%; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; padding: 15px; font-family: 'Courier New', Courier, monospace; color: #00f0ff; font-size: 0.85rem; box-shadow: 0 0 20px rgba(0,240,255,0.2); position: relative; overflow: hidden; margin-bottom: 15px; backdrop-filter: blur(5px); }
     .hacker-text-container::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none; }
     .hacker-line { margin-bottom: 5px; line-height: 1.2; white-space: nowrap; overflow: hidden; }
     .hacker-text-blur { color: rgba(0, 240, 255, 0.3); }
     .cursor-blink { display: inline-block; width: 8px; height: 14px; background-color: #00f0ff; margin-left: 3px; animation: blink 0.8s infinite; vertical-align: middle; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-    /* Progress Bar & Teks Bawah */
     .loading-track { width: 100%; height: 4px; background-color: rgba(255, 255, 255, 0.15); position: relative; border-radius: 3px; margin-bottom: 10px; }
     .loading-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: #00f0ff; border-radius: 3px; box-shadow: 0 0 15px rgba(0,240,255,0.8); transition: width 0.1s linear; }
-    
     .loading-text-wrapper { display: flex; justify-content: space-between; width: 100%; font-size: 0.85rem; color: #d1d5db; font-family: monospace; }
     .loading-label { margin-left: 5px; color: #00f0ff; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; text-shadow: 0 0 8px rgba(0,240,255,0.8); }
-
-    /* Welcome Text */
     #welcome-phase { position: absolute; text-align: center; opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; pointer-events: none; padding: 0 20px; width: 100%; z-index: 10; }
     #welcome-phase.show { opacity: 1; transform: translateY(0); }
     #welcome-phase .line-1 { display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5); margin-bottom: 10px; }
@@ -132,7 +100,6 @@
     .zoomable { cursor: pointer; transition: transform 0.2s; }
     .zoomable:hover { transform: scale(1.05); }
 
-    /* Optimasi HP */
     @media (max-width: 768px) {
       .parallax-box { transform: none !important; }
       #hero-content { transform: none !important; opacity: 1 !important; }
@@ -141,34 +108,20 @@
 </head>
 <body>
 
-  <!-- =========================================
-       PRELOADER INTERAKTIF (VIDEO PETIR)
-       ========================================= -->
+  <!-- PRELOADER INTERAKTIF -->
   <div id="preloader">
-    
-    <!-- 1. VIDEO PETIR DARI RAW.GITHACK -->
     <video class="bg-video" autoplay loop muted playsinline>
       <source src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/video-petir.mp4" type="video/mp4">
-      Browser Anda tidak mendukung video tag.
     </video>
-
-    <!-- 2. Overlay Gelap -->
     <div class="video-overlay"></div>
-
-    <!-- 3. Efek Senter (Spotlight) -->
     <div id="spotlight"></div>
 
-    <!-- 4. Konten Loading -->
     <div id="loading-phase">
-      
-      <!-- Hacker Loading Text -->
       <div class="hacker-text-container">
         <div class="hacker-line hacker-text-blur" id="hacker-line-1">> INITIALIZING SYSTEM...</div>
         <div class="hacker-line hacker-text-blur" id="hacker-line-2">> LOADING LAB DATA...</div>
         <div class="hacker-line" id="hacker-line-3">> <span id="hacker-fake-code">0x00FF</span><span class="cursor-blink"></span></div>
       </div>
-      
-      <!-- Progress Bar -->
       <div class="loading-track">
         <div class="loading-progress" id="progress-bar"></div>
       </div>
@@ -176,159 +129,160 @@
         <span class="loading-label">LOADING</span>
         <span class="loading-percentage" id="progress-percent">0%</span>
       </div>
-
     </div>
 
-    <!-- 5. Teks Welcome -->
     <div id="welcome-phase">
       <span class="line-1">Welcome to</span>
       <span class="line-2">D-IV Teknologi Laboratorium Medis</span>
     </div>
   </div>
 
+  <!-- WADAH PARTIKEL BACKGROUND UTAMA -->
   <div id="particles-js"></div>
 
-  <div id="lightbox" onclick="this.style.display='none'">
-    <img id="lightbox-img" src="" alt="Zoomed Image">
-  </div>
+  <!-- BUNGKUS SEMUA KONTEN AGAR DI ATAS PARTIKEL -->
+  <div id="main-content-wrapper">
 
-  <!-- NAVBAR -->
-  <nav class="fixed top-0 inset-x-0 z-50 glass">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-10 w-10 object-contain">
-        <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
-      </div>
-      <div class="hidden md:flex gap-6 text-sm">
-        <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
-        <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
-        <a href="#gallery" class="hover:text-neon transition">Dokumentasi</a>
-        <a href="#guestbook" class="hover:text-neon transition">Buku Tamu</a>
-      </div>
-      <button id="menu-btn" class="md:hidden text-slate-300 hover:text-neon focus:outline-none">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
+    <div id="lightbox" onclick="this.style.display='none'">
+      <img id="lightbox-img" src="" alt="Zoomed Image">
     </div>
-    <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-700 absolute w-full left-0">
-      <div class="flex flex-col px-6 py-4 space-y-4 text-sm">
-        <a href="#about" class="hover:text-neon transition" onclick="closeMenu()">Tentang Kami</a>
-        <a href="#directory" class="hover:text-neon transition" onclick="closeMenu()">Struktur & Anggota</a>
-        <a href="#gallery" class="hover:text-neon transition" onclick="closeMenu()">Dokumentasi</a>
-        <a href="#guestbook" class="hover:text-neon transition" onclick="closeMenu()">Buku Tamu</a>
-      </div>
-    </div>
-  </nav>
 
-  <!-- HERO -->
-  <section class="relative min-h-screen flex items-center justify-center px-6 pt-24" id="hero-section">
-    <div class="reveal text-center max-w-3xl" id="hero-content">
-      <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
-      <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
-      <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
-      <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition">Jelajahi Kelas</a>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about" class="py-24 px-6 relative z-10">
-    <div class="reveal parallax-box max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12">
-      <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
-      <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">JUMLAH MAHASISWA</p><p class="text-white text-2xl font-bold">24</p></div>
-        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">PRODI</p><p class="text-white text-2xl font-bold">D-IV TLM</p></div>
-        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">INSTITUSI</p><p class="text-white text-2xl font-bold">STIKES Nasional</p></div>
-        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">ANGKATAN</p><p class="text-white text-2xl font-bold">2026</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DIRECTORY -->
-  <section id="directory" class="py-24 px-6 relative z-10">
-    <div class="max-w-6xl mx-auto">
-      <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-16">Struktur & Anggota</h2>
-      <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Pengurus Kelas</h3>
-      <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24"></div>
-      <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Anggota Kelas</h3>
-      <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
-    </div>
-  </section>
-
-  <!-- DOKUMENTASI -->
-  <section id="gallery" class="py-24 px-6 relative z-10">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi Kelas</h2>
-      <div class="folder-container reveal" onclick="this.classList.toggle('folder-open')">
-        <div class="folder-content">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 inset-x-0 z-50 glass">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-10 w-10 object-contain">
+          <span class="font-bold text-neon neon-text tracking-wide">D-IV TLM 2026</span>
         </div>
-        <div class="folder-tab"></div>
-        <div class="folder-body">
-          <div class="text-4xl font-bold text-white">3 <span class="text-lg font-normal text-slate-400">Photos</span></div>
-          <div class="bg-slate-700/50 p-3 rounded-xl border border-slate-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" /></svg>
+        <div class="hidden md:flex gap-6 text-sm">
+          <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
+          <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
+          <a href="#gallery" class="hover:text-neon transition">Dokumentasi</a>
+          <a href="#guestbook" class="hover:text-neon transition">Buku Tamu</a>
+        </div>
+        <button id="menu-btn" class="md:hidden text-slate-300 hover:text-neon focus:outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-700 absolute w-full left-0">
+        <div class="flex flex-col px-6 py-4 space-y-4 text-sm">
+          <a href="#about" class="hover:text-neon transition" onclick="closeMenu()">Tentang Kami</a>
+          <a href="#directory" class="hover:text-neon transition" onclick="closeMenu()">Struktur & Anggota</a>
+          <a href="#gallery" class="hover:text-neon transition" onclick="closeMenu()">Dokumentasi</a>
+          <a href="#guestbook" class="hover:text-neon transition" onclick="closeMenu()">Buku Tamu</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="relative min-h-screen flex items-center justify-center px-6 pt-24" id="hero-section">
+      <div class="reveal text-center max-w-3xl" id="hero-content">
+        <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
+        <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
+        <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition">Jelajahi Kelas</a>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="py-24 px-6 relative z-10">
+      <div class="reveal parallax-box max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12">
+        <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
+        <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">JUMLAH MAHASISWA</p><p class="text-white text-2xl font-bold">24</p></div>
+          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">PRODI</p><p class="text-white text-2xl font-bold">D-IV TLM</p></div>
+          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">INSTITUSI</p><p class="text-white text-2xl font-bold">STIKES Nasional</p></div>
+          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll"><p class="text-slate-400 text-sm mb-1">ANGKATAN</p><p class="text-white text-2xl font-bold">2026</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIRECTORY -->
+    <section id="directory" class="py-24 px-6 relative z-10">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-16">Struktur & Anggota</h2>
+        <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Pengurus Kelas</h3>
+        <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24"></div>
+        <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Anggota Kelas</h3>
+        <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- DOKUMENTASI -->
+    <section id="gallery" class="py-24 px-6 relative z-10">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi Kelas</h2>
+        <div class="folder-container reveal" onclick="this.classList.toggle('folder-open')">
+          <div class="folder-content">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3" class="folder-photo" onclick="event.stopPropagation(); zoomImage(this.src)">
+          </div>
+          <div class="folder-tab"></div>
+          <div class="folder-body">
+            <div class="text-4xl font-bold text-white">3 <span class="text-lg font-normal text-slate-400">Photos</span></div>
+            <div class="bg-slate-700/50 p-3 rounded-xl border border-slate-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" /></svg>
+            </div>
           </div>
         </div>
+        <p class="text-center text-slate-500 text-sm mt-4">Klik folder untuk membuka dokumentasi</p>
       </div>
-      <p class="text-center text-slate-500 text-sm mt-4">Klik folder untuk membuka dokumentasi</p>
-    </div>
-  </section>
+    </section>
 
-  <!-- BUKU TAMU -->
-  <section id="guestbook" class="py-24 px-6 relative z-10">
-    <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-      <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
-        <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
-        <form id="contactForm" class="space-y-4">
-          <input type="text" placeholder="Nama Lengkap" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
-          <textarea rows="4" placeholder="Pesan Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
-          <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold hover:shadow-neon transition">Kirim Pesan</button>
-        </form>
-      </div>
+    <!-- BUKU TAMU -->
+    <section id="guestbook" class="py-24 px-6 relative z-10">
+      <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+        <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
+          <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
+          <form id="contactForm" class="space-y-4">
+            <input type="text" placeholder="Nama Lengkap" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
+            <textarea rows="4" placeholder="Pesan Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
+            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold hover:shadow-neon transition">Kirim Pesan</button>
+          </form>
+        </div>
 
-      <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
-        <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
-        <form id="guestForm" class="space-y-4 mb-6">
-          <input type="text" placeholder="Nama Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
-          <textarea rows="2" placeholder="Tulis ucapan..." required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
-          <button type="submit" class="w-full py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 hover:shadow-neon transition">Tambahkan Ucapan</button>
-        </form>
-        <ul id="guestList" class="space-y-3 max-h-64 overflow-y-auto pr-2">
-          <li class="text-center text-slate-500 text-sm py-4">Loading data...</li>
-        </ul>
+        <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
+          <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
+          <form id="guestForm" class="space-y-4 mb-6">
+            <input type="text" placeholder="Nama Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
+            <textarea rows="2" placeholder="Tulis ucapan..." required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
+            <button type="submit" class="w-full py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 hover:shadow-neon transition">Tambahkan Ucapan</button>
+          </form>
+          <ul id="guestList" class="space-y-3 max-h-64 overflow-y-auto pr-2">
+            <li class="text-center text-slate-500 text-sm py-4">Loading data...</li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FOOTER -->
-  <footer class="glass mt-12 py-10 px-6 relative z-10">
-    <div class="max-w-6xl mx-auto flex flex-col items-center justify-center gap-6">
-      <div class="text-center">
-        <p class="text-slate-400 text-sm mb-2">Ikuti Media Sosial Kami:</p>
-        <p class="text-slate-500 text-xs mb-6">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
-      </div>
-      
-      <div class="flex flex-col md:flex-row gap-6 w-full justify-center items-center">
-        <!-- Tombol Instagram -->
-        <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-          <span class="font-semibold text-sm">@d4tlm.stikesnas26</span>
-        </a>
+    <!-- FOOTER -->
+    <footer class="glass mt-12 py-10 px-6 relative z-10">
+      <div class="max-w-6xl mx-auto flex flex-col items-center justify-center gap-6">
+        <div class="text-center">
+          <p class="text-slate-400 text-sm mb-2">Ikuti Media Sosial Kami:</p>
+          <p class="text-slate-500 text-xs mb-6">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
+        </div>
         
-        <!-- Tombol TikTok -->
-        <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
-          <span class="font-semibold text-sm">@d4tlm_stikesnas26</span>
-        </a>
+        <div class="flex flex-col md:flex-row gap-6 w-full justify-center items-center">
+          <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            <span class="font-semibold text-sm">@d4tlm.stikesnas26</span>
+          </a>
+          
+          <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+            <span class="font-semibold text-sm">@d4tlm_stikesnas26</span>
+          </a>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  <!-- AUDIO UNTUK SUARA PETIR -->
+  </div> <!-- Penutup main-content-wrapper -->
+
   <audio id="thunder-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c497a88d0.mp3?filename=thunder-105237.mp3" preload="auto"></audio>
 
   <script type="module">
@@ -360,9 +314,7 @@
 
     document.body.style.overflow = 'hidden'; 
 
-    // =========================================
     // FITUR AUDIO PETIR
-    // =========================================
     let audioPlayed = false;
     function playThunder() {
       if (!audioPlayed && thunderSound) {
@@ -385,9 +337,7 @@
       }
     }, 4000); 
 
-    // =========================================
     // FITUR HACKER TEXT ANIMATION
-    // =========================================
     const fakeCodeEl = document.getElementById('hacker-fake-code');
     const hexChars = "0123456789ABCDEF";
     
@@ -399,9 +349,7 @@
       fakeCodeEl.innerText = randomHex;
     }, 50);
 
-    // =========================================
-    // FITUR INTERAKSI MOUSE (SPOTLIGHT)
-    // =========================================
+    // FITUR INTERAKSI MOUSE (SPOTLIGHT PRELOADER)
     function moveSpotlight(clientX, clientY) {
       spotlight.style.left = clientX + 'px';
       spotlight.style.top = clientY + 'px';
@@ -416,9 +364,7 @@
     preloader.addEventListener('mouseleave', () => { spotlight.style.opacity = '0'; });
     preloader.addEventListener('mouseenter', () => { spotlight.style.opacity = '1'; });
 
-    // =========================================
     // PROSES LOADING BERJALAN
-    // =========================================
     const interval = setInterval(() => {
       progress += Math.floor(Math.random() * 4) + 1;
       
@@ -441,22 +387,71 @@
     }, 50);
 
     // =========================================
-    // BACKGROUND PARTICLES
+    // 2. KONFIGURASI PARTIKEL INTERAKTIF (FIX SENSITIF)
     // =========================================
     particlesJS("particles-js", {
       "particles": {
-        "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
-        "color": { "value": "#00f0ff" },
-        "shape": { "type": "circle" },
-        "opacity": { "value": 0.5, "random": false, "anim": { "enable": false } },
-        "size": { "value": 3, "random": true, "anim": { "enable": false } },
-        "line_linked": { "enable": true, "distance": 150, "color": "#1e90ff", "opacity": 0.4, "width": 1 },
-        "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+        "number": { 
+          "value": 100, // Partikel diperbanyak biar rame
+          "density": { "enable": true, "value_area": 800 } 
+        },
+        "color": { 
+          "value": ["#00f0ff", "#1e90ff", "#ffffff"] // Variasi warna
+        },
+        "shape": { 
+          "type": "circle" 
+        },
+        "opacity": { 
+          "value": 0.8, 
+          "random": true, 
+          "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } 
+        },
+        "size": { 
+          "value": 3, 
+          "random": true, 
+          "anim": { "enable": true, "speed": 2, "size_min": 0.1, "sync": false } 
+        },
+        "line_linked": { 
+          "enable": true, 
+          "distance": 150, 
+          "color": "#1e90ff", 
+          "opacity": 0.5, 
+          "width": 1.5 // Garis dipertebal
+        },
+        "move": { 
+          "enable": true, 
+          "speed": 2, 
+          "direction": "none", 
+          "random": false, 
+          "straight": false, 
+          "out_mode": "out", 
+          "bounce": false 
+        }
       },
       "interactivity": {
-        "detect_on": "canvas",
-        "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } },
-        "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } } }
+        "detect_on": "canvas", // Deteksi di canvas
+        "events": {
+          "onhover": { 
+            "enable": true, 
+            "mode": "grab" 
+          },
+          "onclick": { 
+            "enable": true, 
+            "mode": "push" 
+          },
+          "resize": true
+        },
+        "modes": {
+          "grab": { 
+            "distance": 250, // Jarak tangkapan kursor diperjauh (biar efeknya berasa)
+            "line_linked": { 
+              "opacity": 1 
+            } 
+          },
+          "push": { 
+            "particles_nb": 5 
+          }
+        }
       },
       "retina_detect": true
     });
@@ -488,9 +483,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // =========================================
     // ANIMASI REVEAL BERULANG
-    // =========================================
     const revealElements = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -503,9 +496,7 @@
     }, { threshold: 0.15 });
     revealElements.forEach(el => revealObserver.observe(el));
 
-    // =========================================
     // LOGIKA EFEK PARALLAX SCROLL
-    // =========================================
     let isTicking = false;
     let lastScrollY = window.scrollY;
 
@@ -536,9 +527,7 @@
       }
     }, { passive: true });
 
-    // =========================================
     // RENDER DATA PENGURUS & ANGGOTA
-    // =========================================
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
       { name: "Nur Azizah", role: "Sekretaris", nim: "13", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
@@ -601,9 +590,7 @@
       revealObserver.observe(card);
     }
 
-    // =========================================
     // FIREBASE BUKU TAMU
-    // =========================================
     async function fetchData() {
       const list = document.getElementById('guestList');
       list.innerHTML = ''; 

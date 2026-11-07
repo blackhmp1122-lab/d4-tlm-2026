@@ -46,7 +46,6 @@
     #preloader { 
       position: fixed; 
       inset: 0; 
-      /* Background biru gelap, bukan hitam polos */
       background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%, #020617 100%);
       z-index: 99999; 
       display: flex; 
@@ -75,7 +74,6 @@
     @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 0.6; } }
 
     /* --- EFEK PETIR CSS MURNI --- */
-    /* 1. Kilatan cahaya satu layar */
     .lightning-flash {
       position: absolute;
       inset: 0;
@@ -86,11 +84,10 @@
     }
     @keyframes flashAnim {
       0%, 92%, 96%, 100% { opacity: 0; }
-      93%, 95% { opacity: 0.4; } /* Kilatan terang */
+      93%, 95% { opacity: 0.4; }
       94% { opacity: 0; }
     }
 
-    /* 2. Bentuk petir bercabang */
     .lightning-bolt {
       position: absolute;
       top: 0;
@@ -104,7 +101,6 @@
       transform: translateX(-50%) rotate(15deg);
       animation: strikeAnim 4s infinite;
     }
-    /* Cabang petir ke kiri */
     .lightning-bolt::before {
       content: '';
       position: absolute;
@@ -117,7 +113,6 @@
       transform: rotate(-40deg);
       transform-origin: left center;
     }
-    /* Cabang petir ke kanan */
     .lightning-bolt::after {
       content: '';
       position: absolute;
@@ -204,27 +199,23 @@
       transform: translateY(0);
     }
     
-    /* Baris Pertama (Kuning/Cream dengan Glow) */
     #welcome-phase .line-1 {
       display: block;
       color: #fcebd5; 
       font-size: 2.2rem;
       font-weight: 700;
       letter-spacing: 2px;
-      /* Efek Glow Kuning/Cream */
       text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5);
       margin-bottom: 10px;
       font-family: sans-serif;
     }
     
-    /* Baris Kedua (Putih dengan Glow Biru/Cyan) */
     #welcome-phase .line-2 {
       display: block;
       color: #ffffff; 
       font-size: 3rem;
       font-weight: 900;
       letter-spacing: 1px;
-      /* Efek Glow Cyan/Neon */
       text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 25px rgba(0, 240, 255, 0.6), 0 0 40px rgba(30, 144, 255, 0.5);
       font-family: sans-serif;
     }
@@ -257,10 +248,7 @@
        ========================================= -->
   <div id="preloader">
     
-    <!-- Background Bintang -->
     <div class="preloader-stars"></div>
-
-    <!-- Efek Petir CSS Murni -->
     <div class="lightning-flash"></div>
     <div class="lightning-bolt"></div>
 
@@ -277,7 +265,7 @@
       </div>
     </div>
 
-    <!-- FASE 2: TEKS WELCOME (GLOW) -->
+    <!-- FASE 2: TEKS WELCOME -->
     <div id="welcome-phase">
       <span class="line-1">Welcome to</span>
       <span class="line-2">D-IV Teknologi Laboratorium Medis</span>
@@ -420,32 +408,28 @@
     const welcomePhase = document.getElementById('welcome-phase');
     const preloader = document.getElementById('preloader');
 
-    // Sembunyikan scroll saat preloader jalan
     document.body.style.overflow = 'hidden'; 
 
     const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 4) + 1; // Tambah 1-4%
+      progress += Math.floor(Math.random() * 4) + 1;
       
       if (progress >= 100) {
         progress = 100;
         clearInterval(interval);
         
-        // 1. Bar loading 100%, sembunyikan Fase 1
         setTimeout(() => {
           loadingPhase.classList.add('hide');
         }, 300);
         
-        // 2. Munculkan teks Welcome (Fase 2)
         setTimeout(() => {
           welcomePhase.classList.add('show');
         }, 800); 
         
-        // 3. Sembunyikan seluruh Preloader dan munculkan Website Utama
         setTimeout(() => {
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
-          document.body.style.overflow = 'auto'; // Bisa scroll lagi
-        }, 4500); // Teks Welcome tampil selama 3.7 detik sebelum hilang
+          document.body.style.overflow = 'auto';
+        }, 4500);
       }
       
       progressBar.style.width = progress + '%';
@@ -514,14 +498,14 @@
     }, { threshold: 0.15 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Render Pengurus
+    // Render Pengurus (NIM SUDAH DIREVISI)
     const committeeData = [
-      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "00000000", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
-      { name: "Nur Azizah", role: "Sekretaris", nim: "00000000", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
-      { name: "Viera Nada", role: "Bendahara 1", nim: "00000000", img: "https://ui-avatars.com/api/?name=Viera+Nada&background=0f172a&color=00f0ff&size=120&bold=true" },
-      { name: "Rizka Oktaviani", role: "Bendahara 2", nim: "00000000", img: "https://ui-avatars.com/api/?name=Rizka+Oktaviani&background=0f172a&color=00f0ff&size=120&bold=true" },
-      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "00000000", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Phuan.jpg" },
-      { name: "Trealyta", role: "Dokumentasi 2", nim: "00000000", img: "https://ui-avatars.com/api/?name=Trealyta&background=0f172a&color=00f0ff&size=120&bold=true" },
+      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 
+      { name: "Nur Azizah", role: "Sekretaris", nim: "13", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
+      { name: "Viera Nada", role: "Bendahara 1", nim: "22", img: "https://ui-avatars.com/api/?name=Viera+Nada&background=0f172a&color=00f0ff&size=120&bold=true" },
+      { name: "Rizka Oktaviani", role: "Bendahara 2", nim: "15", img: "https://ui-avatars.com/api/?name=Rizka+Oktaviani&background=0f172a&color=00f0ff&size=120&bold=true" },
+      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "14", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Phuan.jpg" },
+      { name: "Trealyta", role: "Dokumentasi 2", nim: "11", img: "https://ui-avatars.com/api/?name=Trealyta&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Veronica Laura", role: "Sarpras", nim: "21", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vero.jpg?raw=true" }
     ];
 

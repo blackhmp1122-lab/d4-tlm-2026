@@ -19,7 +19,7 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-    body { background-color: #0f172a; color: #e2e8f0; font-family: sans-serif; overflow-x: hidden; }
+    body { background-color: #0f172a; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; overflow-x: hidden; }
     
     /* Background Particles Utama */
     #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
@@ -44,7 +44,7 @@
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
     /* =========================================
-       PRELOADER INTERAKTIF + ANIMASI LAB
+       PRELOADER: HACKER STYLE & TABUNG PECAH
        ========================================= */
     #preloader { position: fixed; inset: 0; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%, #020617 100%); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; overflow: hidden; cursor: crosshair; touch-action: none; }
     #spotlight { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 60%); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); z-index: 1; transition: opacity 0.3s ease; }
@@ -59,43 +59,70 @@
     .lightning-bolt::after { content: ''; position: absolute; top: 60%; right: 0; width: 80px; height: 3px; background: #fff; box-shadow: 0 0 10px #00f0ff; transform: rotate(30deg); transform-origin: right center; }
     @keyframes strikeAnim { 0%, 90%, 96%, 100% { opacity: 0; transform: translateX(-50%) rotate(15deg) scaleY(0.5); } 91% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1); } 93% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1) scaleX(2); } 94% { opacity: 0.5; transform: translateX(-50%) rotate(15deg) scaleY(1); } }
 
-    #loading-phase { display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10; }
+    #loading-phase { display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10; width: 100%; max-width: 350px; }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
     
-    /* Container Loading */
-    .loading-container { width: 300px; display: flex; flex-direction: column; align-items: center; }
-    
     /* =========================================
-       ANIMASI TABUNG REAKSI (NOMOR 2)
+       ANIMASI TABUNG REAKSI PECAH (BARU)
        ========================================= */
-    .test-tube { position: relative; width: 30px; height: 80px; border: 2px solid #00f0ff; border-top: none; border-radius: 0 0 15px 15px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(0,240,255,0.3); overflow: hidden; background: rgba(0, 240, 255, 0.05); }
-    .test-tube::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 34px; height: 4px; background: #00f0ff; border-radius: 5px; box-shadow: 0 0 10px #00f0ff; }
-    .liquid { position: absolute; bottom: 0; width: 100%; height: 60%; background: linear-gradient(to top, #00f0ff, #1e90ff); opacity: 0.8; animation: slosh 2s infinite alternate ease-in-out; }
-    .bubble { position: absolute; bottom: 10px; background: rgba(255, 255, 255, 0.7); border-radius: 50%; animation: rise 2s infinite linear; }
-    .bubble:nth-child(2) { width: 4px; height: 4px; left: 5px; animation-duration: 1.5s; animation-delay: 0.2s; }
-    .bubble:nth-child(3) { width: 3px; height: 3px; left: 15px; animation-duration: 2s; animation-delay: 0.5s; }
-    .bubble:nth-child(4) { width: 5px; height: 5px; left: 10px; animation-duration: 1.8s; animation-delay: 1s; }
-    .bubble:nth-child(5) { width: 3px; height: 3px; left: 20px; animation-duration: 2.2s; animation-delay: 0.8s; }
+    .tube-smash-wrapper { position: relative; width: 100px; height: 120px; margin-bottom: 20px; display: flex; justify-content: center; align-items: flex-end; }
+    
+    /* Tabung Utama */
+    .smash-tube { position: absolute; bottom: 0; width: 30px; height: 80px; border: 2px solid #00f0ff; border-top: none; border-radius: 0 0 15px 15px; box-shadow: 0 0 15px rgba(0,240,255,0.5); background: rgba(0,240,255,0.1); animation: throwTube 3s forwards; z-index: 2; }
+    .smash-tube::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 34px; height: 4px; background: #00f0ff; border-radius: 5px; box-shadow: 0 0 10px #00f0ff; }
+    
+    /* Cairan di dalam tabung */
+    .smash-liquid { position: absolute; bottom: 0; width: 100%; height: 70%; background: linear-gradient(to top, #00f0ff, #1e90ff); opacity: 0.8; border-radius: 0 0 13px 13px; }
 
-    @keyframes slosh { 0% { transform: rotate(0deg); } 100% { transform: rotate(2deg); } }
-    @keyframes rise { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-40px); opacity: 0; } }
-    /* ========================================= */
+    /* Efek Cairan Nyiprat ke Layar */
+    .splash-effect { position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,240,255,0.8) 0%, rgba(0,240,255,0) 70%); border-radius: 50%; opacity: 0; animation: splashAnim 3s forwards; z-index: 1; top: 20%; }
+    .splash-droplet { position: absolute; width: 8px; height: 8px; background: #00f0ff; border-radius: 50%; opacity: 0; animation: dropAnim 3s forwards; z-index: 3; }
+    .splash-droplet:nth-child(2) { left: 20%; animation-delay: 1.2s; }
+    .splash-droplet:nth-child(3) { right: 20%; animation-delay: 1.3s; }
+    .splash-droplet:nth-child(4) { left: 40%; animation-delay: 1.4s; }
 
-    /* Teks Quotes (Typing Effect) */
-    .loading-quotes-wrapper { font-size: 0.85rem; color: #00f0ff; font-family: monospace; margin-bottom: 15px; height: 20px; text-shadow: 0 0 5px #00f0ff; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; }
-    .cursor-blink { display: inline-block; width: 8px; height: 14px; background-color: #00f0ff; margin-left: 3px; animation: blink 0.8s infinite; }
+    /* Keyframes Tabung Dilempar & Pecah */
+    @keyframes throwTube {
+      0% { transform: translateY(-100px) rotate(0deg) scale(1); opacity: 1; }
+      30% { transform: translateY(0px) rotate(45deg) scale(1); opacity: 1; }
+      40% { transform: translateY(10px) rotate(50deg) scale(0.9); opacity: 1; border-color: #ff0055; box-shadow: 0 0 30px #ff0055; } /* Warna merah tandanya pecah */
+      45% { transform: translateY(15px) rotate(60deg) scale(0.8); opacity: 0; } /* Hancur menghilang */
+      100% { transform: translateY(15px) rotate(60deg) scale(0.8); opacity: 0; }
+    }
+    
+    @keyframes splashAnim {
+      0%, 35% { opacity: 0; transform: scale(0.5); }
+      45% { opacity: 1; transform: scale(1.5); } /* Cairan meledak */
+      100% { opacity: 0; transform: scale(2); }
+    }
+
+    @keyframes dropAnim {
+      0%, 35% { opacity: 0; transform: translateY(0); }
+      45% { opacity: 1; transform: translateY(-20px); }
+      100% { opacity: 0; transform: translateY(-50px); }
+    }
+
+    /* =========================================
+       HACKER LOADING TEXT (BARU)
+       ========================================= */
+    .hacker-text-container { width: 100%; background: #000; border: 1px solid #00f0ff; padding: 15px; font-family: 'Courier New', Courier, monospace; color: #00f0ff; font-size: 0.85rem; box-shadow: 0 0 20px rgba(0,240,255,0.2); position: relative; overflow: hidden; margin-bottom: 15px; }
+    
+    /* Efek Garis Scanline di Monitor Hacker */
+    .hacker-text-container::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none; }
+    
+    .hacker-line { margin-bottom: 5px; line-height: 1.2; white-space: nowrap; overflow: hidden; }
+    .hacker-text-blur { color: rgba(0, 240, 255, 0.3); }
+    .cursor-blink { display: inline-block; width: 8px; height: 14px; background-color: #00f0ff; margin-left: 3px; animation: blink 0.8s infinite; vertical-align: middle; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
     /* Progress Bar */
     .loading-track { width: 100%; height: 4px; background-color: rgba(255, 255, 255, 0.15); position: relative; border-radius: 3px; margin-bottom: 10px; }
-    .loading-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: #fcebd5; border-radius: 3px; box-shadow: 0 0 10px rgba(252, 235, 213, 0.8); transition: width 0.1s linear; }
+    .loading-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: #00f0ff; border-radius: 3px; box-shadow: 0 0 15px rgba(0,240,255,0.8); transition: width 0.1s linear; }
     
     /* Teks Loading & Persen */
     .loading-text-wrapper { display: flex; justify-content: space-between; width: 100%; font-size: 0.85rem; color: #d1d5db; font-family: monospace; }
-    .loading-label { margin-left: 5px; }
+    .loading-label { margin-left: 5px; color: #00f0ff; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; text-shadow: 0 0 8px rgba(0,240,255,0.8); }
-    .glitching { animation: glitch 0.2s linear infinite; }
-    @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
 
     #welcome-phase { position: absolute; text-align: center; opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; pointer-events: none; padding: 0 20px; width: 100%; z-index: 10; }
     #welcome-phase.show { opacity: 1; transform: translateY(0); }
@@ -137,31 +164,34 @@
     <div class="lightning-bolt"></div>
 
     <div id="loading-phase">
-      <div class="loading-container">
-        
-        <!-- 1. ANIMASI TABUNG REAKSI -->
-        <div class="test-tube">
-          <div class="liquid"></div>
-          <div class="bubble"></div>
-          <div class="bubble"></div>
-          <div class="bubble"></div>
-          <div class="bubble"></div>
-        </div>
-
-        <!-- 2. TEKS QUOTES (TYPING EFFECT) -->
-        <div class="loading-quotes-wrapper">
-          <span id="quote-text"></span><span class="cursor-blink"></span>
-        </div>
-        
-        <!-- 3. PROGRESS BAR -->
-        <div class="loading-track">
-          <div class="loading-progress" id="progress-bar"></div>
-        </div>
-        <div class="loading-text-wrapper">
-          <span class="loading-label">Loading</span>
-          <span class="loading-percentage glitching" id="progress-percent">0%</span>
+      
+      <!-- 1. ANIMASI TABUNG REAKSI PECAH & NYIPRAT -->
+      <div class="tube-smash-wrapper">
+        <div class="splash-effect"></div>
+        <div class="splash-droplet"></div>
+        <div class="splash-droplet"></div>
+        <div class="splash-droplet"></div>
+        <div class="smash-tube">
+          <div class="smash-liquid"></div>
         </div>
       </div>
+
+      <!-- 2. HACKER LOADING TEXT -->
+      <div class="hacker-text-container">
+        <div class="hacker-line hacker-text-blur" id="hacker-line-1">> INITIALIZING SYSTEM...</div>
+        <div class="hacker-line hacker-text-blur" id="hacker-line-2">> LOADING LAB DATA...</div>
+        <div class="hacker-line" id="hacker-line-3">> <span id="hacker-fake-code">0x00FF</span><span class="cursor-blink"></span></div>
+      </div>
+      
+      <!-- 3. PROGRESS BAR -->
+      <div class="loading-track">
+        <div class="loading-progress" id="progress-bar"></div>
+      </div>
+      <div class="loading-text-wrapper">
+        <span class="loading-label">STATUS</span>
+        <span class="loading-percentage" id="progress-percent">0%</span>
+      </div>
+
     </div>
 
     <div id="welcome-phase">
@@ -302,7 +332,7 @@
     </div>
   </footer>
 
-  <!-- AUDIO UNTUK SUARA PETIR (Tersembunyi) -->
+  <!-- AUDIO UNTUK SUARA PETIR -->
   <audio id="thunder-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c497a88d0.mp3?filename=thunder-105237.mp3" preload="auto"></audio>
 
   <script type="module">
@@ -331,84 +361,49 @@
     const preloader = document.getElementById('preloader');
     const spotlight = document.getElementById('spotlight');
     const preloaderStars = document.getElementById('preloader-stars');
-    const quoteText = document.getElementById('quote-text');
     const thunderSound = document.getElementById('thunder-sound');
 
     document.body.style.overflow = 'hidden'; 
 
     // =========================================
-    // FITUR BARU 1: AUDIO PETIR (NOMOR 5)
+    // FITUR AUDIO PETIR
     // =========================================
-    // Browser memblokir autoplay audio. Jadi kita mainkan saat user pertama kali klik/sentuh layar.
     let audioPlayed = false;
     function playThunder() {
       if (!audioPlayed && thunderSound) {
-        thunderSound.volume = 0.5; // Atur volume (0.0 sampai 1.0)
+        thunderSound.volume = 0.5; 
         thunderSound.play().then(() => {
           audioPlayed = true;
         }).catch(e => {
-          console.log("Autoplay diblokir browser, menunggu interaksi user.");
+          console.log("Autoplay diblokir, nunggu interaksi.");
         });
       }
     }
 
-    // Mainkan suara saat layar di-klik atau disentuh
     document.addEventListener('click', playThunder, { once: true });
     document.addEventListener('touchstart', playThunder, { once: true });
 
-    // Mainkan suara tiap kali animasi petir muncul (setiap 4 detik)
-    // Kita sinkronkan dengan animasi CSS (strikeAnim 4s infinite)
     setInterval(() => {
       if (audioPlayed) {
-        thunderSound.currentTime = 0; // Reset audio ke awal
+        thunderSound.currentTime = 0;
         thunderSound.play().catch(e => {});
       }
-    }, 4000); // 4000ms = 4 detik
+    }, 4000); 
 
     // =========================================
-    // FITUR BARU 2: TYPING EFFECT (NOMOR 4)
+    // FITUR HACKER TEXT ANIMATION (BARU)
     // =========================================
-    const quotes = [
-      "Menyiapkan mikroskop...",
-      "Mengkalibrasi alat...",
-      "Menganalisis sampel...",
-      "Akurasi adalah kunci...",
-      "Sebentar lagi..."
-    ];
-    let quoteIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
+    const fakeCodeEl = document.getElementById('hacker-fake-code');
+    const hexChars = "0123456789ABCDEF";
     
-    function typeEffect() {
-      const currentQuote = quotes[quoteIndex];
-      
-      if (isDeleting) {
-        quoteText.textContent = currentQuote.substring(0, charIndex - 1);
-        charIndex--;
-      } else {
-        quoteText.textContent = currentQuote.substring(0, charIndex + 1);
-        charIndex++;
+    // Update teks hex acak setiap 50 milidetik biar keliatan sibuk
+    setInterval(() => {
+      let randomHex = "0x";
+      for (let i = 0; i < 4; i++) {
+        randomHex += hexChars[Math.floor(Math.random() * 16)];
       }
-
-      // Kecepatan ngetik dan hapus
-      let typeSpeed = isDeleting ? 30 : 80;
-
-      if (!isDeleting && charIndex === currentQuote.length) {
-        // Selesai ngetik, tahan sebentar sebelum dihapus
-        typeSpeed = 1500; 
-        isDeleting = true;
-      } else if (isDeleting && charIndex === 0) {
-        // Selesai hapus, lanjut ke kata berikutnya
-        isDeleting = false;
-        quoteIndex = (quoteIndex + 1) % quotes.length;
-        typeSpeed = 500; // Jeda sebelum ngetik kata baru
-      }
-
-      setTimeout(typeEffect, typeSpeed);
-    }
-    
-    // Mulai efek ngetik
-    setTimeout(typeEffect, 500);
+      fakeCodeEl.innerText = randomHex;
+    }, 50);
 
     // =========================================
     // FITUR INTERAKSI MOUSE

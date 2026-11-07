@@ -22,64 +22,17 @@
     html { scroll-behavior: smooth; }
     body { background-color: #0f172a; color: #e2e8f0; font-family: ui-sans-serif, system-ui, sans-serif; overflow-x: hidden; }
     
-    /* =========================================
-       1. CUSTOM CURSOR (KURSOR KHUSUS)
-       ========================================= */
-    /* Sembunyikan kursor bawaan (khusus laptop) */
+    /* CUSTOM CURSOR */
     @media (min-width: 769px) {
       body, a, button, .folder-container { cursor: none !important; }
     }
+    .cursor-outer { position: fixed; width: 30px; height: 30px; border: 2px solid #00f0ff; border-radius: 50%; pointer-events: none; z-index: 999999; transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s; transform: translate(-50%, -50%); box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+    .cursor-inner { position: fixed; width: 6px; height: 6px; background-color: #00f0ff; border-radius: 50%; pointer-events: none; z-index: 1000000; transform: translate(-50%, -50%); box-shadow: 0 0 10px #00f0ff; }
+    .cursor-hover .cursor-outer { width: 50px; height: 50px; background-color: rgba(0, 240, 255, 0.1); border-color: #ffffff; }
 
-    /* Lingkaran luar */
-    .cursor-outer {
-      position: fixed;
-      width: 30px;
-      height: 30px;
-      border: 2px solid #00f0ff;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 999999;
-      transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-    }
-    /* Titik di tengah */
-    .cursor-inner {
-      position: fixed;
-      width: 6px;
-      height: 6px;
-      background-color: #00f0ff;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 1000000;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 10px #00f0ff;
-    }
-    /* Efek saat kursor diarahkan ke tombol/foto */
-    .cursor-hover .cursor-outer {
-      width: 50px;
-      height: 50px;
-      background-color: rgba(0, 240, 255, 0.1);
-      border-color: #ffffff;
-    }
+    /* SCROLL PROGRESS BAR */
+    #scroll-progress { position: fixed; top: 0; left: 0; height: 4px; background: linear-gradient(to right, #00f0ff, #1e90ff); width: 0%; z-index: 999999; box-shadow: 0 0 10px rgba(0, 240, 255, 0.8); }
 
-    /* =========================================
-       2. SCROLL PROGRESS BAR (GARIS DI ATAS)
-       ========================================= */
-    #scroll-progress {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 4px;
-      background: linear-gradient(to right, #00f0ff, #1e90ff);
-      width: 0%;
-      z-index: 999999;
-      box-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
-    }
-
-    /* =========================================
-       SISA CSS
-       ========================================= */
     #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
     #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; }
     #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button, .cursor-hover-target { pointer-events: auto; }
@@ -139,47 +92,100 @@
     #welcome-phase .line-1 { display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5); margin-bottom: 10px; }
     #welcome-phase .line-2 { display: block; color: #ffffff; font-size: 3rem; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 25px rgba(0, 240, 255, 0.6), 0 0 40px rgba(30, 144, 255, 0.5); }
 
-    .folder-container { perspective: 1000px; cursor: pointer; margin: 40px auto; width: 100%; max-width: 600px; position: relative; }
-    .folder-tab { width: 150px; height: 30px; background: #334155; border-radius: 15px 15px 0 0; margin-left: 20px; position: relative; z-index: 1; border: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
-    .folder-body { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 0 20px 20px 20px; padding: 40px; position: relative; z-index: 2; transition: transform 0.4s ease; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: flex-end; }
-    .folder-container:hover .folder-body { transform: translateY(-10px); }
-    .folder-content { position: absolute; top: -150px; left: 50%; transform: translateX(-50%); width: 90%; height: 180px; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 0; display: flex; justify-content: center; gap: 10px; }
-    .folder-open .folder-content { opacity: 1; pointer-events: auto; top: -200px; }
-    .folder-open .folder-body { transform: translateY(0); }
-    .folder-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 2px solid #475569; box-shadow: 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.3s; cursor: pointer; }
-    .folder-photo:hover { transform: scale(1.05) rotate(2deg); border-color: #00f0ff; }
+    /* =========================================
+       DESAIN BARU: STACKED PHOTOS (TUMPUKAN FOTO)
+       ========================================= */
+    .photo-stack-container { 
+      position: relative; 
+      width: 100%; 
+      max-width: 600px; 
+      height: 350px; /* Tinggi area tumpukan */
+      margin: 40px auto; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      cursor: pointer;
+    }
 
-    .zoomable { cursor: pointer; transition: transform 0.2s; }
-    .zoomable:hover { transform: scale(1.05); }
+    .photo-card {
+      position: absolute;
+      width: 280px;
+      height: 180px;
+      background: #1e293b;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    /* Efek saat foto di-hover */
+    .photo-card:hover img {
+      transform: scale(1.1);
+    }
+
+    /* Posisi awal tumpukan (Stacked) */
+    .photo-card:nth-child(1) { transform: translateY(-20px) scale(0.9); z-index: 1; }
+    .photo-card:nth-child(2) { transform: translateY(-10px) scale(0.95); z-index: 2; }
+    .photo-card:nth-child(3) { transform: translateY(0) scale(1); z-index: 3; }
+
+    /* Efek saat container di-hover (Foto menyebar) */
+    .photo-stack-container:hover .photo-card:nth-child(1) { transform: translateY(-40px) translateX(-60px) rotate(-10deg) scale(1); z-index: 1; }
+    .photo-stack-container:hover .photo-card:nth-child(2) { transform: translateY(-20px) translateX(60px) rotate(10deg) scale(1); z-index: 2; }
+    .photo-stack-container:hover .photo-card:nth-child(3) { transform: translateY(40px) scale(1.05); z-index: 3; }
+
+    /* Label jumlah foto di tengah */
+    .stack-label {
+      position: absolute;
+      bottom: -20px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid #00f0ff;
+      color: #00f0ff;
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      box-shadow: 0 0 15px rgba(0,240,255,0.3);
+      z-index: 10;
+      transition: transform 0.3s;
+    }
+    .photo-stack-container:hover .stack-label {
+      transform: translateY(10px) scale(1.1);
+    }
 
     @media (max-width: 768px) {
       .parallax-box { transform: none !important; }
       #hero-content { transform: none !important; opacity: 1 !important; }
+      .photo-card { width: 220px; height: 150px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- SCROLL PROGRESS BAR -->
   <div id="scroll-progress"></div>
-
-  <!-- CUSTOM CURSOR (Hanya Muncul di Laptop) -->
   <div class="cursor-outer hidden md:block"></div>
   <div class="cursor-inner hidden md:block"></div>
 
-  <!-- LIGHTBOX POP-UP -->
   <div id="lightbox" onclick="closeLightbox()">
     <div class="close-btn" onclick="closeLightbox()">×</div>
     <img id="lightbox-img" src="" alt="Zoomed Image" onclick="event.stopPropagation()">
   </div>
 
-  <!-- PRELOADER INTERAKTIF -->
   <div id="preloader">
     <video class="bg-video" autoplay loop muted playsinline>
       <source src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/video-petir.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
-    
     <div id="particles-preloader"></div>
     <div id="spotlight"></div>
 
@@ -272,25 +278,35 @@
       </div>
     </section>
 
-    <!-- DOKUMENTASI -->
-    <section id="gallery" class="py-24 px-6 relative z-10">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-12">Dokumentasi Kelas</h2>
-        <div class="folder-container reveal cursor-hover-target" onclick="this.classList.toggle('folder-open')">
-          <div class="folder-content">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1" class="folder-photo shine-effect cursor-hover-target" onclick="event.stopPropagation(); zoomImage(this.src)">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2" class="folder-photo shine-effect cursor-hover-target" onclick="event.stopPropagation(); zoomImage(this.src)">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3" class="folder-photo shine-effect cursor-hover-target" onclick="event.stopPropagation(); zoomImage(this.src)">
+    <!-- DOKUMENTASI (DESAIN BARU: STACKED PHOTOS) -->
+    <section id="gallery" class="py-24 px-6 relative z-10 overflow-hidden">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="reveal text-3xl font-bold text-neon neon-text mb-12">Dokumentasi Kelas</h2>
+        
+        <!-- Kontainer Tumpukan Foto -->
+        <div class="photo-stack-container reveal cursor-hover-target">
+          
+          <!-- Foto 1 (Paling Bawah) -->
+          <div class="photo-card shine-effect" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
           </div>
-          <div class="folder-tab"></div>
-          <div class="folder-body">
-            <div class="text-4xl font-bold text-white">3 <span class="text-lg font-normal text-slate-400">Photos</span></div>
-            <div class="bg-slate-700/50 p-3 rounded-xl border border-slate-600">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" /></svg>
-            </div>
+
+          <!-- Foto 2 (Tengah) -->
+          <div class="photo-card shine-effect" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true')">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
           </div>
+
+          <!-- Foto 3 (Paling Atas) -->
+          <div class="photo-card shine-effect" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true')">
+            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+            <!-- Label Jumlah Foto -->
+            <div class="stack-label">3 Photos - Klik untuk Zoom</div>
+          </div>
+
         </div>
-        <p class="text-center text-slate-500 text-sm mt-4">Klik folder untuk membuka dokumentasi</p>
       </div>
     </section>
 
@@ -347,38 +363,26 @@
   <audio id="thunder-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c497a88d0.mp3?filename=thunder-105237.mp3" preload="auto"></audio>
 
   <script type="module">
-    // =========================================
-    // 1. CUSTOM CURSOR LOGIC (Hanya di Desktop)
-    // =========================================
+    // CUSTOM CURSOR
     if (window.innerWidth > 768) {
       const cursorOuter = document.querySelector('.cursor-outer');
       const cursorInner = document.querySelector('.cursor-inner');
-      const hoverTargets = document.querySelectorAll('a, button, .folder-container, .zoomable, .cursor-hover-target');
+      const hoverTargets = document.querySelectorAll('a, button, .folder-container, .zoomable, .cursor-hover-target, .photo-card');
 
       document.addEventListener('mousemove', (e) => {
-        // Lingkaran luar agak lambat (efek smooth)
         cursorOuter.style.left = e.clientX + 'px';
         cursorOuter.style.top = e.clientY + 'px';
-        
-        // Titik dalam langsung ikut kursor
         cursorInner.style.left = e.clientX + 'px';
         cursorInner.style.top = e.clientY + 'px';
       });
 
-      // Efek membesar saat kursor diarahkan ke elemen interaktif
       hoverTargets.forEach(target => {
-        target.addEventListener('mouseenter', () => {
-          cursorOuter.classList.add('cursor-hover');
-        });
-        target.addEventListener('mouseleave', () => {
-          cursorOuter.classList.remove('cursor-hover');
-        });
+        target.addEventListener('mouseenter', () => { cursorOuter.classList.add('cursor-hover'); });
+        target.addEventListener('mouseleave', () => { cursorOuter.classList.remove('cursor-hover'); });
       });
     }
 
-    // =========================================
-    // 2. SCROLL PROGRESS BAR LOGIC
-    // =========================================
+    // SCROLL PROGRESS BAR
     window.addEventListener('scroll', () => {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
       const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -386,19 +390,11 @@
       document.getElementById('scroll-progress').style.width = scrollPercentage + '%';
     });
 
-    // =========================================
-    // 3. SISA LOGIKA (Menu, Preloader, Firebase, dll)
-    // =========================================
+    // MENU & PRELOADER
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
-
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-
-    window.closeMenu = function() {
-      mobileMenu.classList.add('hidden');
-    }
+    menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+    window.closeMenu = function() { mobileMenu.classList.add('hidden'); }
 
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
@@ -415,18 +411,13 @@
     function playThunder() {
       if (!audioPlayed && thunderSound) {
         thunderSound.volume = 0.5; 
-        thunderSound.play().then(() => {
-          audioPlayed = true;
-        }).catch(e => {});
+        thunderSound.play().then(() => { audioPlayed = true; }).catch(e => {});
       }
     }
     document.addEventListener('click', playThunder, { once: true });
     document.addEventListener('touchstart', playThunder, { once: true });
     setInterval(() => {
-      if (audioPlayed) {
-        thunderSound.currentTime = 0;
-        thunderSound.play().catch(e => {});
-      }
+      if (audioPlayed) { thunderSound.currentTime = 0; thunderSound.play().catch(e => {}); }
     }, 4000); 
 
     const fakeCodeEl = document.getElementById('hacker-fake-code');
@@ -466,6 +457,7 @@
       progressPercent.innerText = progress + '%';
     }, 50);
 
+    // PARTICLES (Sama seperti sebelumnya)
     tsParticles.load("particles-preloader", {
       fpsLimit: 60,
       particles: {
@@ -479,15 +471,8 @@
       },
       interactivity: {
         detectsOn: "window",
-        events: {
-          onHover: { enable: true, mode: "bubble" },
-          onClick: { enable: true, mode: "repulse" }, 
-          resize: true
-        },
-        modes: {
-          bubble: { distance: 200, size: 6, duration: 2, opacity: 1 },
-          repulse: { distance: 150, duration: 0.4 }
-        }
+        events: { onHover: { enable: true, mode: "bubble" }, onClick: { enable: true, mode: "repulse" }, resize: true },
+        modes: { bubble: { distance: 200, size: 6, duration: 2, opacity: 1 }, repulse: { distance: 150, duration: 0.4 } }
       },
       detectRetina: true
     });
@@ -505,20 +490,13 @@
       },
       interactivity: {
         detectsOn: "window",
-        events: {
-          onHover: { enable: true, mode: ["grab", "bubble"] },
-          onClick: { enable: true, mode: "repulse" },
-          resize: true
-        },
-        modes: {
-          grab: { distance: 200, line_linked: { opacity: 0.8 } },
-          bubble: { distance: 200, size: 12, duration: 2, opacity: 1 },
-          repulse: { distance: 300, duration: 0.4 }
-        }
+        events: { onHover: { enable: true, mode: ["grab", "bubble"] }, onClick: { enable: true, mode: "repulse" }, resize: true },
+        modes: { grab: { distance: 200, line_linked: { opacity: 0.8 } }, bubble: { distance: 200, size: 12, duration: 2, opacity: 1 }, repulse: { distance: 300, duration: 0.4 } }
       },
       detectRetina: true
     });
 
+    // LIGHTBOX
     window.zoomImage = function(src) {
       const lightbox = document.getElementById('lightbox');
       document.getElementById('lightbox-img').src = src;
@@ -530,6 +508,7 @@
       document.body.style.overflow = 'auto';
     }
 
+    // LOGIKA FIREBASE & ANIMASI DATA LAINNYA
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -611,9 +590,7 @@
       revealObserver.observe(card);
     });
 
-    VanillaTilt.init(document.querySelectorAll(".lanyard-wrap"), {
-      max: 15, speed: 400, glare: true, "max-glare": 0.3,
-    });
+    VanillaTilt.init(document.querySelectorAll(".lanyard-wrap"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 });
 
     const memberNames = { 3: "Aprelia", 6: "Dania Rahma", 7: "Devita", 9: "Helena", 10: "Jocelin", 16: "Shafira", 18: "Talita" };
     const memberImages = {
@@ -646,9 +623,7 @@
       revealObserver.observe(card);
     }
 
-    VanillaTilt.init(document.querySelectorAll("#memberGrid > div"), {
-      max: 15, speed: 400, glare: true, "max-glare": 0.3,
-    });
+    VanillaTilt.init(document.querySelectorAll("#memberGrid > div"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 });
 
     async function fetchData() {
       const list = document.getElementById('guestList');

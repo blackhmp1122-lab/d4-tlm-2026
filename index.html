@@ -28,25 +28,33 @@
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
     
-    /* Animasi Reveal (Fade Up) */
-    .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
     /* =========================================
-       EFEK PARALLAX & ZOOM SCROLL (BARU)
+       EFEK SCROLL GLOBAL (BARU & LEBIH DRAMATIS)
        ========================================= */
-    .parallax-section {
-      will-change: transform, opacity;
-      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+    /* Animasi muncul dari bawah sambil membesar */
+    .reveal { 
+      opacity: 0; 
+      transform: translateY(60px) scale(0.95); 
+      transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1); 
     }
-    
+    .reveal.visible { 
+      opacity: 1; 
+      transform: translateY(0) scale(1); 
+    }
+
+    /* Efek Parallax (Kotak melayang pelan saat discroll) */
+    .parallax-box {
+      will-change: transform;
+      transition: transform 0.1s ease-out;
+    }
+
     /* Efek Zoom untuk Foto/ID Card */
     .zoom-scroll {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
     .zoom-scroll:hover {
-      transform: scale(1.05) translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 240, 255, 0.2);
+      transform: scale(1.05) translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 240, 255, 0.3);
       z-index: 20;
     }
 
@@ -60,7 +68,7 @@
     .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
     /* =========================================
-       PRELOADER (BIRU GELAP + PETIR CSS + WELCOME GLOW)
+       PRELOADER
        ========================================= */
     #preloader { 
       position: fixed; 
@@ -76,87 +84,24 @@
     }
 
     .preloader-stars {
-      position: absolute;
-      inset: 0;
-      background-image: 
-        radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 160px 120px, #fff, rgba(0,0,0,0));
-      background-repeat: repeat;
-      background-size: 200px 200px;
-      opacity: 0.3;
-      z-index: 0;
-      animation: twinkle 3s infinite alternate;
+      position: absolute; inset: 0;
+      background-image: radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 160px 120px, #fff, rgba(0,0,0,0));
+      background-repeat: repeat; background-size: 200px 200px; opacity: 0.3; z-index: 0; animation: twinkle 3s infinite alternate;
     }
     @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 0.6; } }
 
-    .lightning-flash {
-      position: absolute;
-      inset: 0;
-      background: #fff;
-      opacity: 0;
-      z-index: 1;
-      animation: flashAnim 4s infinite;
-    }
-    @keyframes flashAnim {
-      0%, 92%, 96%, 100% { opacity: 0; }
-      93%, 95% { opacity: 0.4; }
-      94% { opacity: 0; }
-    }
+    .lightning-flash { position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 1; animation: flashAnim 4s infinite; }
+    @keyframes flashAnim { 0%, 92%, 96%, 100% { opacity: 0; } 93%, 95% { opacity: 0.4; } 94% { opacity: 0; } }
 
     .lightning-bolt {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 4px;
-      height: 100%;
-      background: #fff;
-      box-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff;
-      z-index: 2;
-      opacity: 0;
-      transform: translateX(-50%) rotate(15deg);
-      animation: strikeAnim 4s infinite;
+      position: absolute; top: 0; left: 50%; width: 4px; height: 100%; background: #fff; box-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff; z-index: 2; opacity: 0; transform: translateX(-50%) rotate(15deg); animation: strikeAnim 4s infinite;
     }
-    .lightning-bolt::before {
-      content: '';
-      position: absolute;
-      top: 30%;
-      left: 0;
-      width: 60px;
-      height: 3px;
-      background: #fff;
-      box-shadow: 0 0 10px #00f0ff;
-      transform: rotate(-40deg);
-      transform-origin: left center;
-    }
-    .lightning-bolt::after {
-      content: '';
-      position: absolute;
-      top: 60%;
-      right: 0;
-      width: 80px;
-      height: 3px;
-      background: #fff;
-      box-shadow: 0 0 10px #00f0ff;
-      transform: rotate(30deg);
-      transform-origin: right center;
-    }
+    .lightning-bolt::before { content: ''; position: absolute; top: 30%; left: 0; width: 60px; height: 3px; background: #fff; box-shadow: 0 0 10px #00f0ff; transform: rotate(-40deg); transform-origin: left center; }
+    .lightning-bolt::after { content: ''; position: absolute; top: 60%; right: 0; width: 80px; height: 3px; background: #fff; box-shadow: 0 0 10px #00f0ff; transform: rotate(30deg); transform-origin: right center; }
 
-    @keyframes strikeAnim {
-      0%, 90%, 96%, 100% { opacity: 0; transform: translateX(-50%) rotate(15deg) scaleY(0.5); }
-      91% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1); }
-      93% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1) scaleX(2); }
-      94% { opacity: 0.5; transform: translateX(-50%) rotate(15deg) scaleY(1); }
-    }
+    @keyframes strikeAnim { 0%, 90%, 96%, 100% { opacity: 0; transform: translateX(-50%) rotate(15deg) scaleY(0.5); } 91% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1); } 93% { opacity: 1; transform: translateX(-50%) rotate(15deg) scaleY(1) scaleX(2); } 94% { opacity: 0.5; transform: translateX(-50%) rotate(15deg) scaleY(1); } }
 
-    #loading-phase {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      z-index: 10;
-    }
+    #loading-phase { display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10; }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
 
     .loading-container { width: 300px; display: flex; flex-direction: column; align-items: center; }
@@ -166,39 +111,10 @@
     .loading-label { margin-left: 5px; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; }
 
-    #welcome-phase {
-      position: absolute;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 1s ease, transform 1s ease;
-      pointer-events: none;
-      padding: 0 20px;
-      width: 100%;
-      z-index: 10;
-    }
+    #welcome-phase { position: absolute; text-align: center; opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; pointer-events: none; padding: 0 20px; width: 100%; z-index: 10; }
     #welcome-phase.show { opacity: 1; transform: translateY(0); }
-    
-    #welcome-phase .line-1 {
-      display: block;
-      color: #fcebd5; 
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5);
-      margin-bottom: 10px;
-      font-family: sans-serif;
-    }
-    
-    #welcome-phase .line-2 {
-      display: block;
-      color: #ffffff; 
-      font-size: 3rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 25px rgba(0, 240, 255, 0.6), 0 0 40px rgba(30, 144, 255, 0.5);
-      font-family: sans-serif;
-    }
+    #welcome-phase .line-1 { display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(252, 235, 213, 0.8), 0 0 20px rgba(252, 235, 213, 0.5); margin-bottom: 10px; }
+    #welcome-phase .line-2 { display: block; color: #ffffff; font-size: 3rem; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 25px rgba(0, 240, 255, 0.6), 0 0 40px rgba(30, 144, 255, 0.5); }
 
     /* 3D Folder Dokumentasi */
     .folder-container { perspective: 1000px; cursor: pointer; margin: 40px auto; width: 100%; max-width: 600px; position: relative; }
@@ -267,9 +183,9 @@
     </div>
   </nav>
 
-  <!-- HERO (Dikasih Efek Parallax) -->
-  <section class="relative min-h-screen flex items-center justify-center px-6 pt-24 parallax-section" id="hero-section">
-    <div class="reveal text-center max-w-3xl">
+  <!-- HERO (Parallax) -->
+  <section class="relative min-h-screen flex items-center justify-center px-6 pt-24" id="hero-section">
+    <div class="reveal text-center max-w-3xl" id="hero-content">
       <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
       <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
       <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
@@ -277,9 +193,9 @@
     </div>
   </section>
 
-  <!-- ABOUT -->
+  <!-- ABOUT (Parallax Box) -->
   <section id="about" class="py-24 px-6 relative z-10">
-    <div class="reveal max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12">
+    <div class="reveal parallax-box max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12">
       <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
       <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
       <div class="grid grid-cols-2 gap-4">
@@ -324,10 +240,10 @@
     </div>
   </section>
 
-  <!-- BUKU TAMU -->
+  <!-- BUKU TAMU (Parallax Box) -->
   <section id="guestbook" class="py-24 px-6 relative z-10">
     <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-      <div class="reveal glass rounded-3xl p-8 shadow-neon">
+      <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
         <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
         <form id="contactForm" class="space-y-4">
           <input type="text" placeholder="Nama Lengkap" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
@@ -336,7 +252,7 @@
         </form>
       </div>
 
-      <div class="reveal glass rounded-3xl p-8 shadow-neon">
+      <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
         <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
         <form id="guestForm" class="space-y-4 mb-6">
           <input type="text" placeholder="Nama Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
@@ -365,7 +281,7 @@
   </footer>
 
   <script type="module">
-    // 1. LOGIKA PRELOADER BERTAHAP (3 DETIK)
+    // 1. LOGIKA PRELOADER BERTAHAP
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
@@ -389,7 +305,7 @@
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
           document.body.style.overflow = 'auto';
-        }, 3000); // Tepat 3 Detik
+        }, 3000); // 3 Detik
       }
       
       progressBar.style.width = progress + '%';
@@ -438,7 +354,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Animasi Reveal (Muncul saat masuk layar)
+    // Animasi Reveal (Global)
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -450,17 +366,32 @@
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
     // =========================================
-    // 5. LOGIKA EFEK PARALLAX (BARU)
+    // 5. LOGIKA EFEK PARALLAX (GLOBAL)
     // =========================================
     window.addEventListener('scroll', () => {
       const scrollValue = window.scrollY;
-      const heroText = document.querySelector('#hero-section .reveal');
-      
-      // Efek Parallax: Teks Hero bergerak lebih lambat dan memudar saat di-scroll
-      if (heroText) {
-        heroText.style.transform = `translateY(${scrollValue * 0.4}px)`;
-        heroText.style.opacity = 1 - (scrollValue / 600); // Memudar setelah discroll 600px
+
+      // A. Parallax untuk Teks Hero (Bergerak pelan dan memudar)
+      const heroContent = document.getElementById('hero-content');
+      if (heroContent) {
+        heroContent.style.transform = `translateY(${scrollValue * 0.4}px)`;
+        heroContent.style.opacity = 1 - (scrollValue / 600);
       }
+
+      // B. Parallax untuk Kotak-kotak Glass (Tentang Kami & Buku Tamu)
+      const parallaxBoxes = document.querySelectorAll('.parallax-box');
+      parallaxBoxes.forEach(box => {
+        const boxTop = box.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        
+        // Efek hanya berjalan saat kotak mendekati layar
+        if (boxTop < windowHeight && boxTop > -windowHeight) {
+          // Menghitung seberapa jauh kotak dari tengah layar
+          const distanceToCenter = boxTop - (windowHeight / 2);
+          // Menggeser kotak ke atas/bawah secara halus
+          box.style.transform = `translateY(${distanceToCenter * 0.05}px)`;
+        }
+      });
     });
 
     // 6. RENDER DATA PENGURUS & ANGGOTA
@@ -477,7 +408,7 @@
     const committeeGrid = document.getElementById('committeeGrid');
     committeeData.forEach((data, index) => {
       const card = document.createElement('div');
-      // Tambahan class zoom-scroll di sini biar ID card membesar saat di-hover
+      // Tambahan class zoom-scroll biar ID card membesar saat di-hover
       card.className = `reveal lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll`;
       card.innerHTML = `
         <div class="lanyard"></div>

@@ -32,13 +32,10 @@
       top: 0; 
       left: 0; 
       z-index: 0;
-      /* JANGAN PAKAI POINTER-EVENTS: NONE DI SINI */
     }
     
     /* Konten Web Dinaikkan z-index nya di atas partikel */
-    #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; /* Biar klik tembus ke partikel */ }
-    
-    /* Aktifkan kembali klik untuk elemen-elemen di dalam konten (tombol, form, dll) */
+    #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; }
     #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button { pointer-events: auto; }
 
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
@@ -92,10 +89,15 @@
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
     
     /* Hacker Loading Text */
-    .hacker-text-container { width: 100%; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; padding: 15px; font-family: 'Courier New', Courier, monospace; color: #00f0ff; font-size: 0.85rem; box-shadow: 0 0 20px rgba(0,240,255,0.2); position: relative; overflow: hidden; margin-bottom: 15px; backdrop-filter: blur(5px); }
+    .hacker-text-container { width: 100%; background: rgba(0, 0, 0, 0.85); border: 1px solid #00f0ff; padding: 15px; font-family: 'Courier New', Courier, monospace; color: #00f0ff; font-size: 0.85rem; box-shadow: 0 0 20px rgba(0,240,255,0.2); position: relative; overflow: hidden; margin-bottom: 15px; backdrop-filter: blur(5px); }
     .hacker-text-container::after { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none; }
     .hacker-line { margin-bottom: 5px; line-height: 1.2; white-space: nowrap; overflow: hidden; }
-    .hacker-text-blur { color: rgba(0, 240, 255, 0.3); }
+    
+    /* TEKS HACKER DIPERJELAS (TIDAK TERLALU GELAP) */
+    .hacker-text-blur { color: rgba(0, 240, 255, 0.8); /* Diubah dari 0.3 ke 0.8 */
+      text-shadow: 0 0 5px rgba(0, 240, 255, 0.5); 
+    }
+    
     .cursor-blink { display: inline-block; width: 8px; height: 14px; background-color: #00f0ff; margin-left: 3px; animation: blink 0.8s infinite; vertical-align: middle; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
@@ -153,6 +155,7 @@
 
     <div id="loading-phase">
       <div class="hacker-text-container">
+        <!-- Tulisan ini sekarang lebih terang -->
         <div class="hacker-line hacker-text-blur" id="hacker-line-1">> INITIALIZING SYSTEM...</div>
         <div class="hacker-line hacker-text-blur" id="hacker-line-2">> LOADING LAB DATA...</div>
         <div class="hacker-line" id="hacker-line-3">> <span id="hacker-fake-code">0x00FF</span><span class="cursor-blink"></span></div>

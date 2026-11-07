@@ -32,11 +32,14 @@
       top: 0; 
       left: 0; 
       z-index: 0;
-      pointer-events: none; /* Biar ga ngehalangin klik tombol web */
+      /* JANGAN PAKAI POINTER-EVENTS: NONE DI SINI */
     }
     
     /* Konten Web Dinaikkan z-index nya di atas partikel */
-    #main-content-wrapper { position: relative; z-index: 10; }
+    #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; /* Biar klik tembus ke partikel */ }
+    
+    /* Aktifkan kembali klik untuk elemen-elemen di dalam konten (tombol, form, dll) */
+    #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button { pointer-events: auto; }
 
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
@@ -422,7 +425,7 @@
     // 2. KONFIGURASI PARTIKEL (WEB UTAMA & PRELOADER)
     // =========================================
     
-    // A. Partikel di Preloader (Loading & Welcome) - TETAP ADA
+    // A. Partikel di Preloader (Loading & Welcome)
     tsParticles.load("particles-preloader", {
       fpsLimit: 60,
       particles: {
@@ -431,14 +434,14 @@
         shape: { type: "circle" },
         opacity: { value: 0.7, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1 } },
         size: { value: 4, random: true, anim: { enable: true, speed: 2, size_min: 0.1 } },
-        line_linked: { enable: false }, // Titik bundar murni
+        line_linked: { enable: false },
         move: { enable: true, speed: 1, direction: "none", random: true, straight: false, out_mode: "out" }
       },
       interactivity: {
         detectsOn: "window",
         events: {
           onHover: { enable: true, mode: "bubble" },
-          onClick: { enable: true, mode: "repulse" }, // Efek melebar saat disentuh
+          onClick: { enable: true, mode: "repulse" }, 
           resize: true
         },
         modes: {

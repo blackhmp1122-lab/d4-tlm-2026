@@ -43,8 +43,31 @@
     /* Preloader Animation */
     #preloader { position: fixed; inset: 0; background-color: #0f172a; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; }
     #preloader.hidden { opacity: 0; visibility: hidden; }
-    .lightning { position: absolute; width: 200px; height: 100%; background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Lightning_PNG_Image.png/240px-Lightning_PNG_Image.png') no-repeat center center; background-size: contain; opacity: 0.8; animation: flash 2s infinite alternate; z-index: -1; }
-    @keyframes flash { 0% { opacity: 0.1; } 50% { opacity: 0.9; filter: drop-shadow(0 0 20px #00f0ff); } 100% { opacity: 0.3; } }
+    
+    /* Efek Petir SVG (Animasi) */
+    .lightning-container {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+    .lightning {
+      width: 120px;
+      height: 450px;
+      filter: drop-shadow(0 0 20px #00f0ff) drop-shadow(0 0 40px #1e90ff);
+      animation: strike 3s infinite;
+      opacity: 0;
+    }
+    @keyframes strike {
+      0%, 10%, 20% { opacity: 0; transform: scale(0.95); }
+      15%, 25% { opacity: 1; transform: scale(1); }
+      30%, 100% { opacity: 0.2; transform: scale(1); }
+    }
+
     .loading-bar-container { width: 250px; height: 4px; background: rgba(255,255,255,0.1); margin-top: 20px; border-radius: 2px; overflow: hidden; }
     .loading-bar { height: 100%; width: 0%; background: #00f0ff; transition: width 0.1s linear; box-shadow: 0 0 10px #00f0ff; }
     .loading-text { display: flex; justify-content: space-between; width: 250px; font-size: 12px; margin-top: 8px; color: #94a3b8; font-family: monospace; }
@@ -75,9 +98,15 @@
 
   <!-- 1. PRELOADER -->
   <div id="preloader">
-    <div class="lightning"></div>
-    <h1 class="text-3xl md:text-5xl font-bold text-white neon-text text-center px-4" id="welcome-text" style="opacity: 0; transition: opacity 1s ease;">Welcome to D-IV TLM '26</h1>
-    <div id="loading-wrapper">
+    <div class="lightning-container">
+      <svg class="lightning" viewBox="0 0 100 300" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 0 L30 130 L60 140 L20 300 L80 160 L40 150 L70 20 Z" fill="#00f0ff" />
+      </svg>
+    </div>
+    
+    <h1 class="text-3xl md:text-5xl font-bold text-white neon-text text-center px-4" id="welcome-text" style="opacity: 0; transition: opacity 1s ease; z-index: 10;">Welcome to D-IV TLM'26 CLASS</h1>
+    
+    <div id="loading-wrapper" style="z-index: 10;">
       <div class="loading-bar-container">
         <div class="loading-bar" id="progress-bar"></div>
       </div>
@@ -166,7 +195,6 @@
         <div class="folder-body">
           <div class="text-4xl font-bold text-white">3 <span class="text-lg font-normal text-slate-400">Photos</span></div>
           <div class="bg-slate-700/50 p-3 rounded-xl border border-slate-600">
-            <!-- Ikon titik tiga -->
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" /></svg>
           </div>
         </div>

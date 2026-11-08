@@ -586,7 +586,7 @@
           window.scrollTo(0, 0);
           unlockAudio(); 
           
-          // GSAP PARALLAX EFFECT (Dijalankan setelah preloader hilang)
+          // GSAP PARALLAX EFFECT
           initGsapParallax();
         }, 3000); 
       }
@@ -595,20 +595,24 @@
     }, 50);
 
     // ==========================================
-    // FUNGSI EFEK PARALLAX GSAP
+    // FUNGSI EFEK PARALLAX GSAP (Hanya Desktop)
     // ==========================================
     function initGsapParallax() {
-      // Efek Parallax untuk Teks Hero
-      gsap.to("#hero-content", {
-        scrollTrigger: {
-          trigger: "#hero-section",
-          start: "top top",
-          end: "bottom top",
-          scrub: true // Membuat animasi mengikuti kecepatan scroll (scrub)
-        },
-        y: 150, // Teks bergerak turun 150px saat di-scroll (memberi kesan melayang ke atas)
-        scale: 0.9, // Teks sedikit mengecil
-        opacity: 0.2 // Teks memudar
+      // Menggunakan GSAP matchMedia agar efek hanya jalan di layar laptop/PC
+      let mm = gsap.matchMedia();
+      
+      mm.add("(min-width: 769px)", () => {
+        gsap.to("#hero-content", {
+          scrollTrigger: {
+            trigger: "#hero-section",
+            start: "top top",
+            end: "bottom top",
+            scrub: true 
+          },
+          y: 150, 
+          scale: 0.9, 
+          opacity: 0.2 
+        });
       });
     }
 

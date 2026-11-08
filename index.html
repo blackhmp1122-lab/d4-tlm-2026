@@ -44,6 +44,26 @@
       position: relative;
     }
 
+    /* ========================================= */
+    /* EFEK TRANSISI LINGKARAN MENYEBAR (REVEAL) */
+    /* ========================================= */
+    #page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle, #00f0ff 0%, #1e90ff 100%); /* Warna Neon */
+      border-radius: 50%;
+      transform: scale(0);
+      z-index: 9999999;
+      pointer-events: none;
+      opacity: 1;
+      /* Transisi scale dibuat manual via JS agar dinamis mengikuti titik klik */
+      transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1), opacity 0.5s ease;
+    }
+    /* ========================================= */
+
     /* SCROLL PROGRESS BAR */
     #scroll-progress-container { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 6px !important; background: rgba(15, 23, 42, 0.8) !important; z-index: 2147483647 !important; pointer-events: none; }
     #scroll-progress { height: 100%; background: #ffffff; width: 0%; position: relative; box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; }
@@ -140,7 +160,6 @@
     .stack-label { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.85); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 16px; border-radius: 999px; font-size: 0.75rem; font-weight: bold; box-shadow: 0 0 15px rgba(0,240,255,0.4); z-index: 10; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; white-space: nowrap; backdrop-filter: blur(4px); }
     .photo-stack-container:hover .stack-label { transform: translateX(-50%) translateY(-5px) scale(1.05); background: #00f0ff; color: #000; }
 
-    /* PENGATURAN KHUSUS MOBILE */
     @media (max-width: 768px) {
       section, .glass, .photo-stack-container { 
         width: 100% !important; 
@@ -155,6 +174,9 @@
   </style>
 </head>
 <body>
+
+  <!-- DIV UNTUK EFEK MENYEBAR -->
+  <div id="page-transition-overlay"></div>
 
   <div id="scroll-progress-container">
     <div id="scroll-progress"></div>
@@ -222,10 +244,10 @@
         <div id="digital-clock" class="text-sm">--:--:--</div>
 
         <div class="hidden md:flex gap-6 text-sm cursor-hover-target">
-          <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
-          <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
-          <a href="#gallery" class="hover:text-neon transition">Dokumentasi</a>
-          <a href="#guestbook" class="hover:text-neon transition">Pesan & Kesan</a>
+          <a href="#about" class="hover:text-neon transition nav-link">Tentang Kami</a>
+          <a href="#directory" class="hover:text-neon transition nav-link">Struktur & Anggota</a>
+          <a href="#gallery" class="hover:text-neon transition nav-link">Dokumentasi</a>
+          <a href="#guestbook" class="hover:text-neon transition nav-link">Pesan & Kesan</a>
         </div>
         <button id="menu-btn" class="md:hidden text-slate-300 hover:text-neon focus:outline-none cursor-hover-target">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -235,10 +257,10 @@
       </div>
       <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-700 absolute w-full left-0">
         <div class="flex flex-col px-6 py-4 space-y-4 text-sm">
-          <a href="#about" class="hover:text-neon transition" onclick="closeMenu()">Tentang Kami</a>
-          <a href="#directory" class="hover:text-neon transition" onclick="closeMenu()">Struktur & Anggota</a>
-          <a href="#gallery" class="hover:text-neon transition" onclick="closeMenu()">Dokumentasi</a>
-          <a href="#guestbook" class="hover:text-neon transition" onclick="closeMenu()">Pesan & Kesan</a>
+          <a href="#about" class="hover:text-neon transition nav-link" onclick="closeMenu()">Tentang Kami</a>
+          <a href="#directory" class="hover:text-neon transition nav-link" onclick="closeMenu()">Struktur & Anggota</a>
+          <a href="#gallery" class="hover:text-neon transition nav-link" onclick="closeMenu()">Dokumentasi</a>
+          <a href="#guestbook" class="hover:text-neon transition nav-link" onclick="closeMenu()">Pesan & Kesan</a>
         </div>
       </div>
     </nav>
@@ -251,7 +273,7 @@
         <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
         
         <div class="flex justify-center items-center gap-4">
-          <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition cursor-hover-target">Jelajahi Kelas</a>
+          <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition cursor-hover-target nav-link">Jelajahi Kelas</a>
         </div>
       </div>
     </section>
@@ -387,13 +409,9 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script type="module">
-    // Memastikan halaman selalu di paling atas saat pertama dimuat (termasuk di HP)
     window.scrollTo(0, 0);
-
-    // Daftarkan plugin ScrollTrigger GSAP
     gsap.registerPlugin(ScrollTrigger);
 
-    // INISIALISASI AOS
     AOS.init({
       once: false, 
       mirror: false
@@ -401,28 +419,21 @@
 
     // JAM DIGITAL YANG SINKRON
     const clockElement = document.getElementById('digital-clock');
-    
     function updateClock() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
-      
-      if(clockElement) {
-        clockElement.innerText = `${hours}:${minutes}:${seconds}`;
-      }
-      
+      if(clockElement) { clockElement.innerText = `${hours}:${minutes}:${seconds}`; }
       requestAnimationFrame(updateClock);
     }
-    
     updateClock();
 
     // SHARE WHATSAPP
     window.shareToWhatsApp = function() {
       const url = window.location.href;
       const text = "Halo! Cek website keren kelas D-IV TLM STIKES Nasional Surakarta Angkatan 2026 di sini: " + url;
-      const waLink = "https://wa.me/?text=" + encodeURIComponent(text);
-      window.open(waLink, '_blank');
+      window.open("https://wa.me/?text=" + encodeURIComponent(text), '_blank');
     }
 
     // ==========================================
@@ -435,21 +446,16 @@
     fetch('https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-klik.mp3')
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
-      .then(decodedData => {
-        clickBuffer = decodedData;
-      })
+      .then(decodedData => { clickBuffer = decodedData; })
       .catch(e => console.log("Gagal memuat audio klik:", e));
 
     function unlockAudio() {
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (audioCtx.state === 'suspended') { audioCtx.resume(); }
     }
 
     function playClickSound() {
       unlockAudio();
       if (!clickBuffer) return; 
-
       const source = audioCtx.createBufferSource();
       source.buffer = clickBuffer;
       const gainNode = audioCtx.createGain();
@@ -465,6 +471,49 @@
       } else {
         unlockAudio();
       }
+    });
+
+    // ==========================================
+    // EFEK TRANSISI MENYEBAR (RADIAL REVEAL)
+    // ==========================================
+    const transitionOverlay = document.getElementById('page-transition-overlay');
+    
+    // Mengambil semua link navigasi yang punya class "nav-link"
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault(); // Mencegah scroll instan bawaan browser
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          // 1. Dapatkan posisi klik (x, y) untuk titik awal lingkaran
+          const x = e.clientX || e.pageX;
+          const y = e.clientY || e.pageY;
+          
+          // 2. Reset posisi lingkaran ke titik klik dan ubah ukurannya jadi 0
+          transitionOverlay.style.left = x + 'px';
+          transitionOverlay.style.top = y + 'px';
+          transitionOverlay.style.transform = 'translate(-50%, -50%) scale(0)';
+          transitionOverlay.style.opacity = '1';
+          
+          // 3. Animasi Membesar (Menyebar)
+          setTimeout(() => {
+            transitionOverlay.style.transform = 'translate(-50%, -50%) scale(150)'; // 150 cukup untuk menutupi seluruh layar
+          }, 10);
+          
+          // 4. Pindahkan halaman saat layar sudah tertutup lingkaran
+          setTimeout(() => {
+            targetElement.scrollIntoView({ behavior: 'instant' }); // Pindah instan agar tidak bentrok
+            closeMenu(); // Tutup menu mobile jika sedang terbuka
+          }, 600); // Sesuaikan dengan durasi transisi CSS (0.8s / 800ms)
+          
+          // 5. Hilangkan lingkaran secara perlahan (Fade Out)
+          setTimeout(() => {
+            transitionOverlay.style.opacity = '0';
+          }, 800);
+        }
+      });
     });
 
     // COUNT-UP ANGKA
@@ -538,9 +587,7 @@
     preloader.addEventListener('touchstart', initThunder, { once: true });
 
     setInterval(() => {
-      if (audioPlayed && progress < 100) {
-        playThunderSound();
-      }
+      if (audioPlayed && progress < 100) { playThunderSound(); }
     }, 3000); 
 
     const fakeCodeEl = document.getElementById('hacker-fake-code');
@@ -560,8 +607,6 @@
       const touch = e.touches[0];
       if (touch) { moveSpotlight(touch.clientX, touch.clientY); }
     }, { passive: true });
-    preloader.addEventListener('mouseleave', () => { spotlight.style.opacity = '0'; });
-    preloader.addEventListener('mouseenter', () => { spotlight.style.opacity = '1'; });
 
     const interval = setInterval(() => {
       progress += Math.floor(Math.random() * 4) + 1;
@@ -577,8 +622,6 @@
           AOS.refresh(); 
           window.scrollTo(0, 0);
           unlockAudio(); 
-          
-          // GSAP PARALLAX EFFECT (Jalan di Desktop & HP)
           initGsapParallax();
         }, 3000); 
       }
@@ -587,10 +630,9 @@
     }, 50);
 
     // ==========================================
-    // FUNGSI EFEK PARALLAX GSAP (SEMUA LAYAR)
+    // FUNGSI EFEK PARALLAX GSAP
     // ==========================================
     function initGsapParallax() {
-      // Efek Parallax untuk Teks Hero
       gsap.to("#hero-content", {
         scrollTrigger: {
           trigger: "#hero-section",
@@ -604,7 +646,7 @@
       });
     }
 
-    // PARTIKEL & CURSOR (Kursor hanya Desktop)
+    // PARTIKEL & CURSOR
     if (window.innerWidth > 768) {
       const cursorOuter = document.querySelector('.cursor-outer');
       const cursorInner = document.querySelector('.cursor-inner');

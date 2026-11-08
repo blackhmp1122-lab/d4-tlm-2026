@@ -8,10 +8,8 @@
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
   
-  <!-- LIBRARY AOS -->
+  <!-- LIBRARY AOS & GSAP -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  
-  <!-- LIBRARY GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
@@ -38,8 +36,50 @@
       width: 100%;
       max-width: 100vw;
       position: relative;
-      touch-action: pan-y; 
     }
+
+    /* ========================================= */
+    /* LAYAR PUTIH & GELEMBUNG TRANSISI SCROLL   */
+    /* ========================================= */
+    #scroll-transition-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffffff; /* Putih Bersih */
+      z-index: 99999; /* Di atas background, di bawah navbar */
+      opacity: 0; /* Awalnya transparan */
+      pointer-events: none; /* Biarkan user nge-scroll */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Wadah gelembung */
+    #bubbles-container {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* Animasi Gelembung */
+    .bubble {
+      position: absolute;
+      bottom: -100px;
+      background: rgba(0, 240, 255, 0.15); /* Biru transparan */
+      border: 2px solid rgba(0, 240, 255, 0.4);
+      border-radius: 50%;
+      animation: floatUp 10s infinite ease-in;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+    }
+    /* ========================================= */
 
     /* SCROLL PROGRESS BAR */
     #scroll-progress-container { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 6px !important; background: rgba(15, 23, 42, 0.8) !important; z-index: 2147483647 !important; pointer-events: none; }
@@ -47,13 +87,7 @@
     #scroll-progress::after { content: ''; position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; background-color: #ffffff; border-radius: 50%; box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; }
 
     /* JAM DIGITAL */
-    #digital-clock {
-      font-family: 'Courier New', Courier, monospace;
-      color: #00f0ff;
-      text-shadow: 0 0 5px #00f0ff;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
+    #digital-clock { font-family: 'Courier New', Courier, monospace; color: #00f0ff; text-shadow: 0 0 5px #00f0ff; font-weight: bold; letter-spacing: 1px; }
 
     /* TOMBOL BACK TO TOP */
     #back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: rgba(15, 23, 42, 0.8); border: 2px solid #00f0ff; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #00f0ff; cursor: pointer; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0,240,255,0.3); backdrop-filter: blur(5px); }
@@ -62,29 +96,14 @@
 
     /* CUSTOM CURSOR */
     @media (min-width: 769px) { body, a, button, .folder-container { cursor: none !important; } }
-    .cursor-outer { position: fixed; width: 30px; height: 30px; border: 2px solid #00f0ff; border-radius: 50%; pointer-events: none; z-index: 999999; transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s; transform: translate(-50%, -50%); box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
-    .cursor-inner { position: fixed; width: 6px; height: 6px; background-color: #00f0ff; border-radius: 50%; pointer-events: none; z-index: 1000000; transform: translate(-50%, -50%); box-shadow: 0 0 10px #00f0ff; }
+    .cursor-outer { position: fixed; width: 30px; height: 30px; border: 2px solid #00f0ff; border-radius: 50%; pointer-events: none; z-index: 9999999; transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s; transform: translate(-50%, -50%); box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+    .cursor-inner { position: fixed; width: 6px; height: 6px; background-color: #00f0ff; border-radius: 50%; pointer-events: none; z-index: 10000000; transform: translate(-50%, -50%); box-shadow: 0 0 10px #00f0ff; }
     .cursor-hover .cursor-outer { width: 50px; height: 50px; background-color: rgba(0, 240, 255, 0.1); border-color: #ffffff; }
 
     /* SISA CSS */
     #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; pointer-events: none; }
-    
-    #main-content-wrapper { 
-      position: relative; 
-      z-index: 10; 
-      pointer-events: none;
-      width: 100%; 
-      overflow-x: hidden; 
-    }
-    #main-content-wrapper nav, 
-    #main-content-wrapper section, 
-    #main-content-wrapper footer, 
-    #main-content-wrapper .zoomable, 
-    #main-content-wrapper a, 
-    #main-content-wrapper button, 
-    #main-content-wrapper .cursor-hover-target { 
-      pointer-events: auto; 
-    }
+    #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; width: 100%; overflow-x: hidden; }
+    #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button, #main-content-wrapper .cursor-hover-target { pointer-events: auto; }
 
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
@@ -104,18 +123,18 @@
     .shine-effect::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); transition: left 0.7s ease; z-index: 5; pointer-events: none; }
     .shine-effect:hover::before { left: 125%; }
 
-    #lightbox { display: none; position: fixed; z-index: 999999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; backdrop-filter: blur(5px); padding: 20px; }
+    #lightbox { display: none; position: fixed; z-index: 9999999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; backdrop-filter: blur(5px); padding: 20px; }
     #lightbox-img { max-width: 90%; max-height: 85%; border-radius: 10px; border: 2px solid #00f0ff; box-shadow: 0 0 30px rgba(0,240,255,0.5); object-fit: contain; animation: zoomIn 0.3s ease-out; }
     @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .close-btn { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(0, 0, 0, 0.5); border: 2px solid #00f0ff; border-radius: 50%; color: #00f0ff; font-size: 24px; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s ease; z-index: 1000000; }
+    .close-btn { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: rgba(0, 0, 0, 0.5); border: 2px solid #00f0ff; border-radius: 50%; color: #00f0ff; font-size: 24px; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s ease; z-index: 10000000; }
     .close-btn:hover { background: #00f0ff; color: #000; transform: rotate(90deg); }
 
-    #preloader { position: fixed; inset: 0; background-color: #0f172a; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; overflow: hidden; cursor: crosshair; touch-action: none; }
+    /* PRELOADER */
+    #preloader { position: fixed; inset: 0; background-color: #0f172a; z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; overflow: hidden; cursor: crosshair; touch-action: none; }
     .bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translateX(-50%) translateY(-50%); z-index: 1; object-fit: cover; opacity: 0.6; }
     .video-overlay { position: absolute; inset: 0; background: radial-gradient(circle, rgba(15,23,42,0.3) 0%, rgba(15,23,42,0.8) 100%); z-index: 2; }
     #particles-preloader { position: absolute; inset: 0; z-index: 3; }
     #spotlight { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 60%); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); z-index: 4; transition: opacity 0.3s ease; }
-
     #loading-phase { display: flex; flex-direction: column; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10; width: 100%; max-width: 350px; }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
     .hacker-text-container { width: 100%; background: rgba(0, 0, 0, 0.85); border: 1px solid #00f0ff; padding: 15px; font-family: 'Courier New', Courier, monospace; color: #00f0ff; font-size: 0.85rem; box-shadow: 0 0 20px rgba(0,240,255,0.2); position: relative; overflow: hidden; margin-bottom: 15px; backdrop-filter: blur(5px); }
@@ -138,31 +157,7 @@
     .sound-hint { position: absolute; bottom: 20px; background: rgba(0, 240, 255, 0.1); border: 1px solid #00f0ff; color: #00f0ff; padding: 8px 16px; border-radius: 999px; font-size: 0.8rem; font-weight: bold; animation: pulseHint 2s infinite; z-index: 20; pointer-events: none; }
     @keyframes pulseHint { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
 
-    /* ========================================= */
-    /* DESAIN KHUSUS EFEK SCROLL DOKUMENTASI     */
-    /* ========================================= */
-    
-    /* Wadah pembungkus efek scroll */
-    .gallery-scroll-wrapper {
-      position: relative;
-      width: 100%;
-      background-color: #ffffff; /* Warna putih untuk efek halaman baru */
-      border-radius: 40px;
-      padding: 60px 20px;
-      margin-top: 50px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-      overflow: hidden;
-      /* Diatur transparan dulu, akan di-reveal oleh GSAP */
-      opacity: 0;
-      transform: scale(0.8) translateY(100px);
-    }
-
-    /* Teks di dalam kotak putih */
-    .gallery-scroll-wrapper h2 {
-      color: #0f172a; /* Warna gelap agar kontras dengan background putih */
-      text-shadow: none;
-    }
-
+    /* DESAIN STACKED PHOTOS */
     .photo-stack-container { position: relative; width: 100%; max-width: 600px; height: 350px; margin: 40px auto; display: flex; justify-content: center; align-items: center; cursor: pointer; }
     .photo-card { position: absolute; width: 280px; height: 180px; background: #1e293b; border: 4px solid #0f172a; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
     .photo-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
@@ -173,25 +168,23 @@
     .photo-stack-container:hover .photo-card:nth-child(1) { transform: translateY(-40px) translateX(-60px) rotate(-10deg) scale(1); z-index: 1; }
     .photo-stack-container:hover .photo-card:nth-child(2) { transform: translateY(-20px) translateX(60px) rotate(10deg) scale(1); z-index: 2; }
     .photo-stack-container:hover .photo-card:nth-child(3) { transform: translateY(40px) scale(1.05); z-index: 3; }
-    
     .stack-label { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: #0f172a; border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 16px; border-radius: 999px; font-size: 0.75rem; font-weight: bold; box-shadow: 0 0 15px rgba(0,240,255,0.4); z-index: 10; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
     .photo-stack-container:hover .stack-label { transform: translateX(-50%) translateY(-5px) scale(1.05); background: #00f0ff; color: #000; }
 
     @media (max-width: 768px) {
-      section, .glass, .photo-stack-container { 
-        width: 100% !important; 
-        max-width: 100vw !important; 
-        margin-left: auto !important; 
-        margin-right: auto !important; 
-      }
+      section, .glass, .photo-stack-container { width: 100% !important; max-width: 100vw !important; margin-left: auto !important; margin-right: auto !important; }
       .photo-card { width: 220px; height: 150px; }
       .stack-label { font-size: 0.65rem; padding: 5px 12px; }
       #digital-clock { font-size: 0.7rem; letter-spacing: 0; }
-      .gallery-scroll-wrapper { padding: 40px 10px; border-radius: 20px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- LAYAR PUTIH DENGAN GELEMBUNG (Untuk Transisi Scroll) -->
+  <div id="scroll-transition-layer">
+    <div id="bubbles-container"></div>
+  </div>
 
   <div id="scroll-progress-container">
     <div id="scroll-progress"></div>
@@ -211,6 +204,7 @@
     <img id="lightbox-img" src="" alt="Zoomed Image" onclick="event.stopPropagation()">
   </div>
 
+  <!-- PRELOADER -->
   <div id="preloader">
     <video class="bg-video" autoplay loop muted playsinline>
       <source src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/video-petir.mp4" type="video/mp4">
@@ -218,26 +212,19 @@
     <div class="video-overlay"></div>
     <div id="particles-preloader"></div>
     <div id="spotlight"></div>
-
-    <div class="sound-hint" id="sound-hint">
-      🔊 Ketuk Layar untuk Nyalakan Suara
-    </div>
-
+    <div class="sound-hint" id="sound-hint">🔊 Ketuk Layar untuk Nyalakan Suara</div>
     <div id="loading-phase">
       <div class="hacker-text-container">
         <div class="hacker-line hacker-text-blur" id="hacker-line-1">> INITIALIZING SYSTEM...</div>
         <div class="hacker-line hacker-text-blur" id="hacker-line-2">> LOADING WEB CLASS...</div>
         <div class="hacker-line" id="hacker-line-3">> <span id="hacker-fake-code">0x00FF</span><span class="cursor-blink"></span></div>
       </div>
-      <div class="loading-track">
-        <div class="loading-progress" id="progress-bar"></div>
-      </div>
+      <div class="loading-track"><div class="loading-progress" id="progress-bar"></div></div>
       <div class="loading-text-wrapper">
         <span class="loading-label">LOADING</span>
         <span class="loading-percentage" id="progress-percent">0%</span>
       </div>
     </div>
-
     <div id="welcome-phase">
       <span class="line-1">Welcome to</span>
       <span class="line-2">D-IV Teknologi Laboratorium Medis</span>
@@ -247,7 +234,6 @@
   <div id="particles-main"></div>
 
   <div id="main-content-wrapper">
-
     <!-- NAVBAR -->
     <nav class="fixed top-0 inset-x-0 z-50 glass w-full">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
@@ -255,9 +241,7 @@
           <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-8 w-8 sm:h-10 sm:w-10 object-contain">
           <span class="font-bold text-neon neon-text tracking-wide hidden sm:block text-sm sm:text-base">D-IV TLM 2026</span>
         </div>
-        
         <div id="digital-clock" class="text-sm">--:--:--</div>
-
         <div class="hidden md:flex gap-6 text-sm cursor-hover-target">
           <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
           <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
@@ -280,13 +264,12 @@
       </div>
     </nav>
 
-    <!-- HERO -->
+    <!-- HERO (DIBUAT TERANG) -->
     <section class="relative min-h-screen flex items-center justify-center px-6 pt-24 w-full overflow-hidden" id="hero-section">
       <div class="text-center max-w-3xl w-full" data-aos="fade-up" data-aos-duration="1000" id="hero-content">
         <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
         <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
         <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
-        
         <div class="flex justify-center items-center gap-4">
           <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition cursor-hover-target">Jelajahi Kelas</a>
         </div>
@@ -324,47 +307,43 @@
       <div class="max-w-6xl mx-auto w-full">
         <h2 class="text-3xl font-bold text-center text-neon neon-text mb-16" data-aos="fade-up">Struktur & Anggota</h2>
         <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Pengurus Kelas</h3>
-        
         <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24 w-full"></div>
-        
         <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Anggota Kelas</h3>
         <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 w-full"></div>
       </div>
     </section>
 
-    <!-- DOKUMENTASI (EFEK SCROLL ZOOM & PUTIH) -->
-    <section id="gallery" class="py-24 px-4 relative z-10 w-full overflow-hidden flex justify-center">
-      <!-- Kotak Putih Pembungkus -->
-      <div class="gallery-scroll-wrapper w-full max-w-5xl">
-        <h2 class="text-3xl font-bold text-center mb-12">Dokumentasi Kelas</h2>
-        
-        <div class="photo-stack-container cursor-hover-target mx-auto">
-          <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-          </div>
-          <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true')">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-          </div>
-          <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true')">
-            <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-            <div class="stack-label">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              3 Photos
-            </div>
+    <!-- DOKUMENTASI (Efek Zoom & Putih) -->
+    <section id="gallery" class="py-24 px-4 relative z-10 w-full overflow-hidden flex flex-col justify-center items-center">
+      <!-- Teks yang di-zoom -->
+      <h2 class="text-4xl md:text-6xl font-bold text-neon neon-text mb-12 text-center" id="gallery-title">Dokumentasi Kelas</h2>
+      
+      <!-- Wadah Foto -->
+      <div class="photo-stack-container cursor-hover-target mx-auto" data-aos="fade-up" data-aos-duration="1200">
+        <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+        </div>
+        <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true')">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+        </div>
+        <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true')">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+          <div class="stack-label">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            3 Photos
           </div>
         </div>
       </div>
     </section>
 
-    <!-- BUKU TAMU & HUBUNGI KAMI -->
+    <!-- BUKU TAMU -->
     <section id="guestbook" class="py-24 px-6 relative z-10 w-full overflow-hidden">
       <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 w-full">
-        
         <div class="glass rounded-3xl p-8 shadow-neon w-full" data-aos="fade-up" data-aos-duration="1000">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Pesan & Kesan</h2>
           <form id="contactForm" class="space-y-4 cursor-hover-target w-full">
@@ -374,7 +353,6 @@
             <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold hover:shadow-neon transition cursor-hover-target">Kirim Pesan</button>
           </form>
         </div>
-
         <div class="glass rounded-3xl p-8 shadow-neon w-full" data-aos="fade-up" data-aos-duration="1000">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
           <form id="guestForm" class="space-y-4 mb-6 cursor-hover-target w-full">
@@ -396,18 +374,15 @@
           <p class="text-slate-400 text-sm mb-2">Ikuti Media Sosial Kami:</p>
           <p class="text-slate-500 text-xs mb-6">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
         </div>
-        
         <div class="flex flex-wrap gap-4 w-full justify-center items-center">
           <button onclick="document.getElementById('guestbook').scrollIntoView({behavior: 'smooth'})" class="flex items-center gap-2 px-6 py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             <span class="font-semibold text-sm">Contact</span>
           </button>
-
           <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             <span class="font-semibold text-sm">@d4tlm.stikesnas26</span>
           </a>
-          
           <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
             <span class="font-semibold text-sm">@d4tlm_stikesnas26</span>
@@ -415,25 +390,17 @@
         </div>
       </div>
     </footer>
+  </div>
 
-  </div> <!-- Penutup main-content-wrapper -->
-
-  <!-- SUARA PETIR -->
   <audio id="thunder-audio" src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-petir.mp3" preload="auto"></audio>
-
-  <!-- SCRIPT AOS -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script type="module">
     window.scrollTo(0, 0);
     gsap.registerPlugin(ScrollTrigger);
+    AOS.init({ once: false, mirror: false });
 
-    AOS.init({
-      once: false, 
-      mirror: false
-    });
-
-    // JAM DIGITAL YANG SINKRON
+    // JAM DIGITAL
     const clockElement = document.getElementById('digital-clock');
     function updateClock() {
       const now = new Date();
@@ -445,30 +412,23 @@
     }
     updateClock();
 
-    // SHARE WHATSAPP
+    // SHARE
     window.shareToWhatsApp = function() {
       const url = window.location.href;
       const text = "Halo! Cek website keren kelas D-IV TLM STIKES Nasional Surakarta Angkatan 2026 di sini: " + url;
       window.open("https://wa.me/?text=" + encodeURIComponent(text), '_blank');
     }
 
-    // SUARA KLIK SUPER CEPAT
+    // SUARA KLIK
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
     let clickBuffer = null;
-
     fetch('https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-klik.mp3')
-      .then(response => response.arrayBuffer())
-      .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
-      .then(decodedData => { clickBuffer = decodedData; })
-      .catch(e => console.log("Gagal memuat audio klik:", e));
-
-    function unlockAudio() {
-      if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-    }
+      .then(res => res.arrayBuffer()).then(buf => audioCtx.decodeAudioData(buf))
+      .then(data => { clickBuffer = data; }).catch(e => console.log(e));
 
     function playClickSound() {
-      unlockAudio();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       if (!clickBuffer) return; 
       const source = audioCtx.createBufferSource();
       source.buffer = clickBuffer;
@@ -478,220 +438,94 @@
       gainNode.connect(audioCtx.destination);
       source.start(0);
     }
-    
     document.addEventListener('pointerdown', function(e) {
-      if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
-        playClickSound();
-      } else {
-        unlockAudio();
-      }
+      if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) playClickSound();
+      else if (audioCtx.state === 'suspended') audioCtx.resume();
     });
 
-    // COUNT-UP ANGKA
-    const counters = document.querySelectorAll('.counter');
-    const countUpTriggers = document.querySelectorAll('.count-up-trigger');
-    const counterObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const counterElement = entry.target.querySelector('.counter');
-          if (counterElement) {
-            const target = +counterElement.getAttribute('data-target');
-            let count = 0;
-            const speed = target / 30;
-            const updateCount = () => {
-              count += speed;
-              if (count < target) {
-                counterElement.innerText = Math.ceil(count);
-                requestAnimationFrame(updateCount);
-              } else {
-                counterElement.innerText = target;
-              }
-            };
-            updateCount();
-          }
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.5 });
-    countUpTriggers.forEach(trigger => counterObserver.observe(trigger));
-
-    // BACK TO TOP
-    const backToTopBtn = document.getElementById('back-to-top');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) { backToTopBtn.classList.add('show'); } 
-      else { backToTopBtn.classList.remove('show'); }
-    });
-    backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
-
-    // PRELOADER LOGIC
+    // PRELOADER
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
     const loadingPhase = document.getElementById('loading-phase');
     const welcomePhase = document.getElementById('welcome-phase');
     const preloader = document.getElementById('preloader');
-    const spotlight = document.getElementById('spotlight');
     const thunderAudio = document.getElementById('thunder-audio');
     const soundHint = document.getElementById('sound-hint');
 
     document.body.style.overflow = 'hidden'; 
 
     function playThunderSound() {
-      if (thunderAudio) {
-        thunderAudio.volume = 0.6; 
-        thunderAudio.currentTime = 0;
-        thunderAudio.play().catch(e => {});
-      }
+      if (thunderAudio) { thunderAudio.volume = 0.6; thunderAudio.currentTime = 0; thunderAudio.play().catch(e => {}); }
     }
-
     let audioPlayed = false;
     function initThunder() {
       if (!audioPlayed) {
-        playThunderSound();
-        audioPlayed = true;
-        soundHint.style.opacity = '0';
-        unlockAudio(); 
+        playThunderSound(); audioPlayed = true; soundHint.style.opacity = '0';
+        if (audioCtx.state === 'suspended') audioCtx.resume();
       }
     }
-    
     preloader.addEventListener('click', initThunder, { once: true });
     preloader.addEventListener('touchstart', initThunder, { once: true });
-
-    setInterval(() => {
-      if (audioPlayed && progress < 100) { playThunderSound(); }
-    }, 3000); 
-
-    const fakeCodeEl = document.getElementById('hacker-fake-code');
-    const hexChars = "0123456789ABCDEF";
-    setInterval(() => {
-      let randomHex = "0x";
-      for (let i = 0; i < 4; i++) { randomHex += hexChars[Math.floor(Math.random() * 16)]; }
-      fakeCodeEl.innerText = randomHex;
-    }, 50);
-
-    function moveSpotlight(clientX, clientY) {
-      spotlight.style.left = clientX + 'px';
-      spotlight.style.top = clientY + 'px';
-    }
-    preloader.addEventListener('mousemove', (e) => { moveSpotlight(e.clientX, e.clientY); });
-    preloader.addEventListener('touchmove', (e) => {
-      const touch = e.touches[0];
-      if (touch) { moveSpotlight(touch.clientX, touch.clientY); }
-    }, { passive: true });
 
     const interval = setInterval(() => {
       progress += Math.floor(Math.random() * 4) + 1;
       if (progress >= 100) {
-        progress = 100;
-        clearInterval(interval);
+        progress = 100; clearInterval(interval);
         setTimeout(() => { loadingPhase.classList.add('hide'); }, 300);
         setTimeout(() => { welcomePhase.classList.add('show'); }, 800); 
         setTimeout(() => {
-          preloader.style.opacity = '0';
-          preloader.style.visibility = 'hidden';
-          document.body.style.overflow = 'auto';
-          AOS.refresh(); 
-          window.scrollTo(0, 0);
-          unlockAudio(); 
+          preloader.style.opacity = '0'; preloader.style.visibility = 'hidden';
+          document.body.style.overflow = 'auto'; AOS.refresh(); window.scrollTo(0, 0);
           
-          // JALANKAN EFEK SCROLL DOKUMENTASI
+          // Panggil fungsi efek scroll Dokumentasi setelah loading
           initGalleryScrollEffect();
         }, 3000); 
       }
-      progressBar.style.width = progress + '%';
-      progressPercent.innerText = progress + '%';
+      progressBar.style.width = progress + '%'; progressPercent.innerText = progress + '%';
     }, 50);
 
     // ==========================================
     // FUNGSI EFEK SCROLL DOKUMENTASI (ZOOM & PUTIH)
     // ==========================================
     function initGalleryScrollEffect() {
-      gsap.to(".gallery-scroll-wrapper", {
+      // 1. Efek Zoom pada Judul "Dokumentasi Kelas"
+      gsap.to("#gallery-title", {
         scrollTrigger: {
           trigger: "#gallery",
-          start: "top 80%", /* Mulai animasi saat bagian atas gallery mendekati bawah layar */
-          end: "top 20%",   /* Selesai animasi saat bagian atas gallery berada di 20% atas layar */
-          scrub: 1          /* Efek animasi mengikuti kecepatan scroll */
+          start: "top 70%",
+          end: "top 20%",
+          scrub: 1
+        },
+        scale: 1.5, // Membesar
+        opacity: 0, // Memudar
+        y: -100,
+        ease: "power2.inOut"
+      });
+
+      // 2. Efek Layar Putih Muncul Menutupi Layar
+      gsap.to("#scroll-transition-layer", {
+        scrollTrigger: {
+          trigger: "#gallery",
+          start: "top 20%", // Mulai muncul saat judul sudah di-zoom
+          end: "top -10%",  // Selesai saat sudah lewat
+          scrub: 1
         },
         opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 1,
-        ease: "power2.out"
+        pointerEvents: "auto",
+        ease: "power2.inOut"
       });
     }
 
-    // EFEK PARALLAX GSAP (HERO)
-    gsap.to("#hero-content", {
-      scrollTrigger: {
-        trigger: "#hero-section",
-        start: "top top",
-        end: "bottom top",
-        scrub: true 
-      },
-      y: 150, 
-      scale: 0.9, 
-      opacity: 0.2 
-    });
-
-    // PARTIKEL & CURSOR
-    if (window.innerWidth > 768) {
-      const cursorOuter = document.querySelector('.cursor-outer');
-      const cursorInner = document.querySelector('.cursor-inner');
-      const hoverTargets = document.querySelectorAll('a, button, .zoomable, .cursor-hover-target, .photo-card');
-
-      document.addEventListener('mousemove', (e) => {
-        cursorOuter.style.left = e.clientX + 'px';
-        cursorOuter.style.top = e.clientY + 'px';
-        cursorInner.style.left = e.clientX + 'px';
-        cursorInner.style.top = e.clientY + 'px';
-      });
-
-      hoverTargets.forEach(target => {
-        target.addEventListener('mouseenter', () => { cursorOuter.classList.add('cursor-hover'); });
-        target.addEventListener('mouseleave', () => { cursorOuter.classList.remove('cursor-hover'); });
-      });
-    }
-
-    window.addEventListener('scroll', () => {
-      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrollPercentage = (scrollTop / scrollHeight) * 100;
-      document.getElementById('scroll-progress').style.width = scrollPercentage + '%';
-    });
-
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
-    window.closeMenu = function() { mobileMenu.classList.add('hidden'); }
-
-    tsParticles.load("particles-preloader", {
-      fpsLimit: 60,
-      particles: {
-        number: { value: 80, density: { enable: true, value_area: 800 } },
-        color: { value: ["#00f0ff", "#1e90ff", "#ffffff"] },
-        shape: { type: "circle" },
-        opacity: { value: 0.7, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1 } },
-        size: { value: 4, random: true, anim: { enable: true, speed: 2, size_min: 0.1 } },
-        line_linked: { enable: false },
-        move: { enable: true, speed: 1, direction: "none", random: true, straight: false, out_mode: "out" }
-      },
-      interactivity: {
-        detectsOn: "window",
-        events: { onHover: { enable: true, mode: "bubble" }, onClick: { enable: true, mode: "repulse" }, resize: true },
-        modes: { bubble: { distance: 200, size: 6, duration: 2, opacity: 1 }, repulse: { distance: 150, duration: 0.4 } }
-      },
-      detectRetina: true
-    });
-
+    // PARTIKEL UTAMA
     tsParticles.load("particles-main", {
       fpsLimit: 60,
       particles: {
         number: { value: 100, density: { enable: true, value_area: 800 } },
         color: { value: ["#00f0ff", "#1e90ff", "#ffffff"] },
         shape: { type: "circle" },
-        opacity: { value: 0.7, random: true, anim: { enable: true, speed: 1, opacity_min: 0.2, sync: false } },
-        size: { value: 8, random: true, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } },
+        opacity: { value: 0.7, random: true },
+        size: { value: 8, random: true },
         line_linked: { enable: true, distance: 150, color: "#1e90ff", opacity: 0.3, width: 1 },
         move: { enable: true, speed: 1.5, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
       },
@@ -712,6 +546,24 @@
       detectRetina: true
     });
 
+    // FUNGSI MEMBUAT GELEMBUNG DINAMIS
+    const bubblesContainer = document.getElementById('bubbles-container');
+    function createBubbles() {
+      for (let i = 0; i < 20; i++) {
+        let bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        let size = Math.random() * 60 + 20; // Ukuran 20-80px
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        bubble.style.left = Math.random() * 100 + 'vw';
+        bubble.style.animationDuration = (Math.random() * 5 + 5) + 's'; // 5-10 detik
+        bubble.style.animationDelay = Math.random() * 5 + 's';
+        bubblesContainer.appendChild(bubble);
+      }
+    }
+    createBubbles();
+
+    // ZOOM FOTO & LIGHTBOX
     window.zoomImage = function(src) {
       const lightbox = document.getElementById('lightbox');
       document.getElementById('lightbox-img').src = src;
@@ -723,6 +575,52 @@
       document.body.style.overflow = 'auto';
     }
 
+    // MENU MOBILE
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+    window.closeMenu = function() { mobileMenu.classList.add('hidden'); }
+
+    // COUNTER ANGKA
+    const counters = document.querySelectorAll('.counter');
+    const countUpTriggers = document.querySelectorAll('.count-up-trigger');
+    const counterObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counterElement = entry.target.querySelector('.counter');
+          if (counterElement) {
+            const target = +counterElement.getAttribute('data-target');
+            let count = 0;
+            const speed = target / 30;
+            const updateCount = () => {
+              count += speed;
+              if (count < target) { counterElement.innerText = Math.ceil(count); requestAnimationFrame(updateCount); } 
+              else { counterElement.innerText = target; }
+            };
+            updateCount();
+          }
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    countUpTriggers.forEach(trigger => counterObserver.observe(trigger));
+
+    // BACK TO TOP
+    const backToTopBtn = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) { backToTopBtn.classList.add('show'); } 
+      else { backToTopBtn.classList.remove('show'); }
+    });
+    backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrollPercentage = (scrollTop / scrollHeight) * 100;
+      document.getElementById('scroll-progress').style.width = scrollPercentage + '%';
+    });
+
+    // DATA FIREBASE, KARTU ANGGOTA, DLL
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -755,7 +653,6 @@
       card.className = `lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll shine-effect cursor-hover-target`;
       card.setAttribute('data-aos', 'fade-up');
       card.setAttribute('data-aos-delay', index * 100);
-      
       card.innerHTML = `
         <div class="lanyard"></div>
         <div class="lanyard-clip"></div>
@@ -769,7 +666,6 @@
       `;
       committeeGrid.appendChild(card);
     });
-
     VanillaTilt.init(document.querySelectorAll(".lanyard-wrap"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 });
 
     const memberNames = { 3: "Aprelia", 6: "Dania Rahma", 7: "Devita", 9: "Helena", 10: "Jocelin", 16: "Shafira", 18: "Talita" };
@@ -797,14 +693,12 @@
       card.className = 'glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition zoom-scroll shine-effect cursor-hover-target';
       card.setAttribute('data-aos', 'fade-up');
       card.setAttribute('data-aos-delay', (i % 4) * 100);
-
       card.innerHTML = `
         <img src="${imgSrc}" alt="${displayName}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600 object-cover object-top zoomable" onclick="zoomImage('${imgSrc}')">
         <p class="text-sm font-medium text-white">${displayName}</p>
         <p class="text-xs text-slate-400">NIM: ${nimDisplay}</p>`;
       memberGrid.appendChild(card);
     }
-
     VanillaTilt.init(document.querySelectorAll("#memberGrid > div"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 });
 
     async function fetchData() {
@@ -835,11 +729,9 @@
       const oldText = btn.textContent;
       btn.textContent = 'Mengirim...';
       btn.disabled = true;
-      
       const name = e.target.querySelector('input[type="text"]').value;
       const email = e.target.querySelector('input[type="email"]').value;
       const message = e.target.querySelector('textarea').value;
-      
       try {
         await addDoc(collection(db, "contacts"), { name, email, message, created_at: new Date() });
         alert('Pesan & Kesan berhasil dikirim! Terima kasih.');

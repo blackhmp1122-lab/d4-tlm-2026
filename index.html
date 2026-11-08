@@ -39,25 +39,22 @@
     }
 
     /* ========================================= */
-    /* LAYAR PUTIH & GELEMBUNG TRANSISI SCROLL   */
+    /* LAYAR PUTIH & GELEMBUNG TRANSISI          */
     /* ========================================= */
-    #scroll-transition-layer {
+    #page-transition-layer {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: #ffffff; /* Putih Bersih */
-      z-index: 99999; /* Di atas background, di bawah navbar */
-      opacity: 0; /* Awalnya transparan */
-      pointer-events: none; /* Biarkan user nge-scroll */
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: #ffffff; 
+      z-index: 99999; 
+      opacity: 0; 
+      pointer-events: none; 
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
     }
 
-    /* Wadah gelembung */
     #bubbles-container {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -65,11 +62,10 @@
       pointer-events: none;
     }
 
-    /* Animasi Gelembung */
     .bubble {
       position: absolute;
       bottom: -100px;
-      background: rgba(0, 240, 255, 0.15); /* Biru transparan */
+      background: rgba(0, 240, 255, 0.15); 
       border: 2px solid rgba(0, 240, 255, 0.4);
       border-radius: 50%;
       animation: floatUp 10s infinite ease-in;
@@ -84,8 +80,7 @@
     /* SCROLL PROGRESS BAR */
     #scroll-progress-container { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 6px !important; background: rgba(15, 23, 42, 0.8) !important; z-index: 2147483647 !important; pointer-events: none; }
     #scroll-progress { height: 100%; background: #ffffff; width: 0%; position: relative; box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; }
-    #scroll-progress::after { content: ''; position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; background-color: #ffffff; border-radius: 50%; box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; }
-
+    
     /* JAM DIGITAL */
     #digital-clock { font-family: 'Courier New', Courier, monospace; color: #00f0ff; text-shadow: 0 0 5px #00f0ff; font-weight: bold; letter-spacing: 1px; }
 
@@ -181,8 +176,8 @@
 </head>
 <body>
 
-  <!-- LAYAR PUTIH DENGAN GELEMBUNG (Untuk Transisi Scroll) -->
-  <div id="scroll-transition-layer">
+  <!-- LAYAR PUTIH DENGAN GELEMBUNG (Untuk Transisi Halaman Baru) -->
+  <div id="page-transition-layer">
     <div id="bubbles-container"></div>
   </div>
 
@@ -264,132 +259,136 @@
       </div>
     </nav>
 
-    <!-- HERO (DIBUAT TERANG) -->
-    <section class="relative min-h-screen flex items-center justify-center px-6 pt-24 w-full overflow-hidden" id="hero-section">
-      <div class="text-center max-w-3xl w-full" data-aos="fade-up" data-aos-duration="1000" id="hero-content">
-        <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
-        <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
-        <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
-        <div class="flex justify-center items-center gap-4">
-          <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition cursor-hover-target">Jelajahi Kelas</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about" class="py-24 px-6 relative z-10 w-full overflow-hidden">
-      <div class="max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12 w-full" data-aos="fade-up" data-aos-duration="1000">
-        <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
-        <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll count-up-trigger">
-            <p class="text-slate-400 text-sm mb-1">JUMLAH MAHASISWA</p>
-            <p class="text-white text-2xl font-bold counter" data-target="24">0</p>
-          </div>
-          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll">
-            <p class="text-slate-400 text-sm mb-1">PRODI</p>
-            <p class="text-white text-2xl font-bold">D-IV TLM</p>
-          </div>
-          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll">
-            <p class="text-slate-400 text-sm mb-1">INSTITUSI</p>
-            <p class="text-white text-2xl font-bold">STIKES Nasional</p>
-          </div>
-          <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll">
-            <p class="text-slate-400 text-sm mb-1">ANGKATAN</p>
-            <p class="text-white text-2xl font-bold">2026</p>
+    <!-- HALAMAN 1: HERO & LAINNYA -->
+    <div id="page-1-content">
+      <!-- HERO -->
+      <section class="relative min-h-screen flex items-center justify-center px-6 pt-24 w-full overflow-hidden" id="hero-section">
+        <div class="text-center max-w-3xl w-full" data-aos="fade-up" data-aos-duration="1000" id="hero-content">
+          <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
+          <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
+          <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
+          <div class="flex justify-center items-center gap-4">
+            <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition cursor-hover-target">Jelajahi Kelas</a>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- DIRECTORY -->
-    <section id="directory" class="py-24 px-6 relative z-10 w-full overflow-hidden">
-      <div class="max-w-6xl mx-auto w-full">
-        <h2 class="text-3xl font-bold text-center text-neon neon-text mb-16" data-aos="fade-up">Struktur & Anggota</h2>
-        <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Pengurus Kelas</h3>
-        <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24 w-full"></div>
-        <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Anggota Kelas</h3>
-        <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 w-full"></div>
-      </div>
-    </section>
+      <!-- ABOUT -->
+      <section id="about" class="py-24 px-6 relative z-10 w-full overflow-hidden">
+        <div class="max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12 w-full" data-aos="fade-up" data-aos-duration="1000">
+          <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
+          <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll count-up-trigger">
+              <p class="text-slate-400 text-sm mb-1">JUMLAH MAHASISWA</p>
+              <p class="text-white text-2xl font-bold counter" data-target="24">0</p>
+            </div>
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll">
+              <p class="text-slate-400 text-sm mb-1">PRODI</p>
+              <p class="text-white text-2xl font-bold">D-IV TLM</p>
+            </div>
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll">
+              <p class="text-slate-400 text-sm mb-1">INSTITUSI</p>
+              <p class="text-white text-2xl font-bold">STIKES Nasional</p>
+            </div>
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 zoom-scroll">
+              <p class="text-slate-400 text-sm mb-1">ANGKATAN</p>
+              <p class="text-white text-2xl font-bold">2026</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <!-- DOKUMENTASI (Efek Zoom & Putih) -->
-    <section id="gallery" class="py-24 px-4 relative z-10 w-full overflow-hidden flex flex-col justify-center items-center">
-      <!-- Teks yang di-zoom -->
-      <h2 class="text-4xl md:text-6xl font-bold text-neon neon-text mb-12 text-center" id="gallery-title">Dokumentasi Kelas</h2>
-      
-      <!-- Wadah Foto -->
-      <div class="photo-stack-container cursor-hover-target mx-auto" data-aos="fade-up" data-aos-duration="1200">
-        <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+      <!-- DIRECTORY -->
+      <section id="directory" class="py-24 px-6 relative z-10 w-full overflow-hidden">
+        <div class="max-w-6xl mx-auto w-full">
+          <h2 class="text-3xl font-bold text-center text-neon neon-text mb-16" data-aos="fade-up">Struktur & Anggota</h2>
+          <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Pengurus Kelas</h3>
+          <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24 w-full"></div>
+          <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Anggota Kelas</h3>
+          <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 w-full"></div>
         </div>
-        <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true')">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-        </div>
-        <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true')">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-          <div class="stack-label">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            3 Photos
+      </section>
+    </div>
+
+    <!-- HALAMAN 2: TRANSISI DOKUMENTASI -->
+    <div id="page-2-transition" class="w-full h-[50vh] flex justify-center items-center relative z-10 overflow-hidden pointer-events-none">
+      <!-- Teks yang akan di-zoom -->
+      <h2 class="text-4xl md:text-6xl font-bold text-neon neon-text" id="gallery-title-transition">Dokumentasi Kelas</h2>
+    </div>
+
+    <!-- HALAMAN 3: DOKUMENTASI ASLI (Di dalam Layar Putih) -->
+    <div id="page-3-content" class="w-full relative z-10 bg-transparent">
+      <!-- Kita bungkus section dokumentasi asli dengan warna putih -->
+      <div class="bg-white w-full py-24 px-4" id="actual-gallery-section">
+        <div class="max-w-4xl mx-auto text-center">
+          <!-- Judul Asli (Berwarna Gelap karena background putih) -->
+          <h2 class="text-3xl font-bold text-slate-900 mb-12" id="gallery-title-actual">Dokumentasi Kelas</h2>
+          
+          <div class="photo-stack-container cursor-hover-target mx-auto">
+            <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
+              <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1">
+            </div>
+            <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true')">
+              <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%202.jpg?raw=true" alt="Dok 2">
+            </div>
+            <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true')">
+              <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%203.jpg?raw=true" alt="Dok 3">
+              <div class="stack-label">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                3 Photos
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- BUKU TAMU -->
-    <section id="guestbook" class="py-24 px-6 relative z-10 w-full overflow-hidden">
-      <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 w-full">
-        <div class="glass rounded-3xl p-8 shadow-neon w-full" data-aos="fade-up" data-aos-duration="1000">
-          <h2 class="text-2xl font-bold text-neon neon-text mb-6">Pesan & Kesan</h2>
-          <form id="contactForm" class="space-y-4 cursor-hover-target w-full">
-            <input type="text" placeholder="Nama Lengkap" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
-            <input type="email" placeholder="Alamat Email" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
-            <textarea rows="4" placeholder="Pesan Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
-            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold hover:shadow-neon transition cursor-hover-target">Kirim Pesan</button>
-          </form>
-        </div>
-        <div class="glass rounded-3xl p-8 shadow-neon w-full" data-aos="fade-up" data-aos-duration="1000">
-          <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
-          <form id="guestForm" class="space-y-4 mb-6 cursor-hover-target w-full">
-            <input type="text" placeholder="Nama Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
-            <textarea rows="2" placeholder="Tulis ucapan..." required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
-            <button type="submit" class="w-full py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 hover:shadow-neon transition cursor-hover-target">Tambahkan Ucapan</button>
-          </form>
-          <ul id="guestList" class="space-y-3 max-h-64 overflow-y-auto pr-2">
-            <li class="text-center text-slate-500 text-sm py-4">Loading data...</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+      <!-- BUKU TAMU & FOOTER (Juga di dalam area putih) -->
+      <div class="bg-white w-full pb-10 px-6">
+        <section id="guestbook" class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 w-full pt-10">
+          <!-- Form Contact -->
+          <div class="bg-slate-100 rounded-3xl p-8 shadow-xl w-full border border-slate-200">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6">Pesan & Kesan</h2>
+            <form id="contactForm" class="space-y-4 cursor-hover-target w-full">
+              <input type="text" placeholder="Nama Lengkap" required class="w-full bg-white border border-slate-300 focus:border-blue-500 focus:outline-none rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400">
+              <input type="email" placeholder="Alamat Email" required class="w-full bg-white border border-slate-300 focus:border-blue-500 focus:outline-none rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400">
+              <textarea rows="4" placeholder="Pesan Anda" required class="w-full bg-white border border-slate-300 focus:border-blue-500 focus:outline-none rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400"></textarea>
+              <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition cursor-hover-target">Kirim Pesan</button>
+            </form>
+          </div>
 
-    <!-- FOOTER -->
-    <footer class="glass mt-12 py-10 px-6 relative z-10 w-full">
-      <div class="max-w-6xl mx-auto flex flex-col items-center justify-center gap-6">
-        <div class="text-center">
-          <p class="text-slate-400 text-sm mb-2">Ikuti Media Sosial Kami:</p>
-          <p class="text-slate-500 text-xs mb-6">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
-        </div>
-        <div class="flex flex-wrap gap-4 w-full justify-center items-center">
-          <button onclick="document.getElementById('guestbook').scrollIntoView({behavior: 'smooth'})" class="flex items-center gap-2 px-6 py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 transition cursor-hover-target">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-            <span class="font-semibold text-sm">Contact</span>
-          </button>
-          <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition cursor-hover-target">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-            <span class="font-semibold text-sm">@d4tlm.stikesnas26</span>
-          </a>
-          <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition cursor-hover-target">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
-            <span class="font-semibold text-sm">@d4tlm_stikesnas26</span>
-          </a>
-        </div>
+          <!-- Form Buku Tamu -->
+          <div class="bg-slate-100 rounded-3xl p-8 shadow-xl w-full border border-slate-200">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6">Buku Tamu</h2>
+            <form id="guestForm" class="space-y-4 mb-6 cursor-hover-target w-full">
+              <input type="text" placeholder="Nama Anda" required class="w-full bg-white border border-slate-300 focus:border-blue-500 focus:outline-none rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400">
+              <textarea rows="2" placeholder="Tulis ucapan..." required class="w-full bg-white border border-slate-300 focus:border-blue-500 focus:outline-none rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400"></textarea>
+              <button type="submit" class="w-full py-3 rounded-xl border-2 border-blue-500 text-blue-600 font-semibold hover:bg-blue-50 transition cursor-hover-target">Tambahkan Ucapan</button>
+            </form>
+            <ul id="guestList" class="space-y-3 max-h-64 overflow-y-auto pr-2">
+              <li class="text-center text-slate-500 text-sm py-4">Loading data...</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Footer di area putih -->
+        <footer class="mt-16 pt-10 border-t border-slate-200 text-center">
+          <p class="text-slate-500 text-sm mb-4">Ikuti Media Sosial Kami:</p>
+          <p class="text-slate-400 text-xs mb-6">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
+          <div class="flex flex-wrap gap-4 w-full justify-center items-center">
+            <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center gap-2 px-6 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 transition cursor-hover-target">
+              <span class="font-semibold text-sm">Instagram</span>
+            </a>
+            <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center gap-2 px-6 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 transition cursor-hover-target">
+              <span class="font-semibold text-sm">TikTok</span>
+            </a>
+          </div>
+        </footer>
       </div>
-    </footer>
+    </div>
+
   </div>
 
   <audio id="thunder-audio" src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-petir.mp3" preload="auto"></audio>
@@ -478,42 +477,62 @@
           preloader.style.opacity = '0'; preloader.style.visibility = 'hidden';
           document.body.style.overflow = 'auto'; AOS.refresh(); window.scrollTo(0, 0);
           
-          // Panggil fungsi efek scroll Dokumentasi setelah loading
-          initGalleryScrollEffect();
+          initTransitionEffect();
         }, 3000); 
       }
       progressBar.style.width = progress + '%'; progressPercent.innerText = progress + '%';
     }, 50);
 
     // ==========================================
-    // FUNGSI EFEK SCROLL DOKUMENTASI (ZOOM & PUTIH)
+    // FUNGSI EFEK SCROLL ZOOM & GANTI HALAMAN
     // ==========================================
-    function initGalleryScrollEffect() {
-      // 1. Efek Zoom pada Judul "Dokumentasi Kelas"
-      gsap.to("#gallery-title", {
+    function initTransitionEffect() {
+      const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: "#gallery",
-          start: "top 70%",
-          end: "top 20%",
-          scrub: 1
-        },
-        scale: 1.5, // Membesar
-        opacity: 0, // Memudar
-        y: -100,
-        ease: "power2.inOut"
+          trigger: "#page-2-transition",
+          start: "top 80%", // Mulai saat teks masuk dari bawah
+          end: "+=1500",    // Scroll panjang untuk efek dramatis
+          scrub: 1,
+          pin: true,        // Tahan layar selama animasi zoom
+        }
       });
 
-      // 2. Efek Layar Putih Muncul Menutupi Layar
-      gsap.to("#scroll-transition-layer", {
-        scrollTrigger: {
-          trigger: "#gallery",
-          start: "top 20%", // Mulai muncul saat judul sudah di-zoom
-          end: "top -10%",  // Selesai saat sudah lewat
-          scrub: 1
-        },
+      // 1. Zoom Teks "Dokumentasi Kelas"
+      tl.to("#gallery-title-transition", {
+        scale: 20,        // Zoom sangat besar
+        opacity: 0,       // Memudar
+        ease: "power2.in",
+        duration: 2
+      });
+
+      // 2. Munculkan Layar Putih & Gelembung
+      tl.to("#page-transition-layer", {
         opacity: 1,
-        pointerEvents: "auto",
-        ease: "power2.inOut"
+        duration: 0.1
+      }, "-=0.5");
+
+      // 3. Setelah layar putih penuh, ganti posisi scroll ke bagian dokumentasi asli
+      // Kita gunakan onComplete pada scroll trigger
+      ScrollTrigger.create({
+        trigger: "#page-2-transition",
+        start: "bottom bottom", // Saat animasi zoom selesai
+        onEnter: () => {
+          // Sembunyikan halaman 1 & 2, tampilkan halaman 3 (Dokumentasi Asli)
+          gsap.to("#page-1-content", { display: "none" });
+          gsap.to("#page-2-transition", { display: "none" });
+          gsap.to("#page-3-content", { display: "block" }); // Munculkan dokumentasi & form
+          
+          // Kembalikan scroll ke atas dokumentasi asli
+          window.scrollTo(0, 0); // Reset scroll ke atas
+          
+          // Hilangkan layar putih (fade out)
+          gsap.to("#page-transition-layer", {
+            opacity: 0,
+            pointerEvents: "none",
+            duration: 1,
+            delay: 0.5
+          });
+        }
       });
     }
 
@@ -546,24 +565,21 @@
       detectRetina: true
     });
 
-    // FUNGSI MEMBUAT GELEMBUNG DINAMIS
+    // GELEMBUNG PUTIH
     const bubblesContainer = document.getElementById('bubbles-container');
-    function createBubbles() {
-      for (let i = 0; i < 20; i++) {
-        let bubble = document.createElement('div');
-        bubble.classList.add('bubble');
-        let size = Math.random() * 60 + 20; // Ukuran 20-80px
-        bubble.style.width = size + 'px';
-        bubble.style.height = size + 'px';
-        bubble.style.left = Math.random() * 100 + 'vw';
-        bubble.style.animationDuration = (Math.random() * 5 + 5) + 's'; // 5-10 detik
-        bubble.style.animationDelay = Math.random() * 5 + 's';
-        bubblesContainer.appendChild(bubble);
-      }
+    for (let i = 0; i < 20; i++) {
+      let bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      let size = Math.random() * 60 + 20;
+      bubble.style.width = size + 'px';
+      bubble.style.height = size + 'px';
+      bubble.style.left = Math.random() * 100 + 'vw';
+      bubble.style.animationDuration = (Math.random() * 5 + 5) + 's';
+      bubble.style.animationDelay = Math.random() * 5 + 's';
+      bubblesContainer.appendChild(bubble);
     }
-    createBubbles();
 
-    // ZOOM FOTO & LIGHTBOX
+    // ZOOM FOTO
     window.zoomImage = function(src) {
       const lightbox = document.getElementById('lightbox');
       document.getElementById('lightbox-img').src = src;
@@ -581,7 +597,7 @@
     menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
     window.closeMenu = function() { mobileMenu.classList.add('hidden'); }
 
-    // COUNTER ANGKA
+    // COUNTER
     const counters = document.querySelectorAll('.counter');
     const countUpTriggers = document.querySelectorAll('.count-up-trigger');
     const counterObserver = new IntersectionObserver((entries, observer) => {
@@ -620,7 +636,7 @@
       document.getElementById('scroll-progress').style.width = scrollPercentage + '%';
     });
 
-    // DATA FIREBASE, KARTU ANGGOTA, DLL
+    // FIREBASE & KARTU ANGGOTA
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -714,8 +730,8 @@
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           const li = document.createElement('li');
-          li.className = 'bg-slate-900/50 rounded-xl p-4 border border-slate-800 mb-3';
-          li.innerHTML = `<div class="flex justify-between items-start mb-1"><p class="font-semibold text-white">${data.name}</p></div><p class="text-sm text-slate-300">${data.message}</p>`;
+          li.className = 'bg-slate-100 rounded-xl p-4 border border-slate-300 mb-3';
+          li.innerHTML = `<div class="flex justify-between items-start mb-1"><p class="font-semibold text-slate-900">${data.name}</p></div><p class="text-sm text-slate-700">${data.message}</p>`;
           list.appendChild(li);
         });
       } catch (error) {

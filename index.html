@@ -184,32 +184,32 @@
       cursor: crosshair; touch-action: none;
     }
     
-    /* Efek Grid Matrix Latar Belakang */
+    /* Efek Grid Matrix Latar Belakang (Ditaruh di atas video agar terlihat) */
     .matrix-bg {
-      position: absolute; inset: 0; z-index: 0;
+      position: absolute; inset: 0; z-index: 3; /* Di atas video (z-1) dan overlay (z-2) */
       background-image: 
-        linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
-      background-size: 40px 40px;
-      animation: matrixScroll 10s linear infinite;
-      opacity: 0.6;
+        linear-gradient(rgba(0, 240, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.15) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: matrixScroll 5s linear infinite;
+      pointer-events: none;
     }
     @keyframes matrixScroll {
       0% { background-position: 0 0; }
-      100% { background-position: 0 40px; }
+      100% { background-position: 0 50px; }
     }
 
     .bg-video {
       position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%;
       width: auto; height: auto; transform: translateX(-50%) translateY(-50%);
-      z-index: 1; object-fit: cover; opacity: 0.3; /* Dikurangi agar grid terlihat */
+      z-index: 1; object-fit: cover; opacity: 0.4;
     }
     .video-overlay {
       position: absolute; inset: 0;
-      background: radial-gradient(circle, rgba(15,23,42,0.4) 0%, rgba(15,23,42,0.9) 100%);
+      background: radial-gradient(circle, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.9) 100%);
       z-index: 2;
     }
-    #particles-preloader { position: absolute; inset: 0; z-index: 3; }
+    #particles-preloader { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
     #spotlight {
       position: absolute; width: 600px; height: 600px;
       background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 60%);
@@ -241,11 +241,11 @@
     .hacker-line { margin-bottom: 5px; line-height: 1.2; white-space: nowrap; overflow: hidden; }
     .hacker-text-blur { color: rgba(0, 240, 255, 0.8); text-shadow: 0 0 5px rgba(0, 240, 255, 0.5); }
     
-    /* Teks Hex Hacker Glitch */
+    /* Teks Hex Hacker Glitch (Warna Cyan Neon) */
     #hacker-fake-code {
-      color: #00ff00; /* Hijau matrix */
+      color: #00f0ff; /* Warna disamakan dengan teks atas */
       font-weight: bold;
-      text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+      text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
       display: inline-block;
       animation: glitch 0.3s infinite;
     }
@@ -482,6 +482,7 @@
       <source src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/video-petir.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
+    
     <div id="particles-preloader"></div>
     <div id="spotlight"></div>
     <div class="sound-hint" id="sound-hint">🔊 Ketuk Layar untuk Nyalakan Suara</div>

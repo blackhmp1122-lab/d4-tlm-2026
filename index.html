@@ -147,12 +147,7 @@
       }
       .photo-card { width: 220px; height: 150px; }
       .stack-label { font-size: 0.65rem; padding: 5px 12px; }
-      
-      /* UKURAN JAM DI HP */
-      #digital-clock {
-        font-size: 0.7rem; 
-        letter-spacing: 0;
-      }
+      #digital-clock { font-size: 0.7rem; letter-spacing: 0; }
     }
   </style>
 </head>
@@ -221,14 +216,13 @@
           <span class="font-bold text-neon neon-text tracking-wide hidden sm:block text-sm sm:text-base">D-IV TLM 2026</span>
         </div>
         
-        <!-- JAM DIGITAL (SEKARANG MUNCUL DI HP JUGA) -->
         <div id="digital-clock" class="text-sm">--:--:--</div>
 
         <div class="hidden md:flex gap-6 text-sm cursor-hover-target">
           <a href="#about" class="hover:text-neon transition">Tentang Kami</a>
           <a href="#directory" class="hover:text-neon transition">Struktur & Anggota</a>
           <a href="#gallery" class="hover:text-neon transition">Dokumentasi</a>
-          <a href="#guestbook" class="hover:text-neon transition">Buku Tamu</a>
+          <a href="#guestbook" class="hover:text-neon transition">Contact</a>
         </div>
         <button id="menu-btn" class="md:hidden text-slate-300 hover:text-neon focus:outline-none cursor-hover-target">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -241,7 +235,7 @@
           <a href="#about" class="hover:text-neon transition" onclick="closeMenu()">Tentang Kami</a>
           <a href="#directory" class="hover:text-neon transition" onclick="closeMenu()">Struktur & Anggota</a>
           <a href="#gallery" class="hover:text-neon transition" onclick="closeMenu()">Dokumentasi</a>
-          <a href="#guestbook" class="hover:text-neon transition" onclick="closeMenu()">Buku Tamu</a>
+          <a href="#guestbook" class="hover:text-neon transition" onclick="closeMenu()">Contact</a>
         </div>
       </div>
     </nav>
@@ -330,8 +324,9 @@
     <section id="guestbook" class="py-24 px-6 relative z-10 w-full overflow-hidden">
       <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 w-full">
         
+        <!-- Judul diganti jadi Contact -->
         <div class="glass rounded-3xl p-8 shadow-neon w-full" data-aos="fade-up" data-aos-duration="1000">
-          <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
+          <h2 class="text-2xl font-bold text-neon neon-text mb-6">Contact</h2>
           <form id="contactForm" class="space-y-4 cursor-hover-target w-full">
             <input type="text" placeholder="Nama Lengkap" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
             <input type="email" placeholder="Alamat Email" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
@@ -396,9 +391,7 @@
       mirror: true
     });
 
-    // =========================================
     // JAM DIGITAL YANG SINKRON
-    // =========================================
     const clockElement = document.getElementById('digital-clock');
     
     function updateClock() {
@@ -411,7 +404,6 @@
         clockElement.innerText = `${hours}:${minutes}:${seconds}`;
       }
       
-      // Update berdasarkan milidetik, bukan set interval yang bisa ngaco
       requestAnimationFrame(updateClock);
     }
     

@@ -424,24 +424,44 @@
     }
 
     // ==========================================
-    // SUARA KLIK (MENGGUNAKAN FILE MP3 DARI GITHUB)
+    // SUARA KLIK SUPER CEPAT (AUDIO CONTEXT BUFFER)
     // ==========================================
-    const clickAudio = new Audio('https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-klik.mp3');
-    clickAudio.volume = 0.6; // Volume bisa disesuaikan (0.0 - 1.0)
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContext();
+    let clickBuffer = null;
+
+    // Mengunduh file MP3 dan mengubahnya menjadi Buffer (memori) agar instan
+    fetch('https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-klik.mp3')
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
+      .then(decodedData => {
+        clickBuffer = decodedData;
+      })
+      .catch(e => console.log("Gagal memuat audio klik:", e));
 
     function unlockAudio() {
-      // Memancing browser agar mengizinkan pemutaran audio
-      clickAudio.play().then(() => {
-        clickAudio.pause();
-        clickAudio.currentTime = 0;
-      }).catch(e => {});
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
     }
 
     function playClickSound() {
-      // Clone node agar suara bisa diputar berulang kali secara instan tanpa delay
-      const soundClone = clickAudio.cloneNode();
-      soundClone.volume = clickAudio.volume;
-      soundClone.play().catch(e => {});
+      unlockAudio();
+      // Jika buffer belum siap, batalkan agar tidak error
+      if (!clickBuffer) return; 
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = clickBuffer;
+      
+      // Atur volume (0.0 - 1.0)
+      const gainNode = audioCtx.createGain();
+      gainNode.gain.value = 0.6; 
+      
+      source.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      // Mainkan suara langsung dari memori (0 delay)
+      source.start(0);
     }
     
     // Menggunakan pointerdown (lebih responsif untuk laptop & HP)

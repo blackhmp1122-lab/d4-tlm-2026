@@ -264,9 +264,9 @@
     /* TUMPUKAN FOTO (TILT 3D + BUKA SAAT DISENTUH) */
     /* ============================================ */
     .photo-stack-container {
-      --sx: 170px;      /* jarak kartu saat terbuka (desktop) */
-      --rx: 0deg;       /* kemiringan vertikal */
-      --ry: 0deg;       /* kemiringan horizontal */
+      --sx: 170px;
+      --rx: 0deg;
+      --ry: 0deg;
       position: relative; width: 100%; max-width: 640px; height: 380px; margin: 40px auto;
       cursor: pointer; perspective: 1200px; touch-action: pan-y;
     }
@@ -287,12 +287,10 @@
     .photo-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
     .photo-card:hover img { transform: scale(1.08); }
 
-    /* posisi tertutup (tumpukan) */
     .photo-card:nth-child(1) { transform: translate(-50%, -50%) translateY(-18px) scale(0.9); z-index: 1; }
     .photo-card:nth-child(2) { transform: translate(-50%, -50%) translateY(-9px) scale(0.95); z-index: 2; }
     .photo-card:nth-child(3) { transform: translate(-50%, -50%) scale(1); z-index: 3; }
 
-    /* posisi terbuka (menyebar) */
     .photo-stack-container.is-spread .photo-card:nth-child(1) {
       transform: translate(calc(-50% - var(--sx)), calc(-50% - 60px)) rotate(-12deg) scale(1); z-index: 1;
       box-shadow: 0 20px 40px rgba(0, 240, 255, 0.25);
@@ -355,7 +353,6 @@
     }
     @keyframes ringSpin { to { transform: rotate(360deg); } }
 
-    /* Judul: setiap huruf dipisah dan muncul bergelombang */
     .split-title {
       position: relative; z-index: 1; display: flex; flex-wrap: wrap;
       justify-content: center; line-height: 1.1; font-weight: 800;
@@ -538,7 +535,7 @@
       </section>
     </div>
 
-    <!-- HALAMAN 2: ZOOM JUDUL + LATAR PUTIH + GELEMBUNG -->
+    <!-- HALAMAN 2: ZOOM JUDUL + LATAR PUTIH + LATAR TOPOGRAFI -->
     <div id="page-2-transition">
       <canvas id="bubble-canvas"></canvas>
       <div id="title-content">
@@ -767,7 +764,7 @@
     splitTitle(document.getElementById('gallery-title-transition'));
 
     // ==========================================
-    // TRANSISI: ZOOM JUDUL -> LATAR PUTIH -> GELEMBUNG
+    // TRANSISI: ZOOM JUDUL -> LATAR PUTIH -> LATAR TOPOGRAFI
     // ==========================================
     // Jumlah scroll: sekitar 8 putaran mouse. Naikkan/turunkan sesuai selera.
     const SCROLL_DISTANCE = 1000;
@@ -778,9 +775,8 @@
       const canvas = document.getElementById('bubble-canvas');
       const pageTitle = document.getElementById('gallery-title-actual');
 
-      initBubbles(section, canvas);
+      initTopo(section, canvas);
 
-      // Satu timeline yang dikendalikan scroll: turun = masuk, naik = kembali
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -797,7 +793,6 @@
         .to(section, { backgroundColor: '#ffffff', ease: 'none', duration: 0.5 }, 0.8)
         .to(canvas, { opacity: 1, ease: 'none', duration: 0.4 }, 1.1);
 
-      // Judul halaman 3 muncul saat bagian itu masuk layar
       gsap.fromTo(pageTitle,
         { opacity: 0, scale: 0.6 },
         {
@@ -811,25 +806,22 @@
       );
     }
 
-    function initBubbles(section, canvas) {
+    // ==========================================
+    // LATAR TOPOGRAFI: GARIS IKUT KURSOR (MIRIP SITUS EKA)
+    // Garis kontur membentuk cincin konsentris di sekitar kursor.
+    // Saat diklik muncul riak yang menyebar.
+    // ==========================================
+    function initTopo(section, canvas) {
       const ctx = canvas.getContext('2d');
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const pointer = { x: -9999, y: -9999 };
-      let w = 0, h = 0, bubbles = [];
+      const LINES = 46;      // jumlah garis kontur
+      const STEP = 10;       // jarak titik per garis (px) - makin kecil makin halus
+      const RANGE = 230;     // radius pengaruh kursor (px)
+      const RING = 13;       // jarak antar cincin di sekitar kursor (px)
 
-      const rand = (a, b) => a + Math.random() * (b - a);
-
-      function newBubble(fromBottom) {
-        const r = rand(18, 50);
-        return {
-          x: rand(r, Math.max(r, w - r)),
-          y: fromBottom ? h + r + rand(0, h * 0.4) : rand(0, h),
-          r,
-          vx: rand(-0.2, 0.2),
-          vy: rand(-0.6, -1.4),
-          pop: 0
-        };
-      }
+      let w = 0, h = 0;
+      const ptr = { x: 0, y: 0, tx: 0, ty: 0, s: 0, ts: 0 };  // s = kekuatan efek (0..1)
+      const ripples = [];
 
       function resize() {
         w = section.offsetWidth;
@@ -837,89 +829,91 @@
         canvas.width = w * dpr;
         canvas.height = h * dpr;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        if (bubbles.length === 0) {
-          bubbles = Array.from({ length: 22 }, () => newBubble(false));
+      }
+
+      // Posisi dasar garis kontur (tanpa pengaruh kursor)
+      function baseY(k, x) {
+        const t = k / LINES;
+        const y0 = -40 + t * (h + 80);
+        return y0 + 26 * Math.sin(x * 0.004 + k * 0.35) + 12 * Math.sin(x * 0.011 - k * 0.2);
+      }
+
+      // Geser titik agar membentuk cincin di sekitar kursor dan riak klik
+      function warp(x, y) {
+        const dx = x - ptr.x, dy = y - ptr.y;
+        const d = Math.hypot(dx, dy) || 0.0001;
+        let disp = 0;
+
+        if (ptr.s > 0.001) {
+          const fall = Math.exp(-(d * d) / (RANGE * RANGE));
+          disp += ptr.s * 16 * fall * Math.sin(d / RING);
         }
+        for (const rp of ripples) {
+          const diff = d - rp.r;
+          disp += rp.a * Math.exp(-(diff * diff) / (18 * 18));
+        }
+        if (disp === 0) return [x, y];
+        return [x + (dx / d) * disp, y + (dy / d) * disp];
       }
 
       function draw() {
         ctx.clearRect(0, 0, w, h);
 
-        for (const b of bubbles) {
-          // Dorong gelembung menjauh dari kursor atau sentuhan
-          const dx = b.x - pointer.x;
-          const dy = b.y - pointer.y;
-          const dist = Math.hypot(dx, dy);
-          const reach = b.r + 90;
-          if (dist < reach && dist > 0) {
-            const force = (reach - dist) / reach;
-            b.vx += (dx / dist) * force * 0.9;
-            b.vy += (dy / dist) * force * 0.9;
-          }
+        // Kursor mengikuti target dengan sedikit kelembutan
+        ptr.x += (ptr.tx - ptr.x) * 0.2;
+        ptr.y += (ptr.ty - ptr.y) * 0.2;
+        ptr.s += (ptr.ts - ptr.s) * 0.08;
 
-          // Gerak naik perlahan dengan sedikit hambatan
-          b.vx *= 0.96;
-          b.vy += (-0.9 - b.vy) * 0.02;
-          b.x += b.vx;
-          b.y += b.vy;
-
-          if (b.x < b.r) { b.x = b.r; b.vx = Math.abs(b.vx); }
-          if (b.x > w - b.r) { b.x = w - b.r; b.vx = -Math.abs(b.vx); }
-          if (b.y < -b.r) Object.assign(b, newBubble(true));
-
-          // Badan gelembung: biru tipis di atas latar putih
-          ctx.beginPath();
-          ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(30, 144, 255, 0.06)';
-          ctx.fill();
-          ctx.lineWidth = 2;
-          ctx.strokeStyle = 'rgba(30, 144, 255, 0.35)';
-          ctx.stroke();
-
-          // Kilau kecil
-          ctx.beginPath();
-          ctx.arc(b.x - b.r * 0.35, b.y - b.r * 0.35, b.r * 0.18, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-          ctx.fill();
-
-          // Efek pecah
-          if (b.pop > 0) {
-            ctx.beginPath();
-            ctx.arc(b.x, b.y, b.r + (1 - b.pop) * 25, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(30, 144, 255, ${b.pop * 0.5})`;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            b.pop -= 0.06;
-          }
+        // Riak yang menyebar keluar
+        for (let i = ripples.length - 1; i >= 0; i--) {
+          const rp = ripples[i];
+          rp.r += 6;
+          rp.a *= 0.975;
+          if (rp.a < 0.4) ripples.splice(i, 1);
         }
+
+        ctx.strokeStyle = 'rgba(100, 116, 139, 0.3)';
+        ctx.lineWidth = 1;
+
+        for (let k = 0; k <= LINES; k++) {
+          ctx.beginPath();
+          for (let x = -STEP; x <= w + STEP; x += STEP) {
+            const [px, py] = warp(x, baseY(k, x));
+            if (x === -STEP) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+        }
+
         requestAnimationFrame(draw);
       }
 
-      function setPointer(e) {
+      function localPoint(e) {
         const rect = canvas.getBoundingClientRect();
-        pointer.x = e.clientX - rect.left;
-        pointer.y = e.clientY - rect.top;
+        const inside = e.clientX >= rect.left && e.clientX <= rect.right &&
+                       e.clientY >= rect.top && e.clientY <= rect.bottom;
+        return { x: e.clientX - rect.left, y: e.clientY - rect.top, inside };
       }
 
-      // Klik/tap pada gelembung membuatnya pecah dan muncul lagi dari bawah
-      function popAt(e) {
-        const rect = canvas.getBoundingClientRect();
-        if (e.clientY < rect.top || e.clientY > rect.bottom) return;
-        setPointer(e);
-        for (const b of bubbles) {
-          if (Math.hypot(b.x - pointer.x, b.y - pointer.y) < b.r) {
-            const nb = newBubble(true);
-            nb.pop = 1;
-            Object.assign(b, nb);
-            break;
-          }
-        }
-      }
+      window.addEventListener('pointermove', (e) => {
+        const p = localPoint(e);
+        if (!p.inside) { ptr.ts = 0; return; }
+        if (ptr.ts === 0) { ptr.x = p.x; ptr.y = p.y; }   // masuk area: langsung pindah, tidak meluncur dari jauh
+        ptr.tx = p.x; ptr.ty = p.y; ptr.ts = 1;
+      }, { passive: true });
 
-      window.addEventListener('pointermove', setPointer, { passive: true });
-      window.addEventListener('pointerdown', popAt, { passive: true });
+      window.addEventListener('pointerdown', (e) => {
+        const p = localPoint(e);
+        if (!p.inside) return;
+        ptr.tx = ptr.x = p.x; ptr.ty = ptr.y = p.y; ptr.ts = 1;
+        ripples.push({ r: 0, a: 14 });
+      }, { passive: true });
+
+      document.addEventListener('mouseout', (e) => {
+        if (!e.relatedTarget) ptr.ts = 0;
+      });
+
       window.addEventListener('resize', resize);
-
       resize();
       draw();
     }
@@ -936,7 +930,7 @@
     photoStack.addEventListener('pointermove', (e) => {
       if (e.pointerType !== 'mouse') return;
       const r = photoStack.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;   // -0.5 .. 0.5
+      const x = (e.clientX - r.left) / r.width - 0.5;
       const y = (e.clientY - r.top) / r.height - 0.5;
       photoStack.style.setProperty('--ry', (x * 20) + 'deg');
       photoStack.style.setProperty('--rx', (-y * 16) + 'deg');
@@ -948,7 +942,6 @@
       if (e.pointerType === 'mouse') photoStack.classList.remove('is-spread');
     });
 
-    // Di HP: satu tap membuka atau menutup tumpukan
     photoStack.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'touch') photoStack.classList.toggle('is-spread');
     });

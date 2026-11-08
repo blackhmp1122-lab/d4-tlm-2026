@@ -8,6 +8,9 @@
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
   
+  <!-- LIBRARY AOS (ANIMATE ON SCROLL) -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
   <script>
     tailwind.config = {
       theme: {
@@ -126,7 +129,7 @@
       #hero-content { transform: none !important; opacity: 1 !important; }
       .photo-card { width: 220px; height: 150px; }
       .stack-label { font-size: 0.65rem; padding: 5px 12px; }
-      #digital-clock { display: none; } /* Sembunyikan jam di HP biar ga sempit */
+      #digital-clock { display: none; }
     }
   </style>
 </head>
@@ -187,7 +190,7 @@
 
   <div id="main-content-wrapper">
 
-    <!-- NAVBAR DENGAN JAM DIGITAL -->
+    <!-- NAVBAR -->
     <nav class="fixed top-0 inset-x-0 z-50 glass">
       <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -195,7 +198,6 @@
           <span class="font-bold text-neon neon-text tracking-wide hidden sm:block">D-IV TLM 2026</span>
         </div>
         
-        <!-- JAM DIGITAL (Hanya muncul di Desktop) -->
         <div id="digital-clock" class="text-sm">--:--:--</div>
 
         <div class="hidden md:flex gap-6 text-sm cursor-hover-target">
@@ -222,12 +224,12 @@
 
     <!-- HERO -->
     <section class="relative min-h-screen flex items-center justify-center px-6 pt-24" id="hero-section">
-      <div class="reveal text-center max-w-3xl" id="hero-content">
+      <!-- Menggunakan AOS fade-up -->
+      <div class="text-center max-w-3xl" data-aos="fade-up" data-aos-duration="1000" id="hero-content">
         <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
         <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
         <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
         
-        <!-- TOMBOL JELAJAHI & SHARE -->
         <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
           <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition cursor-hover-target">Jelajahi Kelas</a>
           
@@ -241,7 +243,8 @@
 
     <!-- ABOUT -->
     <section id="about" class="py-24 px-6 relative z-10">
-      <div class="reveal parallax-box max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12">
+      <!-- Menggunakan AOS zoom-in -->
+      <div class="max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12" data-aos="zoom-in" data-aos-duration="1000">
         <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
         <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
         <div class="grid grid-cols-2 gap-4">
@@ -268,10 +271,15 @@
     <!-- DIRECTORY -->
     <section id="directory" class="py-24 px-6 relative z-10">
       <div class="max-w-6xl mx-auto">
-        <h2 class="reveal text-3xl font-bold text-center text-neon neon-text mb-16">Struktur & Anggota</h2>
-        <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Pengurus Kelas</h3>
+        <h2 class="text-3xl font-bold text-center text-neon neon-text mb-16" data-aos="fade-down">Struktur & Anggota</h2>
+        <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Pengurus Kelas</h3>
+        
+        <!-- Kartu Pengurus akan dirender JS dengan AOS -->
         <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24"></div>
-        <h3 class="reveal text-xl font-semibold text-slate-300 mb-10 text-center">Anggota Kelas</h3>
+        
+        <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Anggota Kelas</h3>
+        
+        <!-- Kartu Anggota akan dirender JS dengan AOS -->
         <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
       </div>
     </section>
@@ -279,9 +287,10 @@
     <!-- DOKUMENTASI (STACKED PHOTOS) -->
     <section id="gallery" class="py-24 px-6 relative z-10 overflow-hidden">
       <div class="max-w-4xl mx-auto text-center">
-        <h2 class="reveal text-3xl font-bold text-neon neon-text mb-12">Dokumentasi Kelas</h2>
+        <h2 class="text-3xl font-bold text-neon neon-text mb-12" data-aos="fade-down">Dokumentasi Kelas</h2>
         
-        <div class="photo-stack-container reveal cursor-hover-target">
+        <!-- Menggunakan AOS flip-left untuk tumpukan foto -->
+        <div class="photo-stack-container cursor-hover-target" data-aos="flip-left" data-aos-duration="1200">
           <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
             <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1">
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
@@ -308,7 +317,8 @@
     <section id="guestbook" class="py-24 px-6 relative z-10">
       <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
         
-        <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
+        <!-- Menggunakan AOS fade-right -->
+        <div class="glass rounded-3xl p-8 shadow-neon" data-aos="fade-right" data-aos-duration="1000">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
           <form id="contactForm" class="space-y-4 cursor-hover-target">
             <input type="text" placeholder="Nama Lengkap" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
@@ -318,7 +328,8 @@
           </form>
         </div>
 
-        <div class="reveal parallax-box glass rounded-3xl p-8 shadow-neon">
+        <!-- Menggunakan AOS fade-left -->
+        <div class="glass rounded-3xl p-8 shadow-neon" data-aos="fade-left" data-aos-duration="1000">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
           <form id="guestForm" class="space-y-4 mb-6 cursor-hover-target">
             <input type="text" placeholder="Nama Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
@@ -359,10 +370,17 @@
   <!-- SUARA PETIR -->
   <audio id="thunder-audio" src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-petir.mp3" preload="auto"></audio>
 
+  <!-- SCRIPT AOS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
   <script type="module">
-    // =========================================
+    // INISIALISASI AOS
+    AOS.init({
+      once: false, // Set false biar animasi muter terus tiap di-scroll naik/turun
+      mirror: true // Animasi jalan pas di-scroll ke atas juga
+    });
+
     // 1. FITUR JAM DIGITAL REAL-TIME
-    // =========================================
     function updateClock() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -374,21 +392,17 @@
       }
     }
     setInterval(updateClock, 1000);
-    updateClock(); // Panggil langsung saat web dimuat
+    updateClock(); 
 
-    // =========================================
     // 2. FITUR SHARE KE WHATSAPP
-    // =========================================
     window.shareToWhatsApp = function() {
-      const url = window.location.href; // Ambil URL web saat ini
+      const url = window.location.href;
       const text = "Halo! Cek website keren kelas D-IV TLM STIKES Nasional Surakarta Angkatan 2026 di sini: " + url;
       const waLink = "https://wa.me/?text=" + encodeURIComponent(text);
-      window.open(waLink, '_blank'); // Buka tab baru ke WhatsApp
+      window.open(waLink, '_blank');
     }
 
-    // =========================================
     // 3. SUARA KLIK & SUARA PETIR
-    // =========================================
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
     
@@ -412,9 +426,7 @@
       el.addEventListener('click', playClickSound);
     });
 
-    // =========================================
     // 4. FITUR ANIMASI ANGKA BERJALAN (COUNT-UP)
-    // =========================================
     const counters = document.querySelectorAll('.counter');
     const countUpTriggers = document.querySelectorAll('.count-up-trigger');
     
@@ -444,9 +456,7 @@
     }, { threshold: 0.5 });
     countUpTriggers.forEach(trigger => counterObserver.observe(trigger));
 
-    // =========================================
     // 5. FITUR TOMBOL BACK TO TOP
-    // =========================================
     const backToTopBtn = document.getElementById('back-to-top');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 300) { backToTopBtn.classList.add('show'); } 
@@ -454,9 +464,7 @@
     });
     backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-    // =========================================
     // 6. PRELOADER LOGIC & HINT SUARA
-    // =========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
@@ -532,9 +540,7 @@
       progressPercent.innerText = progress + '%';
     }, 50);
 
-    // =========================================
     // SISA LOGIKA (PARTIKEL, CURSOR, DLL)
-    // =========================================
     if (window.innerWidth > 768) {
       const cursorOuter = document.querySelector('.cursor-outer');
       const cursorInner = document.querySelector('.cursor-inner');
@@ -630,6 +636,8 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // REVEAL BIASA (Dihapus karena sudah pakai AOS)
+    // Tapi kita tetap pakai Observer untuk trigger animasi angka
     const revealElements = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -679,7 +687,11 @@
     const committeeGrid = document.getElementById('committeeGrid');
     committeeData.forEach((data, index) => {
       const card = document.createElement('div');
-      card.className = `reveal lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll shine-effect cursor-hover-target`;
+      // Tambahkan AOS ke ID Card
+      card.className = `lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll shine-effect cursor-hover-target`;
+      card.setAttribute('data-aos', 'zoom-in-up');
+      card.setAttribute('data-aos-delay', index * 100);
+      
       card.innerHTML = `
         <div class="lanyard"></div>
         <div class="lanyard-clip"></div>
@@ -692,7 +704,6 @@
         </div>
       `;
       committeeGrid.appendChild(card);
-      revealObserver.observe(card);
     });
 
     VanillaTilt.init(document.querySelectorAll(".lanyard-wrap"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 });
@@ -719,13 +730,16 @@
         if(i === 3 || i === 10 || i === 18) nimDisplay = "0" + i; 
       }
       const card = document.createElement('div');
-      card.className = 'reveal glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition zoom-scroll shine-effect cursor-hover-target';
+      // Tambahkan AOS ke Anggota
+      card.className = 'glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition zoom-scroll shine-effect cursor-hover-target';
+      card.setAttribute('data-aos', 'fade-up');
+      card.setAttribute('data-aos-delay', (i % 4) * 100); // Delay bertahap per kolom
+
       card.innerHTML = `
         <img src="${imgSrc}" alt="${displayName}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600 object-cover object-top zoomable" onclick="zoomImage('${imgSrc}')">
         <p class="text-sm font-medium text-white">${displayName}</p>
         <p class="text-xs text-slate-400">NIM: ${nimDisplay}</p>`;
       memberGrid.appendChild(card);
-      revealObserver.observe(card);
     }
 
     VanillaTilt.init(document.querySelectorAll("#memberGrid > div"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 });

@@ -324,14 +324,15 @@
     #page-2-transition {
       width: 100%; height: 100vh; position: relative; overflow: hidden; background: #0f172a;
     }
+    /* Canvas latar topografi menutupi seluruh halaman 2 */
     #bubble-canvas {
-      position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block;
     }
 
     #title-content {
       position: absolute; inset: 0; display: flex; flex-direction: column;
       justify-content: center; align-items: center; text-align: center; pointer-events: none;
-      padding: 0 24px;
+      padding: 0 24px; z-index: 1;
     }
     .title-ring {
       position: absolute; top: 50%; left: 50%; width: 460px; height: 460px;
@@ -353,29 +354,36 @@
     }
     @keyframes ringSpin { to { transform: rotate(360deg); } }
 
+    /* JUDUL: tanpa blur dan tanpa rotasi 3D agar tajam di HP */
     .split-title {
       position: relative; z-index: 1; display: flex; flex-wrap: wrap;
       justify-content: center; line-height: 1.1; font-weight: 800;
+      filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.45));
     }
+    /* Pembungkus huruf: hanya animasi masuk (naik + memudar) */
     .split-char {
       display: inline-block; white-space: pre;
+      opacity: 0;
+      animation: charIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: var(--d);
+    }
+    .split-char.is-space { width: 0.3em; }
+    /* Huruf di dalam: gradasi warna + gelombang naik-turun */
+    .split-glyph {
+      display: inline-block;
       background: linear-gradient(180deg, #ffffff 0%, #00f0ff 55%, #1e90ff 100%);
       background-size: 100% 200%;
       -webkit-background-clip: text; background-clip: text; color: transparent;
-      filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.55));
-      animation:
-        charIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both,
-        charWave 2.8s ease-in-out infinite;
-      animation-delay: var(--d), calc(var(--d) + 0.9s);
+      animation: charWave 2.8s ease-in-out infinite;
+      animation-delay: var(--w);
     }
-    .split-char.is-space { width: 0.3em; }
     @keyframes charIn {
-      from { opacity: 0; transform: translateY(40px) rotateX(-90deg) scale(0.6); filter: blur(8px); }
-      to   { opacity: 1; transform: translateY(0) rotateX(0) scale(1); filter: drop-shadow(0 0 10px rgba(0,240,255,0.55)); }
+      from { opacity: 0; transform: translateY(24px) scale(0.9); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
     @keyframes charWave {
       0%, 100% { transform: translateY(0); background-position: 0% 0%; }
-      50%      { transform: translateY(-10px); background-position: 0% 100%; }
+      50%      { transform: translateY(-8px); background-position: 0% 100%; }
     }
 
     .title-sub {
@@ -535,7 +543,7 @@
       </section>
     </div>
 
-    <!-- HALAMAN 2: ZOOM JUDUL + LATAR PUTIH + LATAR TOPOGRAFI -->
+    <!-- HALAMAN 2: ZOOM JUDUL + LATAR TOPOGRAFI (FULL HALAMAN) -->
     <div id="page-2-transition">
       <canvas id="bubble-canvas"></canvas>
       <div id="title-content">
@@ -748,23 +756,31 @@
     }, 50);
 
     // ==========================================
-    // JUDUL HALAMAN 2: PECAH JADI HURUF
+    // JUDUL HALAMAN 2: PECAH JADI HURUF (TANPA BLUR)
+    // Setiap huruf dibungkus dua span: luar untuk animasi masuk,
+    // dalam untuk gradasi dan gelombang. Dipisah agar tidak saling menimpa.
     // ==========================================
     function splitTitle(el) {
       const text = el.textContent;
       el.textContent = '';
       [...text].forEach((ch, i) => {
-        const span = document.createElement('span');
-        span.className = 'split-char' + (ch === ' ' ? ' is-space' : '');
-        span.style.setProperty('--d', (i * 0.05) + 's');
-        span.textContent = ch === ' ' ? '\u00A0' : ch;
-        el.appendChild(span);
+        const outer = document.createElement('span');
+        outer.className = 'split-char' + (ch === ' ' ? ' is-space' : '');
+        outer.style.setProperty('--d', (i * 0.05) + 's');
+
+        const inner = document.createElement('span');
+        inner.className = 'split-glyph';
+        inner.style.setProperty('--w', (i * 0.12) + 's');
+        inner.textContent = ch === ' ' ? '\u00A0' : ch;
+
+        outer.appendChild(inner);
+        el.appendChild(outer);
       });
     }
     splitTitle(document.getElementById('gallery-title-transition'));
 
     // ==========================================
-    // TRANSISI: ZOOM JUDUL -> LATAR PUTIH -> LATAR TOPOGRAFI
+    // TRANSISI: ZOOM JUDUL -> LATAR PUTIH
     // ==========================================
     // Jumlah scroll: sekitar 8 putaran mouse. Naikkan/turunkan sesuai selera.
     const SCROLL_DISTANCE = 1000;
@@ -775,7 +791,9 @@
       const canvas = document.getElementById('bubble-canvas');
       const pageTitle = document.getElementById('gallery-title-actual');
 
-      initTopo(section, canvas);
+      // p = 0 saat latar gelap, p = 1 saat latar putih (mengatur warna garis)
+      const topoState = { p: 0 };
+      initTopo(section, canvas, topoState);
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -791,7 +809,7 @@
 
       tl.to(titleContent, { scale: 15, opacity: 0, ease: 'power2.in', duration: 1 }, 0)
         .to(section, { backgroundColor: '#ffffff', ease: 'none', duration: 0.5 }, 0.8)
-        .to(canvas, { opacity: 1, ease: 'none', duration: 0.4 }, 1.1);
+        .to(topoState, { p: 1, ease: 'none', duration: 0.5 }, 0.8);
 
       gsap.fromTo(pageTitle,
         { opacity: 0, scale: 0.6 },
@@ -807,20 +825,17 @@
     }
 
     // ==========================================
-    // LATAR TOPOGRAFI: GARIS IKUT KURSOR (MIRIP SITUS EKA)
-    // Garis kontur membentuk cincin konsentris di sekitar kursor.
-    // Saat diklik muncul riak yang menyebar.
+    // LATAR TOPOGRAFI: SELURUH HALAMAN 2
     // ==========================================
-    function initTopo(section, canvas) {
+    function initTopo(section, canvas, state) {
       const ctx = canvas.getContext('2d');
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const LINES = 46;      // jumlah garis kontur
-      const STEP = 10;       // jarak titik per garis (px) - makin kecil makin halus
-      const RANGE = 230;     // radius pengaruh kursor (px)
-      const RING = 13;       // jarak antar cincin di sekitar kursor (px)
+      const LINES = 52;
+      const STEP = 10;
+      const RING = 13;
 
-      let w = 0, h = 0;
-      const ptr = { x: 0, y: 0, tx: 0, ty: 0, s: 0, ts: 0 };  // s = kekuatan efek (0..1)
+      let w = 0, h = 0, RANGE = 420;
+      const ptr = { x: 0, y: 0, tx: 0, ty: 0, s: 0, ts: 0 };
       const ripples = [];
 
       function resize() {
@@ -829,16 +844,17 @@
         canvas.width = w * dpr;
         canvas.height = h * dpr;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        RANGE = Math.max(420, Math.max(w, h) * 0.45);
       }
 
-      // Posisi dasar garis kontur (tanpa pengaruh kursor)
-      function baseY(k, x) {
-        const t = k / LINES;
-        const y0 = -40 + t * (h + 80);
-        return y0 + 26 * Math.sin(x * 0.004 + k * 0.35) + 12 * Math.sin(x * 0.011 - k * 0.2);
+      function baseY(k, x, t) {
+        const f = k / LINES;
+        const y0 = -60 + f * (h + 120);
+        return y0
+          + 26 * Math.sin(x * 0.004 + k * 0.35 + t)
+          + 12 * Math.sin(x * 0.011 - k * 0.2 - t * 0.7);
       }
 
-      // Geser titik agar membentuk cincin di sekitar kursor dan riak klik
       function warp(x, y) {
         const dx = x - ptr.x, dy = y - ptr.y;
         const d = Math.hypot(dx, dy) || 0.0001;
@@ -856,15 +872,15 @@
         return [x + (dx / d) * disp, y + (dy / d) * disp];
       }
 
-      function draw() {
+      function draw(now) {
         ctx.clearRect(0, 0, w, h);
 
-        // Kursor mengikuti target dengan sedikit kelembutan
+        const t = now * 0.0004;
+
         ptr.x += (ptr.tx - ptr.x) * 0.2;
         ptr.y += (ptr.ty - ptr.y) * 0.2;
         ptr.s += (ptr.ts - ptr.s) * 0.08;
 
-        // Riak yang menyebar keluar
         for (let i = ripples.length - 1; i >= 0; i--) {
           const rp = ripples[i];
           rp.r += 6;
@@ -872,13 +888,16 @@
           if (rp.a < 0.4) ripples.splice(i, 1);
         }
 
-        ctx.strokeStyle = 'rgba(100, 116, 139, 0.3)';
+        const p = state.p;
+        ctx.strokeStyle = p < 0.5
+          ? 'rgba(148, 163, 184, 0.3)'
+          : 'rgba(71, 85, 105, 0.22)';
         ctx.lineWidth = 1;
 
         for (let k = 0; k <= LINES; k++) {
           ctx.beginPath();
           for (let x = -STEP; x <= w + STEP; x += STEP) {
-            const [px, py] = warp(x, baseY(k, x));
+            const [px, py] = warp(x, baseY(k, x, t));
             if (x === -STEP) ctx.moveTo(px, py);
             else ctx.lineTo(px, py);
           }
@@ -898,7 +917,7 @@
       window.addEventListener('pointermove', (e) => {
         const p = localPoint(e);
         if (!p.inside) { ptr.ts = 0; return; }
-        if (ptr.ts === 0) { ptr.x = p.x; ptr.y = p.y; }   // masuk area: langsung pindah, tidak meluncur dari jauh
+        if (ptr.ts === 0) { ptr.x = p.x; ptr.y = p.y; }
         ptr.tx = p.x; ptr.ty = p.y; ptr.ts = 1;
       }, { passive: true });
 
@@ -915,7 +934,7 @@
 
       window.addEventListener('resize', resize);
       resize();
-      draw();
+      requestAnimationFrame(draw);
     }
 
     // ==========================================

@@ -224,26 +224,19 @@
 
     <!-- HERO -->
     <section class="relative min-h-screen flex items-center justify-center px-6 pt-24" id="hero-section">
-      <!-- Menggunakan AOS fade-up -->
       <div class="text-center max-w-3xl" data-aos="fade-up" data-aos-duration="1000" id="hero-content">
         <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
         <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
         <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
         
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+        <div class="flex justify-center items-center gap-4">
           <a href="#directory" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-900 font-semibold shadow-neon hover:scale-105 transition cursor-hover-target">Jelajahi Kelas</a>
-          
-          <button onclick="shareToWhatsApp()" class="inline-block px-8 py-3 rounded-full border border-neon text-neon hover:bg-neon/10 shadow-neon hover:scale-105 transition cursor-hover-target flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-            Share
-          </button>
         </div>
       </div>
     </section>
 
     <!-- ABOUT -->
     <section id="about" class="py-24 px-6 relative z-10">
-      <!-- Menggunakan AOS zoom-in -->
       <div class="max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12" data-aos="zoom-in" data-aos-duration="1000">
         <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
         <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
@@ -274,12 +267,9 @@
         <h2 class="text-3xl font-bold text-center text-neon neon-text mb-16" data-aos="fade-down">Struktur & Anggota</h2>
         <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Pengurus Kelas</h3>
         
-        <!-- Kartu Pengurus akan dirender JS dengan AOS -->
         <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24"></div>
         
         <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Anggota Kelas</h3>
-        
-        <!-- Kartu Anggota akan dirender JS dengan AOS -->
         <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
       </div>
     </section>
@@ -289,7 +279,6 @@
       <div class="max-w-4xl mx-auto text-center">
         <h2 class="text-3xl font-bold text-neon neon-text mb-12" data-aos="fade-down">Dokumentasi Kelas</h2>
         
-        <!-- Menggunakan AOS flip-left untuk tumpukan foto -->
         <div class="photo-stack-container cursor-hover-target" data-aos="flip-left" data-aos-duration="1200">
           <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
             <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1">
@@ -317,7 +306,6 @@
     <section id="guestbook" class="py-24 px-6 relative z-10">
       <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
         
-        <!-- Menggunakan AOS fade-right -->
         <div class="glass rounded-3xl p-8 shadow-neon" data-aos="fade-right" data-aos-duration="1000">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
           <form id="contactForm" class="space-y-4 cursor-hover-target">
@@ -328,7 +316,6 @@
           </form>
         </div>
 
-        <!-- Menggunakan AOS fade-left -->
         <div class="glass rounded-3xl p-8 shadow-neon" data-aos="fade-left" data-aos-duration="1000">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
           <form id="guestForm" class="space-y-4 mb-6 cursor-hover-target">
@@ -343,7 +330,7 @@
       </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- FOOTER DENGAN TOMBOL SHARE -->
     <footer class="glass mt-12 py-10 px-6 relative z-10">
       <div class="max-w-6xl mx-auto flex flex-col items-center justify-center gap-6">
         <div class="text-center">
@@ -351,12 +338,20 @@
           <p class="text-slate-500 text-xs mb-6">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
         </div>
         
-        <div class="flex flex-col md:flex-row gap-6 w-full justify-center items-center">
+        <div class="flex flex-wrap gap-4 w-full justify-center items-center">
+          <!-- Tombol Share -->
+          <button onclick="shareToWhatsApp()" class="flex items-center gap-2 px-6 py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 transition cursor-hover-target">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            <span class="font-semibold text-sm">Bagikan Web</span>
+          </button>
+
+          <!-- Tombol Instagram -->
           <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             <span class="font-semibold text-sm">@d4tlm.stikesnas26</span>
           </a>
           
+          <!-- Tombol TikTok -->
           <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
             <span class="font-semibold text-sm">@d4tlm_stikesnas26</span>
@@ -376,8 +371,8 @@
   <script type="module">
     // INISIALISASI AOS
     AOS.init({
-      once: false, // Set false biar animasi muter terus tiap di-scroll naik/turun
-      mirror: true // Animasi jalan pas di-scroll ke atas juga
+      once: false,
+      mirror: true
     });
 
     // 1. FITUR JAM DIGITAL REAL-TIME
@@ -636,8 +631,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // REVEAL BIASA (Dihapus karena sudah pakai AOS)
-    // Tapi kita tetap pakai Observer untuk trigger animasi angka
     const revealElements = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -687,7 +680,6 @@
     const committeeGrid = document.getElementById('committeeGrid');
     committeeData.forEach((data, index) => {
       const card = document.createElement('div');
-      // Tambahkan AOS ke ID Card
       card.className = `lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll shine-effect cursor-hover-target`;
       card.setAttribute('data-aos', 'zoom-in-up');
       card.setAttribute('data-aos-delay', index * 100);
@@ -730,10 +722,9 @@
         if(i === 3 || i === 10 || i === 18) nimDisplay = "0" + i; 
       }
       const card = document.createElement('div');
-      // Tambahkan AOS ke Anggota
       card.className = 'glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition zoom-scroll shine-effect cursor-hover-target';
       card.setAttribute('data-aos', 'fade-up');
-      card.setAttribute('data-aos-delay', (i % 4) * 100); // Delay bertahap per kolom
+      card.setAttribute('data-aos-delay', (i % 4) * 100);
 
       card.innerHTML = `
         <img src="${imgSrc}" alt="${displayName}" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600 object-cover object-top zoomable" onclick="zoomImage('${imgSrc}')">

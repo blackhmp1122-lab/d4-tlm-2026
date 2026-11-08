@@ -20,6 +20,14 @@
         }
       }
     }
+
+    // Memaksa browser (terutama HP) untuk tidak mengingat posisi scroll terakhir
+    if (history.scrollRestoration) {
+      history.scrollRestoration = 'manual';
+    }
+    window.onbeforeunload = function () {
+      window.scrollTo(0, 0);
+    }
   </script>
   <style>
     html { scroll-behavior: smooth; }
@@ -380,8 +388,10 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script type="module">
+    // Memastikan halaman selalu di paling atas saat pertama dimuat (termasuk di HP)
+    window.scrollTo(0, 0);
+
     // INISIALISASI AOS
-    // PERUBAHAN: once: false & mirror: false agar elemen memudar saat di-scroll ke atas, dan beranimasi lagi saat di-scroll ke bawah
     AOS.init({
       once: false, 
       mirror: false
@@ -413,7 +423,7 @@
       window.open(waLink, '_blank');
     }
 
-    // SUARA KLIK
+    // SUARA KLIK (Diperbaiki agar bunyi di Laptop & HP)
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
     function playClickSound() {
@@ -431,12 +441,18 @@
       osc.stop(audioCtx.currentTime + 0.1);
     }
     
-    // Event Delegation agar elemen dinamis tetap bisa bunyi
-    document.addEventListener('click', function(e) {
+    // Gunakan mousedown (untuk laptop) dan touchstart (untuk HP) agar suara dipicu sebelum link pindah halaman
+    document.addEventListener('mousedown', function(e) {
       if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
         playClickSound();
       }
     });
+    
+    document.addEventListener('touchstart', function(e) {
+      if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
+        playClickSound();
+      }
+    }, { passive: true });
 
     // COUNT-UP ANGKA
     const counters = document.querySelectorAll('.counter');
@@ -544,7 +560,9 @@
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
           document.body.style.overflow = 'auto';
-          AOS.refresh(); // Refresh AOS setelah preloader hilang
+          AOS.refresh(); 
+          // Memaksa scroll ke atas setelah loading selesai
+          window.scrollTo(0, 0);
         }, 3000); 
       }
       progressBar.style.width = progress + '%';

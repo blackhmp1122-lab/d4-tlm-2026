@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" class="scroll-smooth overflow-x-hidden">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
   
-  <!-- LIBRARY AOS (ANIMATE ON SCROLL) -->
+  <!-- LIBRARY AOS -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   
   <script>
@@ -23,7 +23,16 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-    body { background-color: #0f172a; color: #e2e8f0; font-family: ui-sans-serif, system-ui, sans-serif; overflow-x: hidden; }
+    /* Paksa body tidak bisa di scroll ke samping */
+    body { 
+      background-color: #0f172a; 
+      color: #e2e8f0; 
+      font-family: ui-sans-serif, system-ui, sans-serif; 
+      overflow-x: hidden !important; 
+      width: 100%;
+      max-width: 100vw;
+      position: relative;
+    }
     
     /* SCROLL PROGRESS BAR */
     #scroll-progress-container { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 6px !important; background: rgba(15, 23, 42, 0.8) !important; z-index: 2147483647 !important; pointer-events: none; }
@@ -52,14 +61,12 @@
 
     /* SISA CSS */
     #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
-    #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; }
+    #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; width: 100%; overflow-x: hidden; }
     #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button, .cursor-hover-target { pointer-events: auto; }
 
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
     
-    .reveal { opacity: 0; transform: translateY(60px) scale(0.95); transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
-    .reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
     .parallax-box { will-change: transform; transition: transform 0.1s ease-out; }
     .zoom-scroll { transition: transform 0.4s ease, box-shadow 0.4s ease; }
     .zoom-scroll:hover { transform: scale(1.05) translateY(-8px); box-shadow: 0 20px 40px rgba(0, 240, 255, 0.3); z-index: 20; }
@@ -124,9 +131,28 @@
     .stack-label { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.85); border: 1px solid #00f0ff; color: #00f0ff; padding: 6px 16px; border-radius: 999px; font-size: 0.75rem; font-weight: bold; box-shadow: 0 0 15px rgba(0,240,255,0.4); z-index: 10; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; white-space: nowrap; backdrop-filter: blur(4px); }
     .photo-stack-container:hover .stack-label { transform: translateX(-50%) translateY(-5px) scale(1.05); background: #00f0ff; color: #000; }
 
+    /* =========================================
+       FIX LAYOUT HP (ANTI MELAR KE SAMPING)
+       ========================================= */
     @media (max-width: 768px) {
+      /* Matikan efek AOS geser kiri/kanan yang bikin melebar di HP */
+      [data-aos="fade-right"], [data-aos="fade-left"], 
+      [data-aos="zoom-in"], [data-aos="zoom-in-up"],
+      [data-aos="flip-left"] {
+        transform: none !important;
+        opacity: 1 !important;
+      }
+      
+      /* Paksa container tetap di tengah */
       .parallax-box { transform: none !important; }
       #hero-content { transform: none !important; opacity: 1 !important; }
+      section, .glass, .photo-stack-container { 
+        width: 100% !important; 
+        max-width: 100vw !important; 
+        margin-left: auto !important; 
+        margin-right: auto !important; 
+      }
+      
       .photo-card { width: 220px; height: 150px; }
       .stack-label { font-size: 0.65rem; padding: 5px 12px; }
       #digital-clock { display: none; }
@@ -191,7 +217,7 @@
   <div id="main-content-wrapper">
 
     <!-- NAVBAR -->
-    <nav class="fixed top-0 inset-x-0 z-50 glass">
+    <nav class="fixed top-0 inset-x-0 z-50 glass w-full">
       <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-10 w-10 object-contain">
@@ -223,8 +249,8 @@
     </nav>
 
     <!-- HERO -->
-    <section class="relative min-h-screen flex items-center justify-center px-6 pt-24" id="hero-section">
-      <div class="text-center max-w-3xl" data-aos="fade-up" data-aos-duration="1000" id="hero-content">
+    <section class="relative min-h-screen flex items-center justify-center px-6 pt-24 w-full overflow-hidden" id="hero-section">
+      <div class="text-center max-w-3xl w-full" data-aos="fade-up" data-aos-duration="1000" id="hero-content">
         <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
         <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
         <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
@@ -236,8 +262,8 @@
     </section>
 
     <!-- ABOUT -->
-    <section id="about" class="py-24 px-6 relative z-10">
-      <div class="max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12" data-aos="zoom-in" data-aos-duration="1000">
+    <section id="about" class="py-24 px-6 relative z-10 w-full overflow-hidden">
+      <div class="max-w-4xl mx-auto glass rounded-3xl p-8 md:p-12 w-full" data-aos="fade-up" data-aos-duration="1000">
         <h2 class="text-3xl font-bold text-neon neon-text mb-6">Tentang Kami</h2>
         <p class="text-slate-300 leading-relaxed text-lg mb-8">Tahun 2026 menandai awal perjalanan kami sebagai mahasiswa D-IV TLM STIKES Nasional Surakarta...</p>
         <div class="grid grid-cols-2 gap-4">
@@ -262,24 +288,24 @@
     </section>
 
     <!-- DIRECTORY -->
-    <section id="directory" class="py-24 px-6 relative z-10">
-      <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold text-center text-neon neon-text mb-16" data-aos="fade-down">Struktur & Anggota</h2>
+    <section id="directory" class="py-24 px-6 relative z-10 w-full overflow-hidden">
+      <div class="max-w-6xl mx-auto w-full">
+        <h2 class="text-3xl font-bold text-center text-neon neon-text mb-16" data-aos="fade-up">Struktur & Anggota</h2>
         <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Pengurus Kelas</h3>
         
-        <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24"></div>
+        <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24 w-full"></div>
         
         <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Anggota Kelas</h3>
-        <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
+        <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 w-full"></div>
       </div>
     </section>
 
     <!-- DOKUMENTASI (STACKED PHOTOS) -->
-    <section id="gallery" class="py-24 px-6 relative z-10 overflow-hidden">
-      <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-3xl font-bold text-neon neon-text mb-12" data-aos="fade-down">Dokumentasi Kelas</h2>
+    <section id="gallery" class="py-24 px-6 relative z-10 w-full overflow-hidden">
+      <div class="max-w-4xl mx-auto text-center w-full">
+        <h2 class="text-3xl font-bold text-neon neon-text mb-12" data-aos="fade-up">Dokumentasi Kelas</h2>
         
-        <div class="photo-stack-container cursor-hover-target" data-aos="flip-left" data-aos-duration="1200">
+        <div class="photo-stack-container cursor-hover-target mx-auto" data-aos="fade-up" data-aos-duration="1200">
           <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true')">
             <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/dok%201.jpg?raw=true" alt="Dok 1">
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
@@ -303,12 +329,12 @@
     </section>
 
     <!-- BUKU TAMU & HUBUNGI KAMI -->
-    <section id="guestbook" class="py-24 px-6 relative z-10">
-      <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+    <section id="guestbook" class="py-24 px-6 relative z-10 w-full overflow-hidden">
+      <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 w-full">
         
-        <div class="glass rounded-3xl p-8 shadow-neon" data-aos="fade-right" data-aos-duration="1000">
+        <div class="glass rounded-3xl p-8 shadow-neon w-full" data-aos="fade-up" data-aos-duration="1000">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Hubungi Kami</h2>
-          <form id="contactForm" class="space-y-4 cursor-hover-target">
+          <form id="contactForm" class="space-y-4 cursor-hover-target w-full">
             <input type="text" placeholder="Nama Lengkap" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
             <input type="email" placeholder="Alamat Email" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
             <textarea rows="4" placeholder="Pesan Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
@@ -316,9 +342,9 @@
           </form>
         </div>
 
-        <div class="glass rounded-3xl p-8 shadow-neon" data-aos="fade-left" data-aos-duration="1000">
+        <div class="glass rounded-3xl p-8 shadow-neon w-full" data-aos="fade-up" data-aos-duration="1000">
           <h2 class="text-2xl font-bold text-neon neon-text mb-6">Buku Tamu</h2>
-          <form id="guestForm" class="space-y-4 mb-6 cursor-hover-target">
+          <form id="guestForm" class="space-y-4 mb-6 cursor-hover-target w-full">
             <input type="text" placeholder="Nama Anda" required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500">
             <textarea rows="2" placeholder="Tulis ucapan..." required class="w-full bg-slate-900/60 border border-slate-700 focus:border-neon focus:outline-none rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500"></textarea>
             <button type="submit" class="w-full py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 hover:shadow-neon transition cursor-hover-target">Tambahkan Ucapan</button>
@@ -331,7 +357,7 @@
     </section>
 
     <!-- FOOTER DENGAN TOMBOL SHARE -->
-    <footer class="glass mt-12 py-10 px-6 relative z-10">
+    <footer class="glass mt-12 py-10 px-6 relative z-10 w-full">
       <div class="max-w-6xl mx-auto flex flex-col items-center justify-center gap-6">
         <div class="text-center">
           <p class="text-slate-400 text-sm mb-2">Ikuti Media Sosial Kami:</p>
@@ -339,19 +365,16 @@
         </div>
         
         <div class="flex flex-wrap gap-4 w-full justify-center items-center">
-          <!-- Tombol Share -->
           <button onclick="shareToWhatsApp()" class="flex items-center gap-2 px-6 py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             <span class="font-semibold text-sm">Bagikan Web</span>
           </button>
 
-          <!-- Tombol Instagram -->
           <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-neon/50 text-neon hover:bg-neon/10 transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             <span class="font-semibold text-sm">@d4tlm.stikesnas26</span>
           </a>
           
-          <!-- Tombol TikTok -->
           <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" class="flex items-center gap-3 px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:border-neon hover:text-neon transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
             <span class="font-semibold text-sm">@d4tlm_stikesnas26</span>
@@ -375,7 +398,7 @@
       mirror: true
     });
 
-    // 1. FITUR JAM DIGITAL REAL-TIME
+    // JAM DIGITAL
     function updateClock() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -389,7 +412,7 @@
     setInterval(updateClock, 1000);
     updateClock(); 
 
-    // 2. FITUR SHARE KE WHATSAPP
+    // SHARE WHATSAPP
     window.shareToWhatsApp = function() {
       const url = window.location.href;
       const text = "Halo! Cek website keren kelas D-IV TLM STIKES Nasional Surakarta Angkatan 2026 di sini: " + url;
@@ -397,10 +420,9 @@
       window.open(waLink, '_blank');
     }
 
-    // 3. SUARA KLIK & SUARA PETIR
+    // SUARA KLIK
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
-    
     function playClickSound() {
       if (audioCtx.state === 'suspended') { audioCtx.resume(); }
       const osc = audioCtx.createOscillator();
@@ -415,16 +437,14 @@
       osc.start();
       osc.stop(audioCtx.currentTime + 0.1);
     }
-
     const clickableElements = document.querySelectorAll('a, button, .zoomable, .photo-card, .cursor-hover-target');
     clickableElements.forEach(el => {
       el.addEventListener('click', playClickSound);
     });
 
-    // 4. FITUR ANIMASI ANGKA BERJALAN (COUNT-UP)
+    // COUNT-UP ANGKA
     const counters = document.querySelectorAll('.counter');
     const countUpTriggers = document.querySelectorAll('.count-up-trigger');
-    
     const counterObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -433,7 +453,6 @@
             const target = +counterElement.getAttribute('data-target');
             let count = 0;
             const speed = target / 30;
-
             const updateCount = () => {
               count += speed;
               if (count < target) {
@@ -451,7 +470,7 @@
     }, { threshold: 0.5 });
     countUpTriggers.forEach(trigger => counterObserver.observe(trigger));
 
-    // 5. FITUR TOMBOL BACK TO TOP
+    // BACK TO TOP
     const backToTopBtn = document.getElementById('back-to-top');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 300) { backToTopBtn.classList.add('show'); } 
@@ -459,7 +478,7 @@
     });
     backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-    // 6. PRELOADER LOGIC & HINT SUARA
+    // PRELOADER LOGIC
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
     const progressPercent = document.getElementById('progress-percent');
@@ -535,7 +554,7 @@
       progressPercent.innerText = progress + '%';
     }, 50);
 
-    // SISA LOGIKA (PARTIKEL, CURSOR, DLL)
+    // PARTIKEL & CURSOR
     if (window.innerWidth > 768) {
       const cursorOuter = document.querySelector('.cursor-outer');
       const cursorInner = document.querySelector('.cursor-inner');
@@ -631,15 +650,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const revealElements = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) { entry.target.classList.add('visible'); } 
-        else { entry.target.classList.remove('visible'); }
-      });
-    }, { threshold: 0.15 });
-    revealElements.forEach(el => revealObserver.observe(el));
-
     let isTicking = false;
     let lastScrollY = window.scrollY;
     window.addEventListener('scroll', () => {
@@ -681,7 +691,7 @@
     committeeData.forEach((data, index) => {
       const card = document.createElement('div');
       card.className = `lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll shine-effect cursor-hover-target`;
-      card.setAttribute('data-aos', 'zoom-in-up');
+      card.setAttribute('data-aos', 'fade-up');
       card.setAttribute('data-aos-delay', index * 100);
       
       card.innerHTML = `

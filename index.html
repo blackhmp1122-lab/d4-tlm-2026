@@ -380,10 +380,11 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script type="module">
-    // INISIALISASI AOS (Diperbaiki agar tidak bug di laptop & HP)
+    // INISIALISASI AOS
+    // PERUBAHAN: once: false & mirror: true agar animasi terus berulang saat di-scroll bolak-balik
     AOS.init({
-      once: true, // Animasi hanya jalan sekali agar tidak bug saat scroll balik
-      mirror: false
+      once: false, 
+      mirror: true
     });
 
     // JAM DIGITAL YANG SINKRON
@@ -412,7 +413,7 @@
       window.open(waLink, '_blank');
     }
 
-    // SUARA KLIK (Diperbaiki agar bisa mendeteksi elemen dinamis/JS)
+    // SUARA KLIK
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
     function playClickSound() {
@@ -430,7 +431,7 @@
       osc.stop(audioCtx.currentTime + 0.1);
     }
     
-    // Gunakan Event Delegation agar kartu yang dibuat via JS tetap bisa bunyi
+    // Event Delegation agar elemen dinamis tetap bisa bunyi
     document.addEventListener('click', function(e) {
       if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
         playClickSound();
@@ -617,7 +618,6 @@
           onHover: { enable: true, mode: ["grab", "bubble"] }, 
           onClick: { enable: true, mode: "repulse" },
           resize: true,
-          // TAMBAHAN: Mengaktifkan interaksi sentuhan di HP
           touch: { enable: true, mode: ["grab", "repulse"] } 
         },
         modes: { 

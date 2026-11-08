@@ -427,7 +427,7 @@
     // SUARA KLIK (MENGGUNAKAN FILE MP3 DARI GITHUB)
     // ==========================================
     const clickAudio = new Audio('https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-klik.mp3');
-    clickAudio.volume = 0.5;
+    clickAudio.volume = 0.6; // Volume bisa disesuaikan (0.0 - 1.0)
 
     function unlockAudio() {
       // Memancing browser agar mengizinkan pemutaran audio
@@ -438,6 +438,7 @@
     }
 
     function playClickSound() {
+      // Clone node agar suara bisa diputar berulang kali secara instan tanpa delay
       const soundClone = clickAudio.cloneNode();
       soundClone.volume = clickAudio.volume;
       soundClone.play().catch(e => {});
@@ -517,7 +518,7 @@
         playThunderSound();
         audioPlayed = true;
         soundHint.style.opacity = '0';
-        unlockAudio();
+        unlockAudio(); // Membangunkan audio klik
       }
     }
     
@@ -563,7 +564,7 @@
           document.body.style.overflow = 'auto';
           AOS.refresh(); 
           window.scrollTo(0, 0);
-          unlockAudio();
+          unlockAudio(); // Pastikan audio aktif setelah loading
         }, 3000); 
       }
       progressBar.style.width = progress + '%';

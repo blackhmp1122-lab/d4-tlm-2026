@@ -77,6 +77,38 @@
     }
     /* ========================================= */
 
+    /* CUSTOM CURSOR (FIX HILANG) */
+    @media (min-width: 769px) { 
+      body, a, button, .folder-container { cursor: none !important; } 
+    }
+    .cursor-outer { 
+      position: fixed; 
+      width: 30px; height: 30px; 
+      border: 2px solid #00f0ff; 
+      border-radius: 50%; 
+      pointer-events: none; 
+      z-index: 2147483647; /* Paling atas */
+      transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s; 
+      transform: translate(-50%, -50%); 
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); 
+      display: none;
+    }
+    .cursor-inner { 
+      position: fixed; 
+      width: 6px; height: 6px; 
+      background-color: #00f0ff; 
+      border-radius: 50%; 
+      pointer-events: none; 
+      z-index: 2147483647; 
+      transform: translate(-50%, -50%); 
+      box-shadow: 0 0 10px #00f0ff; 
+      display: none;
+    }
+    @media (min-width: 769px) {
+      .cursor-outer, .cursor-inner { display: block; }
+    }
+    .cursor-hover .cursor-outer { width: 50px; height: 50px; background-color: rgba(0, 240, 255, 0.1); border-color: #ffffff; }
+
     /* SCROLL PROGRESS BAR */
     #scroll-progress-container { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 6px !important; background: rgba(15, 23, 42, 0.8) !important; z-index: 2147483647 !important; pointer-events: none; }
     #scroll-progress { height: 100%; background: #ffffff; width: 0%; position: relative; box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; }
@@ -89,16 +121,10 @@
     #back-to-top.show { opacity: 1; visibility: visible; }
     #back-to-top:hover { background: #00f0ff; color: #000; transform: translateY(-5px) scale(1.1); box-shadow: 0 0 25px rgba(0,240,255,0.8); }
 
-    /* CUSTOM CURSOR */
-    @media (min-width: 769px) { body, a, button, .folder-container { cursor: none !important; } }
-    .cursor-outer { position: fixed; width: 30px; height: 30px; border: 2px solid #00f0ff; border-radius: 50%; pointer-events: none; z-index: 9999999; transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s; transform: translate(-50%, -50%); box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
-    .cursor-inner { position: fixed; width: 6px; height: 6px; background-color: #00f0ff; border-radius: 50%; pointer-events: none; z-index: 10000000; transform: translate(-50%, -50%); box-shadow: 0 0 10px #00f0ff; }
-    .cursor-hover .cursor-outer { width: 50px; height: 50px; background-color: rgba(0, 240, 255, 0.1); border-color: #ffffff; }
-
     /* SISA CSS */
     #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; pointer-events: none; }
     #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; width: 100%; overflow-x: hidden; }
-    #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button, #main-content-wrapper .cursor-hover-target { pointer-events: auto; }
+    #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button, #main-content-wrapper .cursor-hover-target, #page-3-content { pointer-events: auto; }
 
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(0, 240, 255, 0.15); }
     .neon-text { text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5); }
@@ -176,7 +202,10 @@
 </head>
 <body>
 
-  <!-- LAYAR PUTIH DENGAN GELEMBUNG (Untuk Transisi Halaman Baru) -->
+  <div class="cursor-outer"></div>
+  <div class="cursor-inner"></div>
+
+  <!-- LAYAR PUTIH DENGAN GELEMBUNG (Transisi) -->
   <div id="page-transition-layer">
     <div id="bubbles-container"></div>
   </div>
@@ -190,9 +219,6 @@
       <path d="M12 19V5M5 12l7-7 7 7"/>
     </svg>
   </div>
-
-  <div class="cursor-outer hidden md:block"></div>
-  <div class="cursor-inner hidden md:block"></div>
 
   <div id="lightbox" onclick="closeLightbox()">
     <div class="close-btn" onclick="closeLightbox()">×</div>
@@ -312,17 +338,14 @@
     </div>
 
     <!-- HALAMAN 2: TRANSISI DOKUMENTASI -->
-    <div id="page-2-transition" class="w-full h-[50vh] flex justify-center items-center relative z-10 overflow-hidden pointer-events-none">
-      <!-- Teks yang akan di-zoom -->
+    <div id="page-2-transition" class="w-full h-[60vh] flex justify-center items-center relative z-10 overflow-hidden pointer-events-none">
       <h2 class="text-4xl md:text-6xl font-bold text-neon neon-text" id="gallery-title-transition">Dokumentasi Kelas</h2>
     </div>
 
-    <!-- HALAMAN 3: DOKUMENTASI ASLI (Di dalam Layar Putih) -->
-    <div id="page-3-content" class="w-full relative z-10 bg-transparent">
-      <!-- Kita bungkus section dokumentasi asli dengan warna putih -->
-      <div class="bg-white w-full py-24 px-4" id="actual-gallery-section">
+    <!-- HALAMAN 3: DOKUMENTASI ASLI (Latar Putih) -->
+    <div id="page-3-content" class="w-full relative z-10 bg-white" style="display: none;">
+      <div class="w-full py-24 px-4">
         <div class="max-w-4xl mx-auto text-center">
-          <!-- Judul Asli (Berwarna Gelap karena background putih) -->
           <h2 class="text-3xl font-bold text-slate-900 mb-12" id="gallery-title-actual">Dokumentasi Kelas</h2>
           
           <div class="photo-stack-container cursor-hover-target mx-auto">
@@ -345,8 +368,8 @@
         </div>
       </div>
 
-      <!-- BUKU TAMU & FOOTER (Juga di dalam area putih) -->
-      <div class="bg-white w-full pb-10 px-6">
+      <!-- BUKU TAMU & FOOTER -->
+      <div class="w-full pb-10 px-6 bg-white">
         <section id="guestbook" class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 w-full pt-10">
           <!-- Form Contact -->
           <div class="bg-slate-100 rounded-3xl p-8 shadow-xl w-full border border-slate-200">
@@ -373,7 +396,7 @@
           </div>
         </section>
 
-        <!-- Footer di area putih -->
+        <!-- Footer -->
         <footer class="mt-16 pt-10 border-t border-slate-200 text-center">
           <p class="text-slate-500 text-sm mb-4">Ikuti Media Sosial Kami:</p>
           <p class="text-slate-400 text-xs mb-6">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
@@ -411,14 +434,32 @@
     }
     updateClock();
 
-    // SHARE
+    // CUSTOM CURSOR FIX
+    if (window.innerWidth > 768) {
+      const cursorOuter = document.querySelector('.cursor-outer');
+      const cursorInner = document.querySelector('.cursor-inner');
+      const hoverTargets = document.querySelectorAll('a, button, .zoomable, .cursor-hover-target, .photo-card');
+
+      document.addEventListener('mousemove', (e) => {
+        cursorOuter.style.left = e.clientX + 'px';
+        cursorOuter.style.top = e.clientY + 'px';
+        cursorInner.style.left = e.clientX + 'px';
+        cursorInner.style.top = e.clientY + 'px';
+      });
+
+      hoverTargets.forEach(target => {
+        target.addEventListener('mouseenter', () => { cursorOuter.classList.add('cursor-hover'); });
+        target.addEventListener('mouseleave', () => { cursorOuter.classList.remove('cursor-hover'); });
+      });
+    }
+
+    // SHARE & SUARA
     window.shareToWhatsApp = function() {
       const url = window.location.href;
       const text = "Halo! Cek website keren kelas D-IV TLM STIKES Nasional Surakarta Angkatan 2026 di sini: " + url;
       window.open("https://wa.me/?text=" + encodeURIComponent(text), '_blank');
     }
 
-    // SUARA KLIK
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
     let clickBuffer = null;
@@ -487,52 +528,65 @@
     // FUNGSI EFEK SCROLL ZOOM & GANTI HALAMAN
     // ==========================================
     function initTransitionEffect() {
+      // 1. Timeline untuk efek Zoom ke Teks Dokumentasi
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: "#page-2-transition",
-          start: "top 80%", // Mulai saat teks masuk dari bawah
-          end: "+=1500",    // Scroll panjang untuk efek dramatis
+          start: "top 80%", 
+          end: "+=1000",    
           scrub: 1,
-          pin: true,        // Tahan layar selama animasi zoom
+          pin: true,        
+          onLeave: () => {
+            // Saat scroll melewati batas zoom (menuju halaman 3)
+            document.getElementById('page-1-content').style.display = 'none';
+            document.getElementById('page-2-transition').style.display = 'none';
+            document.getElementById('page-3-content').style.display = 'block';
+            
+            // Animasi layar putih & gelembung
+            gsap.to("#page-transition-layer", {
+              opacity: 1,
+              pointerEvents: "auto",
+              duration: 0.5,
+              onComplete: () => {
+                window.scrollTo(0, 0); // Paksa scroll ke atas halaman 3
+                gsap.to("#page-transition-layer", {
+                  opacity: 0,
+                  pointerEvents: "none",
+                  duration: 1,
+                  delay: 0.5
+                });
+              }
+            });
+          },
+          onEnterBack: () => {
+             // Saat scroll naik dari halaman 3 kembali ke halaman 1
+             gsap.to("#page-transition-layer", {
+              opacity: 1,
+              pointerEvents: "auto",
+              duration: 0.5,
+              onComplete: () => {
+                document.getElementById('page-3-content').style.display = 'none';
+                document.getElementById('page-2-transition').style.display = 'flex';
+                document.getElementById('page-1-content').style.display = 'block';
+                window.scrollTo(0, document.getElementById('page-2-transition').offsetTop); 
+                gsap.to("#page-transition-layer", {
+                  opacity: 0,
+                  pointerEvents: "none",
+                  duration: 1,
+                  delay: 0.5
+                });
+              }
+            });
+          }
         }
       });
 
-      // 1. Zoom Teks "Dokumentasi Kelas"
+      // Animasi zoom teks
       tl.to("#gallery-title-transition", {
-        scale: 20,        // Zoom sangat besar
-        opacity: 0,       // Memudar
+        scale: 15,        
+        opacity: 0,       
         ease: "power2.in",
         duration: 2
-      });
-
-      // 2. Munculkan Layar Putih & Gelembung
-      tl.to("#page-transition-layer", {
-        opacity: 1,
-        duration: 0.1
-      }, "-=0.5");
-
-      // 3. Setelah layar putih penuh, ganti posisi scroll ke bagian dokumentasi asli
-      // Kita gunakan onComplete pada scroll trigger
-      ScrollTrigger.create({
-        trigger: "#page-2-transition",
-        start: "bottom bottom", // Saat animasi zoom selesai
-        onEnter: () => {
-          // Sembunyikan halaman 1 & 2, tampilkan halaman 3 (Dokumentasi Asli)
-          gsap.to("#page-1-content", { display: "none" });
-          gsap.to("#page-2-transition", { display: "none" });
-          gsap.to("#page-3-content", { display: "block" }); // Munculkan dokumentasi & form
-          
-          // Kembalikan scroll ke atas dokumentasi asli
-          window.scrollTo(0, 0); // Reset scroll ke atas
-          
-          // Hilangkan layar putih (fade out)
-          gsap.to("#page-transition-layer", {
-            opacity: 0,
-            pointerEvents: "none",
-            duration: 1,
-            delay: 0.5
-          });
-        }
       });
     }
 

@@ -423,11 +423,18 @@
       window.open(waLink, '_blank');
     }
 
-    // SUARA KLIK (Diperbaiki agar bunyi di Laptop & HP)
+    // SETUP AUDIO CONTEXT (Membangunkan audio di laptop)
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
+
+    function unlockAudio() {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
     function playClickSound() {
-      if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+      unlockAudio();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
@@ -441,18 +448,12 @@
       osc.stop(audioCtx.currentTime + 0.1);
     }
     
-    // Gunakan mousedown (untuk laptop) dan touchstart (untuk HP) agar suara dipicu sebelum link pindah halaman
-    document.addEventListener('mousedown', function(e) {
+    // Hanya gunakan 'click' agar tidak dobel di HP, dan tetap jalan di laptop
+    document.addEventListener('click', function(e) {
       if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
         playClickSound();
       }
     });
-    
-    document.addEventListener('touchstart', function(e) {
-      if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
-        playClickSound();
-      }
-    }, { passive: true });
 
     // COUNT-UP ANGKA
     const counters = document.querySelectorAll('.counter');
@@ -517,6 +518,8 @@
         playThunderSound();
         audioPlayed = true;
         soundHint.style.opacity = '0';
+        // Membangunkan audio browser saat layar diketuk
+        unlockAudio();
       }
     }
     
@@ -561,8 +564,10 @@
           preloader.style.visibility = 'hidden';
           document.body.style.overflow = 'auto';
           AOS.refresh(); 
-          // Memaksa scroll ke atas setelah loading selesai
           window.scrollTo(0, 0);
+          
+          // Membangunkan audio tepat setelah preloader hilang (khusus laptop)
+          unlockAudio();
         }, 3000); 
       }
       progressBar.style.width = progress + '%';

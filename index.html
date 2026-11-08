@@ -423,44 +423,36 @@
       window.open(waLink, '_blank');
     }
 
-    // SETUP AUDIO CONTEXT (Membangunkan audio di laptop)
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    const audioCtx = new AudioContext();
+    // ==========================================
+    // SUARA KLIK (MENGGUNAKAN FILE MP3 DARI GITHUB)
+    // ==========================================
+    const clickAudio = new Audio('https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-klik.mp3');
+    clickAudio.volume = 0.5;
 
     function unlockAudio() {
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      // Memancing browser agar mengizinkan pemutaran audio
+      clickAudio.play().then(() => {
+        clickAudio.pause();
+        clickAudio.currentTime = 0;
+      }).catch(e => {});
     }
 
     function playClickSound() {
-      unlockAudio();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.1);
+      const soundClone = clickAudio.cloneNode();
+      soundClone.volume = clickAudio.volume;
+      soundClone.play().catch(e => {});
     }
     
-    // Menggunakan pointerdown untuk respon instan di laptop sebelum halaman pindah
+    // Menggunakan pointerdown (lebih responsif untuk laptop & HP)
     document.addEventListener('pointerdown', function(e) {
       if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
         playClickSound();
+      } else {
+        unlockAudio();
       }
     });
 
-    // Fallback khusus touch untuk memastikan suara di HP
-    document.addEventListener('touchstart', function(e) {
-      if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
-        playClickSound();
-      }
-    }, { passive: true });
+    // ==========================================
 
     // COUNT-UP ANGKA
     const counters = document.querySelectorAll('.counter');
@@ -525,7 +517,6 @@
         playThunderSound();
         audioPlayed = true;
         soundHint.style.opacity = '0';
-        // Membangunkan audio browser saat layar diketuk
         unlockAudio();
       }
     }
@@ -572,8 +563,6 @@
           document.body.style.overflow = 'auto';
           AOS.refresh(); 
           window.scrollTo(0, 0);
-          
-          // Membangunkan audio tepat setelah preloader hilang (khusus laptop)
           unlockAudio();
         }, 3000); 
       }

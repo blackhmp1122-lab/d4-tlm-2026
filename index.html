@@ -260,25 +260,46 @@
     }
     @keyframes pulseHint { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
 
-    /* TUMPUKAN FOTO */
+    /* TUMPUKAN FOTO (INTERAKTIF: TILT + BUKA SAAT DISENTUH) */
     .photo-stack-container {
+      --sx: 120px;      /* jarak kartu saat terbuka */
+      --rx: 0deg;       /* kemiringan vertikal */
+      --ry: 0deg;       /* kemiringan horizontal */
       position: relative; width: 100%; max-width: 600px; height: 350px; margin: 40px auto;
-      display: flex; justify-content: center; align-items: center; cursor: pointer;
+      cursor: pointer; perspective: 1000px; touch-action: pan-y;
+    }
+    .photo-stack-inner {
+      position: relative; width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transform: rotateX(var(--rx)) rotateY(var(--ry));
+      transition: transform 0.4s ease;
     }
     .photo-card {
-      position: absolute; width: 280px; height: 180px; background: #1e293b;
+      position: absolute; left: 50%; top: 50%;
+      width: 280px; height: 180px; background: #1e293b;
       border: 4px solid #0f172a; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
     }
     .photo-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
     .photo-card:hover img { transform: scale(1.1); }
-    .photo-card:nth-child(1) { transform: translateY(-20px) scale(0.9); z-index: 1; }
-    .photo-card:nth-child(2) { transform: translateY(-10px) scale(0.95); z-index: 2; }
-    .photo-card:nth-child(3) { transform: translateY(0) scale(1); z-index: 3; }
-    .photo-stack-container:hover .photo-card:nth-child(1) { transform: translateY(-40px) translateX(-60px) rotate(-10deg) scale(1); z-index: 1; }
-    .photo-stack-container:hover .photo-card:nth-child(2) { transform: translateY(-20px) translateX(60px) rotate(10deg) scale(1); z-index: 2; }
-    .photo-stack-container:hover .photo-card:nth-child(3) { transform: translateY(40px) scale(1.05); z-index: 3; }
+
+    /* posisi tertutup (tumpukan) */
+    .photo-card:nth-child(1) { transform: translate(-50%, -50%) translateY(-20px) scale(0.9); z-index: 1; }
+    .photo-card:nth-child(2) { transform: translate(-50%, -50%) translateY(-10px) scale(0.95); z-index: 2; }
+    .photo-card:nth-child(3) { transform: translate(-50%, -50%) scale(1); z-index: 3; }
+
+    /* posisi terbuka (menyebar) */
+    .photo-stack-container.is-spread .photo-card:nth-child(1) {
+      transform: translate(calc(-50% - var(--sx)), calc(-50% - 50px)) rotate(-10deg) scale(1); z-index: 1;
+    }
+    .photo-stack-container.is-spread .photo-card:nth-child(2) {
+      transform: translate(calc(-50% + var(--sx)), calc(-50% - 25px)) rotate(10deg) scale(1); z-index: 2;
+    }
+    .photo-stack-container.is-spread .photo-card:nth-child(3) {
+      transform: translate(-50%, calc(-50% + 40px)) scale(1.05); z-index: 3;
+    }
+
     .stack-label {
       position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
       background: #0f172a; border: 1px solid #00f0ff; color: #00f0ff;
@@ -286,8 +307,13 @@
       box-shadow: 0 0 15px rgba(0,240,255,0.4); z-index: 10; transition: all 0.3s ease;
       display: flex; align-items: center; gap: 5px; white-space: nowrap;
     }
-    .photo-stack-container:hover .stack-label {
-      transform: translateX(-50%) translateY(-5px) scale(1.05); background: #00f0ff; color: #000;
+    .photo-stack-container.is-spread .stack-label {
+      background: #00f0ff; color: #000;
+    }
+    .stack-hint {
+      position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: #64748b; white-space: nowrap; pointer-events: none;
     }
 
     /* HALAMAN 2: TRANSISI */
@@ -298,11 +324,57 @@
       position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0;
     }
 
+    /* JUDUL HALAMAN 2 */
+    #title-content {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center; pointer-events: none;
+      padding: 0 24px;
+    }
+    .title-ring {
+      position: absolute; top: 50%; left: 50%; width: 440px; height: 440px;
+      margin: -220px 0 0 -220px; border-radius: 50%;
+      border: 1px dashed rgba(0, 240, 255, 0.35);
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.15) inset;
+      animation: ringSpin 25s linear infinite;
+    }
+    .title-ring::after {
+      content: ''; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px;
+      margin-left: -5px; border-radius: 50%; background: #00f0ff;
+      box-shadow: 0 0 12px #00f0ff;
+    }
+    @keyframes ringSpin { to { transform: rotate(360deg); } }
+    .title-shimmer {
+      background: linear-gradient(90deg, #00f0ff 0%, #ffffff 25%, #1e90ff 50%, #ffffff 75%, #00f0ff 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: shimmerText 4s linear infinite;
+      filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.55));
+      position: relative; z-index: 1;
+    }
+    @keyframes shimmerText { to { background-position: 200% center; } }
+    .title-sub {
+      letter-spacing: 0.4em; text-transform: uppercase; color: #94a3b8;
+      font-size: 0.75rem; position: relative; z-index: 1;
+    }
+    .title-line {
+      width: 0; height: 2px; position: relative; z-index: 1;
+      background: linear-gradient(90deg, transparent, #00f0ff, transparent);
+      box-shadow: 0 0 10px #00f0ff;
+      animation: lineGrow 1.6s ease-out 0.4s forwards;
+    }
+    @keyframes lineGrow { to { width: 200px; } }
+    .title-pulse {
+      animation: subPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes subPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
     @media (max-width: 768px) {
       section, .glass, .photo-stack-container { width: 100% !important; max-width: 100vw !important; margin-left: auto !important; margin-right: auto !important; }
+      .photo-stack-container { --sx: 70px; }
       .photo-card { width: 220px; height: 150px; }
       .stack-label { font-size: 0.65rem; padding: 5px 12px; }
       #digital-clock { font-size: 0.7rem; letter-spacing: 0; }
+      .title-ring { width: 300px; height: 300px; margin: -150px 0 0 -150px; }
     }
   </style>
 </head>
@@ -441,8 +513,12 @@
     <!-- HALAMAN 2: ZOOM JUDUL + LATAR PUTIH + GELEMBUNG -->
     <div id="page-2-transition">
       <canvas id="bubble-canvas"></canvas>
-      <div class="absolute inset-0 flex justify-center items-center pointer-events-none">
-        <h2 class="text-4xl md:text-6xl font-bold text-neon neon-text" id="gallery-title-transition">Dokumentasi Kelas</h2>
+      <div id="title-content">
+        <div class="title-ring"></div>
+        <p class="title-sub title-pulse mb-4">D-IV TLM 2026</p>
+        <h2 class="title-shimmer text-4xl md:text-6xl font-extrabold leading-tight" id="gallery-title-transition">Dokumentasi Kelas</h2>
+        <div class="title-line mt-6"></div>
+        <p class="title-sub title-pulse mt-6">Scroll untuk melihat</p>
       </div>
     </div>
 
@@ -452,20 +528,23 @@
         <div class="max-w-4xl mx-auto text-center">
           <h2 class="text-3xl font-bold text-slate-900 mb-12 opacity-0" id="gallery-title-actual">Dokumentasi Kelas</h2>
 
-          <div class="photo-stack-container cursor-hover-target mx-auto">
-            <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%201.jpg')">
-              <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%201.jpg" alt="Dok 1">
-            </div>
-            <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%202.jpg')">
-              <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%202.jpg" alt="Dok 2">
-            </div>
-            <div class="photo-card shine-effect cursor-hover-target" onclick="zoomImage('https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%203.jpg')">
-              <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%203.jpg" alt="Dok 3">
-              <div class="stack-label">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                3 Photos
+          <div class="photo-stack-container cursor-hover-target mx-auto" id="photoStack">
+            <span class="stack-hint">Sentuh untuk membuka</span>
+            <div class="photo-stack-inner">
+              <div class="photo-card shine-effect" onclick="zoomImage('https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%201.jpg')">
+                <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%201.jpg" alt="Dok 1">
+              </div>
+              <div class="photo-card shine-effect" onclick="zoomImage('https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%202.jpg')">
+                <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%202.jpg" alt="Dok 2">
+              </div>
+              <div class="photo-card shine-effect" onclick="zoomImage('https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%203.jpg')">
+                <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%203.jpg" alt="Dok 3">
+                <div class="stack-label">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  3 Photos
+                </div>
               </div>
             </div>
           </div>
@@ -505,11 +584,13 @@
           <p class="text-slate-500 text-sm mb-4">Ikuti Media Sosial Kami:</p>
           <p class="text-slate-400 text-xs mb-6">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
           <div class="flex flex-wrap gap-4 w-full justify-center items-center">
-            <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" rel="noopener" class="flex items-center gap-2 px-6 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 transition cursor-hover-target">
+            <a href="https://instagram.com/d4tlm.stikesnas26" target="_blank" rel="noopener" class="flex flex-col items-center gap-0.5 px-6 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 transition cursor-hover-target">
               <span class="font-semibold text-sm">Instagram</span>
+              <span class="text-xs text-slate-500">@d4tlm.stikesnas26</span>
             </a>
-            <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" rel="noopener" class="flex items-center gap-2 px-6 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 transition cursor-hover-target">
+            <a href="https://tiktok.com/@d4tlm_stikesnas26" target="_blank" rel="noopener" class="flex flex-col items-center gap-0.5 px-6 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 transition cursor-hover-target">
               <span class="font-semibold text-sm">TikTok</span>
+              <span class="text-xs text-slate-500">@d4tlm_stikesnas26</span>
             </a>
           </div>
         </footer>
@@ -643,12 +724,12 @@
     // ==========================================
     // TRANSISI: ZOOM JUDUL -> LATAR PUTIH -> GELEMBUNG
     // ==========================================
-    // Jumlah scroll: sekitar 8 putaran mouse (1 putaran ~100px). Naikkan/turunkan sesuai selera.
+    // Jumlah scroll: sekitar 8 putaran mouse. Naikkan/turunkan sesuai selera.
     const SCROLL_DISTANCE = 1000;
 
     function initTransitionEffect() {
       const section = document.getElementById('page-2-transition');
-      const title = document.getElementById('gallery-title-transition');
+      const titleContent = document.getElementById('title-content');
       const canvas = document.getElementById('bubble-canvas');
       const pageTitle = document.getElementById('gallery-title-actual');
 
@@ -667,7 +748,7 @@
         }
       });
 
-      tl.to(title, { scale: 15, opacity: 0, ease: 'power2.in', duration: 1 }, 0)
+      tl.to(titleContent, { scale: 15, opacity: 0, ease: 'power2.in', duration: 1 }, 0)
         .to(section, { backgroundColor: '#ffffff', ease: 'none', duration: 0.5 }, 0.8)
         .to(canvas, { opacity: 1, ease: 'none', duration: 0.4 }, 1.1);
 
@@ -741,7 +822,7 @@
           if (b.x > w - b.r) { b.x = w - b.r; b.vx = -Math.abs(b.vx); }
           if (b.y < -b.r) Object.assign(b, newBubble(true));
 
-          // Badan gelembung: biru sangat tipis di atas latar putih
+          // Badan gelembung: biru tipis di atas latar putih
           ctx.beginPath();
           ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
           ctx.fillStyle = 'rgba(30, 144, 255, 0.06)';
@@ -797,6 +878,36 @@
       resize();
       draw();
     }
+
+    // ==========================================
+    // TUMPUKAN FOTO: TILT + BUKA SAAT DISENTUH
+    // ==========================================
+    const photoStack = document.getElementById('photoStack');
+
+    photoStack.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse') photoStack.classList.add('is-spread');
+    });
+
+    photoStack.addEventListener('pointermove', (e) => {
+      const r = photoStack.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;   // -0.5 .. 0.5
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      photoStack.style.setProperty('--ry', (x * 18) + 'deg');
+      photoStack.style.setProperty('--rx', (-y * 14) + 'deg');
+    });
+
+    photoStack.addEventListener('pointerleave', (e) => {
+      photoStack.style.setProperty('--rx', '0deg');
+      photoStack.style.setProperty('--ry', '0deg');
+      if (e.pointerType === 'mouse') photoStack.classList.remove('is-spread');
+    });
+
+    // Di HP: satu tap membuka atau menutup tumpukan
+    photoStack.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') {
+        photoStack.classList.toggle('is-spread');
+      }
+    });
 
     // ==========================================
     // PARTIKEL UTAMA

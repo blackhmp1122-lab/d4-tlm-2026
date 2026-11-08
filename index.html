@@ -448,12 +448,19 @@
       osc.stop(audioCtx.currentTime + 0.1);
     }
     
-    // Hanya gunakan 'click' agar tidak dobel di HP, dan tetap jalan di laptop
-    document.addEventListener('click', function(e) {
+    // Menggunakan pointerdown untuk respon instan di laptop sebelum halaman pindah
+    document.addEventListener('pointerdown', function(e) {
       if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
         playClickSound();
       }
     });
+
+    // Fallback khusus touch untuk memastikan suara di HP
+    document.addEventListener('touchstart', function(e) {
+      if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
+        playClickSound();
+      }
+    }, { passive: true });
 
     // COUNT-UP ANGKA
     const counters = document.querySelectorAll('.counter');

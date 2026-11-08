@@ -338,7 +338,7 @@
     </div>
 
     <!-- HALAMAN 2: TRANSISI DOKUMENTASI -->
-    <div id="page-2-transition" class="w-full h-[60vh] flex justify-center items-center relative z-10 overflow-hidden pointer-events-none">
+    <div id="page-2-transition" class="w-full h-screen flex justify-center items-center relative z-10 overflow-hidden pointer-events-none">
       <h2 class="text-4xl md:text-6xl font-bold text-neon neon-text" id="gallery-title-transition">Dokumentasi Kelas</h2>
     </div>
 
@@ -528,64 +528,49 @@
     // FUNGSI EFEK SCROLL ZOOM & GANTI HALAMAN
     // ==========================================
     function initTransitionEffect() {
-      // 1. Timeline untuk efek Zoom ke Teks Dokumentasi
+      // Timeline untuk efek Zoom ke Teks Dokumentasi
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: "#page-2-transition",
-          start: "top 80%", 
-          end: "+=1000",    
-          scrub: 1,
-          pin: true,        
-          onLeave: () => {
-            // Saat scroll melewati batas zoom (menuju halaman 3)
+          start: "top top", // Mulai saat section transisi menyentuh atas
+          end: "+=2000",    // 2000px scroll space (memberikan efek lambat/zoom)
+          scrub: 1,         // Smooth scrubbing (1 detik lag)
+          pin: true,        // Kunci layar
+          onEnter: () => {
+            // Saat scroll ke bawah menembus batas akhir
             document.getElementById('page-1-content').style.display = 'none';
             document.getElementById('page-2-transition').style.display = 'none';
             document.getElementById('page-3-content').style.display = 'block';
             
-            // Animasi layar putih & gelembung
             gsap.to("#page-transition-layer", {
-              opacity: 1,
-              pointerEvents: "auto",
-              duration: 0.5,
+              opacity: 1, pointerEvents: "auto", duration: 0.5,
               onComplete: () => {
-                window.scrollTo(0, 0); // Paksa scroll ke atas halaman 3
-                gsap.to("#page-transition-layer", {
-                  opacity: 0,
-                  pointerEvents: "none",
-                  duration: 1,
-                  delay: 0.5
-                });
+                window.scrollTo(0, 0);
+                gsap.to("#page-transition-layer", { opacity: 0, pointerEvents: "none", duration: 1, delay: 0.5 });
               }
             });
           },
-          onEnterBack: () => {
-             // Saat scroll naik dari halaman 3 kembali ke halaman 1
+          onLeaveBack: () => {
+             // Saat scroll ke atas dari halaman 3 kembali ke halaman 1
              gsap.to("#page-transition-layer", {
-              opacity: 1,
-              pointerEvents: "auto",
-              duration: 0.5,
+              opacity: 1, pointerEvents: "auto", duration: 0.5,
               onComplete: () => {
                 document.getElementById('page-3-content').style.display = 'none';
                 document.getElementById('page-2-transition').style.display = 'flex';
                 document.getElementById('page-1-content').style.display = 'block';
                 window.scrollTo(0, document.getElementById('page-2-transition').offsetTop); 
-                gsap.to("#page-transition-layer", {
-                  opacity: 0,
-                  pointerEvents: "none",
-                  duration: 1,
-                  delay: 0.5
-                });
+                gsap.to("#page-transition-layer", { opacity: 0, pointerEvents: "none", duration: 1, delay: 0.5 });
               }
             });
           }
         }
       });
 
-      // Animasi zoom teks
+      // Animasi zoom teks (Membesar perlahan seiring scroll)
       tl.to("#gallery-title-transition", {
         scale: 15,        
         opacity: 0,       
-        ease: "power2.in",
+        ease: "power2.inOut",
         duration: 2
       });
     }

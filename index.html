@@ -44,7 +44,7 @@
       color: #00f0ff;
       text-shadow: 0 0 5px #00f0ff;
       font-weight: bold;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
     }
 
     /* TOMBOL BACK TO TOP */
@@ -147,7 +147,12 @@
       }
       .photo-card { width: 220px; height: 150px; }
       .stack-label { font-size: 0.65rem; padding: 5px 12px; }
-      #digital-clock { display: none; }
+      
+      /* UKURAN JAM DI HP */
+      #digital-clock {
+        font-size: 0.7rem; 
+        letter-spacing: 0;
+      }
     }
   </style>
 </head>
@@ -210,12 +215,13 @@
 
     <!-- NAVBAR -->
     <nav class="fixed top-0 inset-x-0 z-50 glass w-full">
-      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-10 w-10 object-contain">
-          <span class="font-bold text-neon neon-text tracking-wide hidden sm:block">D-IV TLM 2026</span>
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <img src="https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/logostikes.jpg?raw=true" alt="Logo STIKES" class="h-8 w-8 sm:h-10 sm:w-10 object-contain">
+          <span class="font-bold text-neon neon-text tracking-wide hidden sm:block text-sm sm:text-base">D-IV TLM 2026</span>
         </div>
         
+        <!-- JAM DIGITAL (SEKARANG MUNCUL DI HP JUGA) -->
         <div id="digital-clock" class="text-sm">--:--:--</div>
 
         <div class="hidden md:flex gap-6 text-sm cursor-hover-target">
@@ -391,7 +397,7 @@
     });
 
     // =========================================
-    // PERBAIKAN JAM DIGITAL (SINKRON 100%)
+    // JAM DIGITAL YANG SINKRON
     // =========================================
     const clockElement = document.getElementById('digital-clock');
     
@@ -405,12 +411,10 @@
         clockElement.innerText = `${hours}:${minutes}:${seconds}`;
       }
       
-      // Panggil lagi tepat di milidetik awal detik berikutnya
-      // Biar sinkron dan nggak kecepatan/lambatan
+      // Update berdasarkan milidetik, bukan set interval yang bisa ngaco
       requestAnimationFrame(updateClock);
     }
     
-    // Jalankan fungsi jam
     updateClock();
 
     // SHARE WHATSAPP

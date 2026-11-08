@@ -11,6 +11,10 @@
   <!-- LIBRARY AOS -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   
+  <!-- LIBRARY GSAP (Untuk Efek Parallax Premium) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
   <script>
     tailwind.config = {
       theme: {
@@ -391,6 +395,9 @@
     // Memastikan halaman selalu di paling atas saat pertama dimuat (termasuk di HP)
     window.scrollTo(0, 0);
 
+    // Daftarkan plugin ScrollTrigger GSAP
+    gsap.registerPlugin(ScrollTrigger);
+
     // INISIALISASI AOS
     AOS.init({
       once: false, 
@@ -430,7 +437,6 @@
     const audioCtx = new AudioContext();
     let clickBuffer = null;
 
-    // Mengunduh file MP3 dan mengubahnya menjadi Buffer (memori) agar instan
     fetch('https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-klik.mp3')
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
@@ -447,24 +453,20 @@
 
     function playClickSound() {
       unlockAudio();
-      // Jika buffer belum siap, batalkan agar tidak error
       if (!clickBuffer) return; 
 
       const source = audioCtx.createBufferSource();
       source.buffer = clickBuffer;
       
-      // Atur volume (0.0 - 1.0)
       const gainNode = audioCtx.createGain();
       gainNode.gain.value = 0.6; 
       
       source.connect(gainNode);
       gainNode.connect(audioCtx.destination);
       
-      // Mainkan suara langsung dari memori (0 delay)
       source.start(0);
     }
     
-    // Menggunakan pointerdown (lebih responsif untuk laptop & HP)
     document.addEventListener('pointerdown', function(e) {
       if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
         playClickSound();
@@ -472,8 +474,6 @@
         unlockAudio();
       }
     });
-
-    // ==========================================
 
     // COUNT-UP ANGKA
     const counters = document.querySelectorAll('.counter');
@@ -538,7 +538,7 @@
         playThunderSound();
         audioPlayed = true;
         soundHint.style.opacity = '0';
-        unlockAudio(); // Membangunkan audio klik
+        unlockAudio(); 
       }
     }
     
@@ -584,12 +584,33 @@
           document.body.style.overflow = 'auto';
           AOS.refresh(); 
           window.scrollTo(0, 0);
-          unlockAudio(); // Pastikan audio aktif setelah loading
+          unlockAudio(); 
+          
+          // GSAP PARALLAX EFFECT (Dijalankan setelah preloader hilang)
+          initGsapParallax();
         }, 3000); 
       }
       progressBar.style.width = progress + '%';
       progressPercent.innerText = progress + '%';
     }, 50);
+
+    // ==========================================
+    // FUNGSI EFEK PARALLAX GSAP
+    // ==========================================
+    function initGsapParallax() {
+      // Efek Parallax untuk Teks Hero
+      gsap.to("#hero-content", {
+        scrollTrigger: {
+          trigger: "#hero-section",
+          start: "top top",
+          end: "bottom top",
+          scrub: true // Membuat animasi mengikuti kecepatan scroll (scrub)
+        },
+        y: 150, // Teks bergerak turun 150px saat di-scroll (memberi kesan melayang ke atas)
+        scale: 0.9, // Teks sedikit mengecil
+        opacity: 0.2 // Teks memudar
+      });
+    }
 
     // PARTIKEL & CURSOR
     if (window.innerWidth > 768) {
@@ -695,33 +716,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
-    let isTicking = false;
-    let lastScrollY = window.scrollY;
-    window.addEventListener('scroll', () => {
-      lastScrollY = window.scrollY;
-      if (window.innerWidth < 768) return;
-      if (!isTicking) {
-        window.requestAnimationFrame(() => {
-          const heroContent = document.getElementById('hero-content');
-          if (heroContent) {
-            heroContent.style.transform = `translateY(${lastScrollY * 0.4}px)`;
-            heroContent.style.opacity = 1 - (lastScrollY / 600);
-          }
-          const parallaxBoxes = document.querySelectorAll('.parallax-box');
-          parallaxBoxes.forEach(box => {
-            const boxTop = box.getBoundingClientRect().top;
-            const windowHeight = window.innerHeight;
-            if (boxTop < windowHeight && boxTop > -windowHeight) {
-              const distanceToCenter = boxTop - (windowHeight / 2);
-              box.style.transform = `translateY(${distanceToCenter * 0.05}px)`;
-            }
-          });
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }, { passive: true });
 
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", img: "https://github.com/blackhmp1122-lab/d4-tlm-2026/blob/main/vanes%20revisi.jpg?raw=true" }, 

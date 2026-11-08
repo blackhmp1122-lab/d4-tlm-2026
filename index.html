@@ -32,7 +32,7 @@
       max-width: 100vw;
       position: relative;
     }
-    
+
     /* SCROLL PROGRESS BAR */
     #scroll-progress-container { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 6px !important; background: rgba(15, 23, 42, 0.8) !important; z-index: 2147483647 !important; pointer-events: none; }
     #scroll-progress { height: 100%; background: #ffffff; width: 0%; position: relative; box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; }
@@ -59,7 +59,7 @@
     .cursor-hover .cursor-outer { width: 50px; height: 50px; background-color: rgba(0, 240, 255, 0.1); border-color: #ffffff; }
 
     /* SISA CSS */
-    #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
+    #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; pointer-events: none; }
     #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; width: 100%; overflow-x: hidden; }
     #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer, #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button, .cursor-hover-target { pointer-events: auto; }
 
@@ -131,12 +131,6 @@
     .photo-stack-container:hover .stack-label { transform: translateX(-50%) translateY(-5px) scale(1.05); background: #00f0ff; color: #000; }
 
     @media (max-width: 768px) {
-      [data-aos="fade-right"], [data-aos="fade-left"], 
-      [data-aos="zoom-in"], [data-aos="zoom-in-up"],
-      [data-aos="flip-left"] {
-        transform: none !important;
-        opacity: 1 !important;
-      }
       .parallax-box { transform: none !important; }
       #hero-content { transform: none !important; opacity: 1 !important; }
       section, .glass, .photo-stack-container { 
@@ -358,7 +352,7 @@
         </div>
         
         <div class="flex flex-wrap gap-4 w-full justify-center items-center">
-          <!-- TOMBOL CONTACT YANG DIPERBARUI: Mengarah ke form Pesan & Kesan -->
+          <!-- TOMBOL CONTACT -->
           <button onclick="document.getElementById('guestbook').scrollIntoView({behavior: 'smooth'})" class="flex items-center gap-2 px-6 py-3 rounded-xl border border-neon text-neon hover:bg-neon/10 transition cursor-hover-target">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             <span class="font-semibold text-sm">Contact</span>
@@ -386,10 +380,11 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script type="module">
-    // INISIALISASI AOS
+    // INISIALISASI AOS (Diperbaiki agar tidak bug di laptop & HP)
     AOS.init({
-      once: false,
-      mirror: true
+      once: true, // Animasi hanya jalan sekali agar tidak bug saat scroll balik
+      mirror: false,
+      disable: window.innerWidth < 768 // Matikan animasi di HP agar tidak layar kosong
     });
 
     // JAM DIGITAL YANG SINKRON
@@ -410,7 +405,7 @@
     
     updateClock();
 
-    // SHARE WHATSAPP (Masih disimpan jika sewaktu-waktu diperlukan)
+    // SHARE WHATSAPP
     window.shareToWhatsApp = function() {
       const url = window.location.href;
       const text = "Halo! Cek website keren kelas D-IV TLM STIKES Nasional Surakarta Angkatan 2026 di sini: " + url;
@@ -418,7 +413,7 @@
       window.open(waLink, '_blank');
     }
 
-    // SUARA KLIK
+    // SUARA KLIK (Diperbaiki agar bisa mendeteksi elemen dinamis/JS)
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
     function playClickSound() {
@@ -435,9 +430,12 @@
       osc.start();
       osc.stop(audioCtx.currentTime + 0.1);
     }
-    const clickableElements = document.querySelectorAll('a, button, .zoomable, .photo-card, .cursor-hover-target');
-    clickableElements.forEach(el => {
-      el.addEventListener('click', playClickSound);
+    
+    // Gunakan Event Delegation agar kartu yang dibuat via JS tetap bisa bunyi
+    document.addEventListener('click', function(e) {
+      if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.cursor-hover-target') || e.target.closest('.zoomable') || e.target.closest('.photo-card')) {
+        playClickSound();
+      }
     });
 
     // COUNT-UP ANGKA
@@ -546,6 +544,7 @@
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
           document.body.style.overflow = 'auto';
+          AOS.refresh(); // Refresh AOS setelah preloader hilang
         }, 3000); 
       }
       progressBar.style.width = progress + '%';
@@ -615,8 +614,18 @@
       },
       interactivity: {
         detectsOn: "window",
-        events: { onHover: { enable: true, mode: ["grab", "bubble"] }, onClick: { enable: true, mode: "repulse" }, resize: true },
-        modes: { grab: { distance: 200, line_linked: { opacity: 0.8 } }, bubble: { distance: 200, size: 12, duration: 2, opacity: 1 }, repulse: { distance: 300, duration: 0.4 } }
+        events: { 
+          onHover: { enable: true, mode: ["grab", "bubble"] }, 
+          onClick: { enable: true, mode: "repulse" },
+          resize: true,
+          // TAMBAHAN: Mengaktifkan interaksi sentuhan di HP
+          touch: { enable: true, mode: ["grab", "repulse"] } 
+        },
+        modes: { 
+          grab: { distance: 200, line_linked: { opacity: 0.8 } }, 
+          bubble: { distance: 200, size: 12, duration: 2, opacity: 1 }, 
+          repulse: { distance: 300, duration: 0.4 } 
+        }
       },
       detectRetina: true
     });

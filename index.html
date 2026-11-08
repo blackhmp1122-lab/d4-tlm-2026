@@ -741,26 +741,26 @@
           if (b.x > w - b.r) { b.x = w - b.r; b.vx = -Math.abs(b.vx); }
           if (b.y < -b.r) Object.assign(b, newBubble(true));
 
-          // Badan gelembung
+          // Badan gelembung: biru sangat tipis di atas latar putih
           ctx.beginPath();
           ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(0, 240, 255, 0.15)';
+          ctx.fillStyle = 'rgba(30, 144, 255, 0.06)';
           ctx.fill();
           ctx.lineWidth = 2;
-          ctx.strokeStyle = 'rgba(0, 240, 255, 0.55)';
+          ctx.strokeStyle = 'rgba(30, 144, 255, 0.35)';
           ctx.stroke();
 
           // Kilau kecil
           ctx.beginPath();
           ctx.arc(b.x - b.r * 0.35, b.y - b.r * 0.35, b.r * 0.18, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
           ctx.fill();
 
           // Efek pecah
           if (b.pop > 0) {
             ctx.beginPath();
             ctx.arc(b.x, b.y, b.r + (1 - b.pop) * 25, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(0, 240, 255, ${b.pop * 0.6})`;
+            ctx.strokeStyle = `rgba(30, 144, 255, ${b.pop * 0.5})`;
             ctx.lineWidth = 2;
             ctx.stroke();
             b.pop -= 0.06;
@@ -792,7 +792,6 @@
 
       window.addEventListener('pointermove', setPointer, { passive: true });
       window.addEventListener('pointerdown', popAt, { passive: true });
-      document.addEventListener('mouseleave', () => { pointer.x = pointer.y = -9999; });
       window.addEventListener('resize', resize);
 
       resize();

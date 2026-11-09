@@ -174,64 +174,42 @@
     }
     .close-btn:hover { background: #00f0ff; color: #000; transform: rotate(90deg); }
 
-    /* ========================================= */
-    /* PRELOADER & EFEK HACKER / MATRIX BARU     */
-    /* ========================================= */
+    /* PRELOADER */
     #preloader {
       position: fixed; inset: 0; background-color: #0f172a; z-index: 999999;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       transition: opacity 1s ease, visibility 1s ease; overflow: hidden;
       cursor: crosshair; touch-action: none;
     }
-    
-    /* Efek Grid Matrix Latar Belakang (Ditaruh di atas video agar terlihat) */
-    .matrix-bg {
-      position: absolute; inset: 0; z-index: 3; /* Di atas video (z-1) dan overlay (z-2) */
-      background-image: 
-        linear-gradient(rgba(0, 240, 255, 0.15) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 240, 255, 0.15) 1px, transparent 1px);
-      background-size: 50px 50px;
-      animation: matrixScroll 5s linear infinite;
-      pointer-events: none;
-    }
-    @keyframes matrixScroll {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 50px; }
-    }
-
     .bg-video {
       position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%;
       width: auto; height: auto; transform: translateX(-50%) translateY(-50%);
-      z-index: 1; object-fit: cover; opacity: 0.4;
+      z-index: 1; object-fit: cover; opacity: 0.6;
     }
     .video-overlay {
       position: absolute; inset: 0;
-      background: radial-gradient(circle, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.9) 100%);
+      background: radial-gradient(circle, rgba(15,23,42,0.3) 0%, rgba(15,23,42,0.8) 100%);
       z-index: 2;
     }
-    #particles-preloader { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+    #particles-preloader { position: absolute; inset: 0; z-index: 3; }
     #spotlight {
       position: absolute; width: 600px; height: 600px;
       background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 60%);
       border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
       z-index: 4; transition: opacity 0.3s ease;
     }
-    
-    /* Kotak Loading */
     #loading-phase {
       display: flex; flex-direction: column; align-items: center;
       transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10;
-      width: 100%; max-width: 350px; position: relative;
+      width: 100%; max-width: 350px;
     }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
-    
     .hacker-text-container {
       width: 100%; background: rgba(0, 0, 0, 0.85); border: 1px solid #00f0ff;
       padding: 15px; font-family: 'Courier New', Courier, monospace; color: #00f0ff;
       font-size: 0.85rem; box-shadow: 0 0 20px rgba(0,240,255,0.2);
       position: relative; overflow: hidden; margin-bottom: 15px; backdrop-filter: blur(5px);
     }
-    /* Efek garis scanlines layar monitor */
     .hacker-text-container::after {
       content: " "; display: block; position: absolute; inset: 0;
       background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%),
@@ -240,30 +218,11 @@
     }
     .hacker-line { margin-bottom: 5px; line-height: 1.2; white-space: nowrap; overflow: hidden; }
     .hacker-text-blur { color: rgba(0, 240, 255, 0.8); text-shadow: 0 0 5px rgba(0, 240, 255, 0.5); }
-    
-    /* Teks Hex Hacker Glitch (Warna Cyan Neon) */
-    #hacker-fake-code {
-      color: #00f0ff; /* Warna disamakan dengan teks atas */
-      font-weight: bold;
-      text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
-      display: inline-block;
-      animation: glitch 0.3s infinite;
-    }
-    @keyframes glitch {
-      0% { transform: translate(0); }
-      20% { transform: translate(-1px, 1px); }
-      40% { transform: translate(-1px, -1px); }
-      60% { transform: translate(1px, 1px); }
-      80% { transform: translate(1px, -1px); }
-      100% { transform: translate(0); }
-    }
-
     .cursor-blink {
       display: inline-block; width: 8px; height: 14px; background-color: #00f0ff;
       margin-left: 3px; animation: blink 0.8s infinite; vertical-align: middle;
     }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-    
     .loading-track {
       width: 100%; height: 4px; background-color: rgba(255,255,255,0.15);
       position: relative; border-radius: 3px; margin-bottom: 10px;
@@ -279,8 +238,6 @@
     }
     .loading-label { margin-left: 5px; color: #00f0ff; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; text-shadow: 0 0 8px rgba(0,240,255,0.8); }
-
-    /* Welcome Text */
     #welcome-phase {
       position: absolute; text-align: center; opacity: 0; transform: translateY(20px);
       transition: opacity 1s ease, transform 1s ease; pointer-events: none;
@@ -290,16 +247,11 @@
     #welcome-phase .line-1 {
       display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px;
       text-shadow: 0 0 10px rgba(252,235,213,0.8), 0 0 20px rgba(252,235,213,0.5); margin-bottom: 10px;
-      animation: welcomePulse 2s infinite alternate;
     }
     #welcome-phase .line-2 {
       display: block; color: #ffffff; font-size: 3rem; font-weight: 900; letter-spacing: 1px;
       text-shadow: 0 0 10px rgba(0,240,255,0.8), 0 0 25px rgba(0,240,255,0.6), 0 0 40px rgba(30,144,255,0.5);
-      animation: glowText 1.5s infinite alternate;
     }
-    @keyframes welcomePulse { from { opacity: 0.7; } to { opacity: 1; } }
-    @keyframes glowText { from { text-shadow: 0 0 10px rgba(0,240,255,0.8); } to { text-shadow: 0 0 30px rgba(0,240,255,1), 0 0 50px rgba(30,144,255,0.8); } }
-
     .sound-hint {
       position: absolute; bottom: 20px; background: rgba(0,240,255,0.1);
       border: 1px solid #00f0ff; color: #00f0ff; padding: 8px 16px; border-radius: 999px;
@@ -307,6 +259,38 @@
       z-index: 20; pointer-events: none;
     }
     @keyframes pulseHint { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
+
+    /* ============================================ */
+    /* LOGO KELAS 3D (IKUT KURSOR / JARI)          */
+    /* ============================================ */
+    .logo-3d-wrap {
+      position: relative; width: 220px; height: 220px; margin: 0 auto 40px;
+      perspective: 800px; cursor: pointer; touch-action: none;
+      animation: logoFloat 4s ease-in-out infinite;
+    }
+    .logo-3d {
+      --lx: 0deg; --ly: 0deg; --gx: 50%; --gy: 50%;
+      position: relative; width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transform: rotateX(var(--lx)) rotateY(var(--ly));
+      transition: transform 0.3s ease-out;
+    }
+    .logo-3d-img {
+      width: 100%; height: 100%; object-fit: contain;
+      mix-blend-mode: multiply;
+      filter: drop-shadow(0 18px 25px rgba(15, 23, 42, 0.35));
+      user-select: none; -webkit-user-drag: none; pointer-events: none;
+    }
+    /* Kilau cahaya yang ikut bergerak mengikuti posisi tilt */
+    .logo-glare {
+      position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle at var(--gx) var(--gy), rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 45%);
+      mix-blend-mode: screen; opacity: 0.8;
+    }
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
 
     /* ============================================ */
     /* TUMPUKAN FOTO (TILT 3D + BUKA SAAT DISENTUH) */
@@ -372,6 +356,7 @@
     #page-2-transition {
       width: 100%; height: 100vh; position: relative; overflow: hidden; background: #0f172a;
     }
+    /* Canvas latar topografi menutupi seluruh halaman 2 */
     #bubble-canvas {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block;
     }
@@ -401,17 +386,21 @@
     }
     @keyframes ringSpin { to { transform: rotate(360deg); } }
 
+    /* JUDUL: tanpa blur dan tanpa rotasi 3D agar tajam di HP */
     .split-title {
       position: relative; z-index: 1; display: flex; flex-wrap: wrap;
       justify-content: center; line-height: 1.1; font-weight: 800;
       filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.45));
     }
+    /* Pembungkus huruf: hanya animasi masuk (naik + memudar) */
     .split-char {
-      display: inline-block; white-space: pre; opacity: 0;
+      display: inline-block; white-space: pre;
+      opacity: 0;
       animation: charIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       animation-delay: var(--d);
     }
     .split-char.is-space { width: 0.3em; }
+    /* Huruf di dalam: gradasi warna + gelombang naik-turun */
     .split-glyph {
       display: inline-block;
       background: linear-gradient(180deg, #ffffff 0%, #00f0ff 55%, #1e90ff 100%);
@@ -451,6 +440,7 @@
       #digital-clock { font-size: 0.7rem; letter-spacing: 0; }
       .title-ring { width: 300px; height: 300px; margin: -150px 0 0 -150px; }
       .title-ring-2 { width: 220px; height: 220px; margin: -110px 0 0 -110px; }
+      .logo-3d-wrap { width: 180px; height: 180px; }
     }
   </style>
 </head>
@@ -474,19 +464,15 @@
     <img id="lightbox-img" src="" alt="Zoomed Image" onclick="event.stopPropagation()">
   </div>
 
-  <!-- PRELOADER BARU DENGAN EFEK HACKER & MATRIX -->
+  <!-- PRELOADER -->
   <div id="preloader">
-    <div class="matrix-bg"></div>
-    
     <video class="bg-video" autoplay loop muted playsinline>
       <source src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/video-petir.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
-    
     <div id="particles-preloader"></div>
     <div id="spotlight"></div>
     <div class="sound-hint" id="sound-hint">🔊 Ketuk Layar untuk Nyalakan Suara</div>
-    
     <div id="loading-phase">
       <div class="hacker-text-container">
         <div class="hacker-line hacker-text-blur">> INITIALIZING SYSTEM...</div>
@@ -499,7 +485,6 @@
         <span class="loading-percentage" id="progress-percent">0%</span>
       </div>
     </div>
-    
     <div id="welcome-phase">
       <span class="line-1">Welcome to</span>
       <span class="line-2">D-IV Teknologi Laboratorium Medis</span>
@@ -591,7 +576,7 @@
       </section>
     </div>
 
-    <!-- HALAMAN 2: ZOOM JUDUL -->
+    <!-- HALAMAN 2: ZOOM JUDUL + LATAR TOPOGRAFI (FULL HALAMAN) -->
     <div id="page-2-transition">
       <canvas id="bubble-canvas"></canvas>
       <div id="title-content">
@@ -604,10 +589,19 @@
       </div>
     </div>
 
-    <!-- HALAMAN 3: DOKUMENTASI -->
+    <!-- HALAMAN 3: DOKUMENTASI (LATAR PUTIH) -->
     <div id="page-3-content" class="w-full relative z-10 bg-white">
       <div class="w-full py-24 px-4">
         <div class="max-w-4xl mx-auto text-center">
+
+          <!-- LOGO KELAS 3D -->
+          <div class="logo-3d-wrap" id="logo3d">
+            <div class="logo-3d">
+              <img class="logo-3d-img" src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/logo-kelas.png" alt="Logo Kelas D-IV TLM 2026" draggable="false">
+              <div class="logo-glare"></div>
+            </div>
+          </div>
+
           <h2 class="text-3xl font-bold text-slate-900 mb-12 opacity-0" id="gallery-title-actual">Dokumentasi Kelas</h2>
 
           <div class="photo-stack-container cursor-hover-target mx-auto" id="photoStack">
@@ -636,6 +630,7 @@
       <!-- BUKU TAMU & FOOTER -->
       <div class="w-full pb-10 px-6 bg-white">
         <section id="guestbook" class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 w-full pt-10">
+          <!-- Form Kontak -->
           <div class="bg-slate-100 rounded-3xl p-8 shadow-xl w-full border border-slate-200">
             <h2 class="text-2xl font-bold text-slate-900 mb-6">Pesan & Kesan</h2>
             <form id="contactForm" class="space-y-4 cursor-hover-target w-full">
@@ -646,6 +641,7 @@
             </form>
           </div>
 
+          <!-- Buku Tamu -->
           <div class="bg-slate-100 rounded-3xl p-8 shadow-xl w-full border border-slate-200">
             <h2 class="text-2xl font-bold text-slate-900 mb-6">Buku Tamu</h2>
             <form id="guestForm" class="space-y-4 mb-6 cursor-hover-target w-full">
@@ -659,6 +655,7 @@
           </div>
         </section>
 
+        <!-- FOOTER -->
         <footer class="mt-16 pt-10 border-t border-slate-200 text-center">
           <p class="text-slate-500 text-sm mb-4">Ikuti Media Sosial Kami:</p>
           <p class="text-slate-400 text-xs mb-6">&copy; 2026 D-IV TLM STIKES Nasional Surakarta</p>
@@ -689,7 +686,7 @@
     window.scrollTo(0, 0);
 
     // ==========================================
-    // JAM DIGITAL
+    // JAM DIGITAL (sekali per detik)
     // ==========================================
     const clockElement = document.getElementById('digital-clock');
     function updateClock() {
@@ -708,7 +705,7 @@
     if (window.matchMedia('(min-width: 769px)').matches) {
       const cursorOuter = document.querySelector('.cursor-outer');
       const cursorInner = document.querySelector('.cursor-inner');
-      const hoverSelector = 'a, button, .zoomable, .cursor-hover-target, .photo-card, .lanyard-wrap, .glass';
+      const hoverSelector = 'a, button, .zoomable, .cursor-hover-target, .photo-card, .lanyard-wrap, .glass, .logo-3d-wrap';
 
       document.addEventListener('mousemove', (e) => {
         cursorOuter.style.left = cursorInner.style.left = e.clientX + 'px';
@@ -720,7 +717,7 @@
     }
 
     // ==========================================
-    // SUARA KLIK & HACKER HEX ANIMATION
+    // SUARA KLIK (dibuat saat interaksi pertama)
     // ==========================================
     const clickUrl = 'https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/suara-klik.mp3';
     let audioCtx = null, clickBytes = null, clickBuffer = null;
@@ -742,17 +739,16 @@
       if (e.target.closest('a, button, .cursor-hover-target, .zoomable, .photo-card')) playClickSound();
     });
 
-    // Animasi Hex Hacker di Loading
-    const fakeCodeEl = document.getElementById('hacker-fake-code');
-    const hexChars = "0123456789ABCDEF";
-    setInterval(() => {
-      let randomHex = "0x";
-      for (let i = 0; i < 4; i++) { randomHex += hexChars[Math.floor(Math.random() * 16)]; }
-      if(fakeCodeEl) fakeCodeEl.textContent = randomHex;
-    }, 50);
+    // ==========================================
+    // SHARE WHATSAPP
+    // ==========================================
+    window.shareToWhatsApp = function () {
+      const text = "Halo! Cek website keren kelas D-IV TLM STIKES Nasional Surakarta Angkatan 2026 di sini: " + window.location.href;
+      window.open("https://wa.me/?text=" + encodeURIComponent(text), '_blank', 'noopener');
+    };
 
     // ==========================================
-    // PRELOADER LOGIC
+    // PRELOADER
     // ==========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
@@ -802,7 +798,7 @@
     }, 50);
 
     // ==========================================
-    // SPLIT TITLE (Untuk Halaman 2)
+    // JUDUL HALAMAN 2: PECAH JADI HURUF (TANPA BLUR)
     // ==========================================
     function splitTitle(el) {
       const text = el.textContent;
@@ -824,8 +820,9 @@
     splitTitle(document.getElementById('gallery-title-transition'));
 
     // ==========================================
-    // TRANSISI SCROLL
+    // TRANSISI: ZOOM JUDUL -> LATAR PUTIH
     // ==========================================
+    // Jumlah scroll: sekitar 8 putaran mouse. Naikkan/turunkan sesuai selera.
     const SCROLL_DISTANCE = 1000;
 
     function initTransitionEffect() {
@@ -834,6 +831,7 @@
       const canvas = document.getElementById('bubble-canvas');
       const pageTitle = document.getElementById('gallery-title-actual');
 
+      // p = 0 saat latar gelap, p = 1 saat latar putih (mengatur warna garis)
       const topoState = { p: 0 };
       initTopo(section, canvas, topoState);
 
@@ -867,7 +865,7 @@
     }
 
     // ==========================================
-    // LATAR TOPOGRAFI
+    // LATAR TOPOGRAFI: SELURUH HALAMAN 2
     // ==========================================
     function initTopo(section, canvas, state) {
       const ctx = canvas.getContext('2d');
@@ -916,6 +914,7 @@
 
       function draw(now) {
         ctx.clearRect(0, 0, w, h);
+
         const t = now * 0.0004;
 
         ptr.x += (ptr.tx - ptr.x) * 0.2;
@@ -930,7 +929,9 @@
         }
 
         const p = state.p;
-        ctx.strokeStyle = p < 0.5 ? 'rgba(148, 163, 184, 0.3)' : 'rgba(71, 85, 105, 0.22)';
+        ctx.strokeStyle = p < 0.5
+          ? 'rgba(148, 163, 184, 0.3)'
+          : 'rgba(71, 85, 105, 0.22)';
         ctx.lineWidth = 1;
 
         for (let k = 0; k <= LINES; k++) {
@@ -942,6 +943,7 @@
           }
           ctx.stroke();
         }
+
         requestAnimationFrame(draw);
       }
 
@@ -976,12 +978,44 @@
     }
 
     // ==========================================
-    // TUMPUKAN FOTO
+    // LOGO KELAS 3D: MIRING MENGIKUTI KURSOR / JARI
+    // ==========================================
+    const logoWrap = document.getElementById('logo3d');
+    const logoInner = logoWrap.querySelector('.logo-3d');
+
+    function tiltLogo(e) {
+      const r = logoWrap.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;    // 0 .. 1
+      const y = (e.clientY - r.top) / r.height;    // 0 .. 1
+      logoInner.style.setProperty('--ly', ((x - 0.5) * 40) + 'deg');
+      logoInner.style.setProperty('--lx', (-(y - 0.5) * 30) + 'deg');
+      logoInner.style.setProperty('--gx', (x * 100) + '%');
+      logoInner.style.setProperty('--gy', (y * 100) + '%');
+    }
+
+    function resetLogo() {
+      logoInner.style.setProperty('--lx', '0deg');
+      logoInner.style.setProperty('--ly', '0deg');
+      logoInner.style.setProperty('--gx', '50%');
+      logoInner.style.setProperty('--gy', '50%');
+    }
+
+    logoWrap.addEventListener('pointermove', tiltLogo);
+    logoWrap.addEventListener('pointerdown', tiltLogo);
+    logoWrap.addEventListener('pointerleave', resetLogo);
+    logoWrap.addEventListener('pointerup', (e) => {
+      if (e.pointerType === 'touch') resetLogo();
+    });
+
+    // ==========================================
+    // TUMPUKAN FOTO: TILT 3D + BUKA SAAT DISENTUH
     // ==========================================
     const photoStack = document.getElementById('photoStack');
+
     photoStack.addEventListener('pointerenter', (e) => {
       if (e.pointerType === 'mouse') photoStack.classList.add('is-spread');
     });
+
     photoStack.addEventListener('pointermove', (e) => {
       if (e.pointerType !== 'mouse') return;
       const r = photoStack.getBoundingClientRect();
@@ -990,11 +1024,13 @@
       photoStack.style.setProperty('--ry', (x * 20) + 'deg');
       photoStack.style.setProperty('--rx', (-y * 16) + 'deg');
     });
+
     photoStack.addEventListener('pointerleave', (e) => {
       photoStack.style.setProperty('--rx', '0deg');
       photoStack.style.setProperty('--ry', '0deg');
       if (e.pointerType === 'mouse') photoStack.classList.remove('is-spread');
     });
+
     photoStack.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'touch') photoStack.classList.toggle('is-spread');
     });
@@ -1031,7 +1067,7 @@
     });
 
     // ==========================================
-    // ZOOM FOTO
+    // ZOOM FOTO (LIGHTBOX)
     // ==========================================
     window.zoomImage = function (src) {
       document.getElementById('lightbox-img').src = src;
@@ -1080,7 +1116,7 @@
     countUpTriggers.forEach(t => counterObserver.observe(t));
 
     // ==========================================
-    // SCROLL PROGRESS & BACK TO TOP
+    // SCROLL: PROGRESS BAR + BACK TO TOP (satu listener)
     // ==========================================
     const backToTopBtn = document.getElementById('back-to-top');
     const scrollBar = document.getElementById('scroll-progress');
@@ -1095,7 +1131,7 @@
     backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     // ==========================================
-    // KARTU PENGURUS
+    // KARTU PENGURUS (LANYARD)
     // ==========================================
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/vanes%20revisi.jpg" },
@@ -1173,7 +1209,7 @@
     VanillaTilt.init(document.querySelectorAll("#memberGrid > div"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 });
 
     // ==========================================
-    // FIREBASE & BUKU TAMU
+    // FIREBASE: BUKU TAMU & KONTAK
     // ==========================================
     const firebaseConfig = {
       apiKey: "AIzaSyB6JYyXkD-PBxvw77HrbztnlOXkp_6iRWA",
@@ -1201,12 +1237,15 @@
           const data = doc.data();
           const li = document.createElement('li');
           li.className = 'bg-slate-100 rounded-xl p-4 border border-slate-300 mb-3';
+
           const nameEl = document.createElement('p');
           nameEl.className = 'font-semibold text-slate-900';
           nameEl.textContent = data.name;
+
           const msgEl = document.createElement('p');
           msgEl.className = 'text-sm text-slate-700';
           msgEl.textContent = data.message;
+
           li.append(nameEl, msgEl);
           list.appendChild(li);
         });

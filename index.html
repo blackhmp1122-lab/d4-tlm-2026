@@ -187,6 +187,7 @@
       z-index: 0; pointer-events: none;
     }
     #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; width: 100%; overflow-x: hidden; }
+    /* Membuat elemen tertentu bisa menerima klik, tapi membiarkan sentuhan di area kosong tembus ke partikel */
     #main-content-wrapper nav,
     #main-content-wrapper section,
     #main-content-wrapper footer,
@@ -1190,15 +1191,15 @@
     });
 
     // ==========================================
-    // PARTIKEL UTAMA (EFEK SENTUHAN)
+    // PARTIKEL UTAMA (EFEK SENTUHAN YANG SUDAH DIPERBAIKI)
     // ==========================================
     tsParticles.load("particles-main", {
       fpsLimit: 60,
       particles: {
-        number: { value: 100, density: { enable: true, value_area: 800 } },
+        number: { value: 80, density: { enable: true, value_area: 800 } }, // Dikurangi sedikit agar ringan
         color: { value: ["#00f0ff", "#1e90ff", "#ffffff"] },
         shape: { type: "circle" },
-        opacity: { value: 0.7, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
+        opacity: { value: 0.6, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
         size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.1, sync: false } },
         line_linked: { enable: true, distance: 150, color: "#1e90ff", opacity: 0.4, width: 1 },
         move: { enable: true, speed: 1.5, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
@@ -1209,7 +1210,11 @@
           onHover: { enable: true, mode: ["grab", "bubble"] },
           onClick: { enable: true, mode: "push" },
           resize: true,
-          touch: { enable: true, mode: ["grab", "bubble"] } /* <-- EFEK SENTUHAN DI HP */
+          /* KONFIGURASI SENTUHAN (TOUCH) YANG BENAR */
+          touch: {
+            enable: true,
+            mode: ["grab", "bubble"] 
+          }
         },
         modes: {
           grab: { distance: 200, line_linked: { opacity: 0.8 } },

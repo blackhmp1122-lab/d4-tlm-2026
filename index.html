@@ -42,16 +42,14 @@
     /* ============================================ */
     #intro {
       position: fixed; inset: 0; z-index: 1000000;
-      /* Background abu-abu gelap metalik (bukan hitam polos) */
       background: radial-gradient(circle at center, #2a323d 0%, #12161c 60%, #050505 100%);
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       transition: opacity 1.2s ease, visibility 1.2s ease;
       overflow: hidden; cursor: pointer;
-      perspective: 1200px; /* Penting untuk efek 3D */
+      perspective: 1200px;
     }
     #intro.hide { opacity: 0; visibility: hidden; }
 
-    /* Cahaya Sorot (Spotlight) dari atas */
     .studio-light {
       position: absolute; top: -30%; left: 50%; transform: translateX(-50%);
       width: 80%; height: 80%;
@@ -59,7 +57,6 @@
       z-index: 1; pointer-events: none;
     }
 
-    /* Efek Lantai Reflektif (Garis Horizon) */
     .floor-reflection {
       position: absolute; bottom: 0; left: 0; width: 100%; height: 40%;
       background: linear-gradient(to top, rgba(0, 240, 255, 0.05) 0%, rgba(0,0,0,0) 100%);
@@ -69,18 +66,15 @@
       transform-origin: bottom;
     }
 
-    /* Tekstur Halus */
     .film-grain {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
       opacity: 0.05; 
     }
 
-    /* Wadah Logo 3D */
     .intro-logo-wrap { 
       position: relative; z-index: 3; 
       transform-style: preserve-3d;
-      /* Animasi 3D: Berputar dari samping lalu menghadap depan */
       animation: logo3DSpin 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       opacity: 0;
     }
@@ -90,13 +84,11 @@
       100% { opacity: 1; transform: rotateY(0deg) rotateX(0deg) scale(1); }
     }
 
-    /* Gambar Logo */
     .intro-logo {
       width: 240px; height: 240px; object-fit: contain;
-      mix-blend-mode: screen; /* Menghilangkan background putih */
+      mix-blend-mode: screen;
       filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 15px rgba(0, 240, 255, 0.4));
       user-select: none; -webkit-user-drag: none; pointer-events: none;
-      /* Animasi melayang setelah berhenti berputar */
       animation: logoFloat 4s ease-in-out infinite alternate;
       animation-delay: 3s; 
     }
@@ -105,7 +97,6 @@
       100% { transform: translateY(-10px); }
     }
 
-    /* Teks Bawah (Muncul Bersamaan dengan Fokus Logo) */
     .intro-text-container {
       position: relative; z-index: 3; margin-top: 40px; text-align: center;
       opacity: 0; 
@@ -277,7 +268,6 @@
       cursor: crosshair; touch-action: none;
     }
     
-    /* Efek Garis Grid Matrix di Background Loading */
     .matrix-bg {
       position: absolute; inset: 0; z-index: 3;
       background-image: 
@@ -311,7 +301,6 @@
       z-index: 4; transition: opacity 0.3s ease;
     }
     
-    /* Kotak Loading */
     #loading-phase {
       display: flex; flex-direction: column; align-items: center;
       transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10;
@@ -333,7 +322,6 @@
     .hacker-line { margin-bottom: 5px; line-height: 1.2; white-space: nowrap; overflow: hidden; }
     .hacker-text-blur { color: rgba(0, 240, 255, 0.8); text-shadow: 0 0 5px rgba(0, 240, 255, 0.5); }
     
-    /* Teks Hex Hacker Glitch */
     #hacker-fake-code {
       color: #00f0ff;
       font-weight: bold;
@@ -371,7 +359,6 @@
     .loading-label { margin-left: 5px; color: #00f0ff; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; text-shadow: 0 0 8px rgba(0,240,255,0.8); }
     
-    /* Welcome Text */
     #welcome-phase {
       position: absolute; text-align: center; opacity: 0; transform: translateY(20px);
       transition: opacity 1s ease, transform 1s ease; pointer-events: none;
@@ -1203,7 +1190,7 @@
     });
 
     // ==========================================
-    // PARTIKEL UTAMA
+    // PARTIKEL UTAMA (EFEK SENTUHAN)
     // ==========================================
     tsParticles.load("particles-main", {
       fpsLimit: 60,
@@ -1211,23 +1198,23 @@
         number: { value: 100, density: { enable: true, value_area: 800 } },
         color: { value: ["#00f0ff", "#1e90ff", "#ffffff"] },
         shape: { type: "circle" },
-        opacity: { value: 0.7, random: true },
-        size: { value: 8, random: true },
-        line_linked: { enable: true, distance: 150, color: "#1e90ff", opacity: 0.3, width: 1 },
+        opacity: { value: 0.7, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
+        size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.1, sync: false } },
+        line_linked: { enable: true, distance: 150, color: "#1e90ff", opacity: 0.4, width: 1 },
         move: { enable: true, speed: 1.5, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
       },
       interactivity: {
         detectsOn: "window",
         events: {
           onHover: { enable: true, mode: ["grab", "bubble"] },
-          onClick: { enable: true, mode: "repulse" },
+          onClick: { enable: true, mode: "push" },
           resize: true,
-          touch: { enable: true, mode: ["grab", "repulse"] }
+          touch: { enable: true, mode: ["grab", "bubble"] } /* <-- EFEK SENTUHAN DI HP */
         },
         modes: {
           grab: { distance: 200, line_linked: { opacity: 0.8 } },
-          bubble: { distance: 200, size: 12, duration: 2, opacity: 1 },
-          repulse: { distance: 300, duration: 0.4 }
+          bubble: { distance: 200, size: 6, duration: 2, opacity: 1 },
+          push: { particles_nb: 4 }
         }
       },
       detectRetina: true

@@ -840,6 +840,9 @@
     AOS.init({ once: false, mirror: false });
     window.scrollTo(0, 0);
 
+    // DETEKSI MOBILE DI PALING ATAS (PENTING)
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
     // ==========================================
     // HALFTONE (WEBGL2)
     // ==========================================
@@ -1234,9 +1237,13 @@ void main() {
       const onMove = (e) => {
         if (!C.interactive) return;
         const r = canvas.getBoundingClientRect();
-        pointer.tx = e.clientX - r.left;
-        pointer.ty = r.bottom - e.clientY;
-        pointer.inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+        // Gunakan e.touches[0] jika event touch, selain itu e.clientX/Y
+        const cx = e.touches ? e.touches[0].clientX : e.clientX;
+        const cy = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        pointer.tx = cx - r.left;
+        pointer.ty = r.bottom - cy;
+        pointer.inside = cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom;
         
         if (!pointer.seen || (e.type === 'pointerdown' || e.type === 'touchstart')) {
           pointer.x = pointer.tx;
@@ -1248,13 +1255,14 @@ void main() {
       
       const onLeave = () => { pointer.inside = false; schedule(); };
       const onUp = (e) => {
-        if (e.pointerType === 'touch') setTimeout(onLeave, 400);
+        if (e.pointerType === 'touch' || e.type === 'touchend') setTimeout(onLeave, 400);
       };
 
       if (C.interactive) {
         window.addEventListener('pointerrawupdate', onMove, { passive: true });
         window.addEventListener('pointermove', onMove, { passive: true });
         window.addEventListener('pointerdown', onMove, { passive: true });
+        window.addEventListener('touchmove', onMove, { passive: true });
         window.addEventListener('touchstart', onMove, { passive: true });
         window.addEventListener('pointerup', onUp, { passive: true });
         window.addEventListener('touchend', onUp, { passive: true });
@@ -1294,7 +1302,6 @@ void main() {
       };
     }
 
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
     const mainHT = createHalftone(document.getElementById('main-halftone'), {
       isMobile: isMobile,
       spacing: isMobile ? 10 : 9, 
@@ -1326,7 +1333,7 @@ void main() {
     // ==========================================
     // KURSOR KUSTOM
     // ==========================================
-    if (window.matchMedia('(min-width: 769px)').matches) {
+    if (!isMobile) {
       const cursorOuter = document.querySelector('.cursor-outer');
       const cursorInner = document.querySelector('.cursor-inner');
       const hoverSelector = 'a, button, .zoomable, .cursor-hover-target, .photo-card, .lanyard-wrap, .glass, .logo-3d-wrap, #loading-phase';
@@ -1388,19 +1395,23 @@ void main() {
 
     // REVISI: Suara petir dipicu oleh touchend dan click pada preloader itu sendiri
     let audioPlayed = false;
-    function initThunder() {
+    function initThunder(e) {
+      // Cegah klik pada tombol/link agar tidak memicu suara ini secara tidak sengaja
+      if (e && e.target.closest('a, button')) return; 
+      
       if (audioPlayed) return;
       audioPlayed = true;
       soundHint.style.opacity = '0';
       if (thunderAudio) {
         thunderAudio.volume = 0.6;
         thunderAudio.currentTime = 0;
-        thunderAudio.play().catch(() => {});
+        thunderAudio.play().catch((err) => console.log("Gagal memutar audio:", err));
       }
       playClickSound();
     }
-    preloader.addEventListener('click', initThunder, { once: true });
-    preloader.addEventListener('touchend', initThunder, { once: true });
+    // Gunakan event global window agar pasti terdeteksi di semua layar HP
+    window.addEventListener('click', initThunder, { once: true });
+    window.addEventListener('touchend', initThunder, { once: true });
 
     // ==========================================
     // INTRO -> LALU PRELOADER
@@ -1593,12 +1604,21 @@ void main() {
 
       function localPoint(e) {
         const rect = canvas.getBoundingClientRect();
-        const inside = e.clientX >= rect.left && e.clientX <= rect.right &&
-                       e.clientY >= rect.top && e.clientY <= rect.bottom;
-        return { x: e.clientX - rect.left, y: e.clientY - rect.top, inside };
+        const cx = e.touches ? e.touches[0].clientX : e.clientX;
+        const cy = e.touches ? e.touches[0].clientY : e.clientY;
+        const inside = cx >= rect.left && cx <= rect.right &&
+                       cy >= rect.top && cy <= rect.bottom;
+        return { x: cx - rect.left, y: cy - rect.top, inside };
       }
 
       window.addEventListener('pointermove', (e) => {
+        const p = localPoint(e);
+        if (!p.inside) { ptr.ts = 0; return; }
+        if (ptr.ts === 0) { ptr.x = p.x; ptr.y = p.y; }
+        ptr.tx = p.x; ptr.ty = p.y; ptr.ts = 1;
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
         const p = localPoint(e);
         if (!p.inside) { ptr.ts = 0; return; }
         if (ptr.ts === 0) { ptr.x = p.x; ptr.y = p.y; }
@@ -1629,8 +1649,11 @@ void main() {
 
     function tiltLogo(e) {
       const r = logoWrap.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width;
-      const y = (e.clientY - r.top) / r.height;
+      const cx = e.touches ? e.touches[0].clientX : e.clientX;
+      const cy = e.touches ? e.touches[0].clientY : e.clientY;
+      
+      const x = (cx - r.left) / r.width;
+      const y = (cy - r.top) / r.height;
       logoInner.style.setProperty('--ly', ((x - 0.5) * 40) + 'deg');
       logoInner.style.setProperty('--lx', (-(y - 0.5) * 30) + 'deg');
       logoInner.style.setProperty('--gx', (x * 100) + '%');
@@ -1646,10 +1669,13 @@ void main() {
 
     logoWrap.addEventListener('pointermove', tiltLogo);
     logoWrap.addEventListener('pointerdown', tiltLogo);
+    logoWrap.addEventListener('touchmove', tiltLogo);
+    logoWrap.addEventListener('touchstart', tiltLogo);
     logoWrap.addEventListener('pointerleave', resetLogo);
     logoWrap.addEventListener('pointerup', (e) => {
       if (e.pointerType === 'touch') resetLogo();
     });
+    logoWrap.addEventListener('touchend', resetLogo);
 
     // ==========================================
     // TUMPUKAN FOTO

@@ -38,153 +38,70 @@
     }
 
     /* ============================================ */
-    /* LATAR BERSAMA: BLOB CAHAYA, GRID, GARIS PINDAI */
-    /* ============================================ */
-    @keyframes blobDriftA { to { transform: translate(9vw, 7vh) scale(1.15); } }
-    @keyframes blobDriftB { to { transform: translate(-8vw, -6vh) scale(1.12); } }
-    @keyframes blobDriftC { to { transform: translate(-6vw, 8vh) scale(0.9); } }
-    @keyframes gridMove { from { background-position: 0 0; } to { background-position: 0 56px; } }
-    @keyframes sweepDown { to { transform: translateY(100vh); } }
-    @keyframes ringSpin { to { transform: rotate(360deg); } }
-    @keyframes haloPulse {
-      0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.94); }
-      50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.06); }
-    }
-
-    /* ============================================ */
-    /* INTRO: KAMERA MASUK KE DALAM LAYAR           */
+    /* INTRO LOGO PREMIUM (SINEMATIK)               */
     /* ============================================ */
     #intro {
       position: fixed; inset: 0; z-index: 1000000;
-      background: #050b1a;
-      overflow: hidden; cursor: pointer;
+      background: #050505; /* Hitam pekat profesional */
       display: flex; flex-direction: column; justify-content: center; align-items: center;
+      transition: opacity 1s ease, visibility 1s ease;
+      overflow: hidden; cursor: pointer;
     }
+    #intro.hide { opacity: 0; visibility: hidden; }
 
-    .intro-bg { position: absolute; inset: -10%; z-index: 0; pointer-events: none; will-change: transform; }
-    .intro-blob {
-      position: absolute; border-radius: 50%; filter: blur(70px);
-      will-change: transform, opacity;
-    }
-    .blob-a {
-      width: 60vmax; height: 60vmax; left: -18%; top: -22%;
-      background: radial-gradient(circle, rgba(30,144,255,0.85) 0%, rgba(30,144,255,0) 70%);
-      animation: blobDriftA 16s ease-in-out infinite alternate;
-    }
-    .blob-b {
-      width: 55vmax; height: 55vmax; right: -20%; bottom: -24%;
-      background: radial-gradient(circle, rgba(0,240,255,0.6) 0%, rgba(0,240,255,0) 70%);
-      animation: blobDriftB 19s ease-in-out infinite alternate;
-    }
-    .blob-c {
-      width: 40vmax; height: 40vmax; left: 28%; top: 30%;
-      background: radial-gradient(circle, rgba(124,58,237,0.5) 0%, rgba(124,58,237,0) 70%);
-      animation: blobDriftC 22s ease-in-out infinite alternate;
-    }
-
-    .intro-grid {
-      position: absolute; left: -60%; right: -60%; bottom: -8%; height: 62%;
-      z-index: 1; pointer-events: none;
-      background-image:
-        linear-gradient(rgba(0,240,255,0.22) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,240,255,0.22) 1px, transparent 1px);
-      background-size: 64px 64px;
-      -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.5) 40%, transparent 80%);
-              mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.5) 40%, transparent 80%);
-      animation: gridMove 2.6s linear infinite;
-      will-change: transform, opacity;
-    }
-
-    .intro-particles { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-
-    .intro-vignette {
-      position: absolute; inset: 0; z-index: 2; pointer-events: none;
-      background: radial-gradient(ellipse at center, rgba(5,11,26,0) 35%, rgba(2,6,15,0.9) 100%);
-    }
-
-    .intro-stage {
-      position: relative; z-index: 3;
-      display: flex; flex-direction: column; align-items: center;
-      perspective: 1400px; will-change: transform;
-    }
-
-    .intro-screen {
-      position: relative; width: min(84vw, 480px); aspect-ratio: 16 / 10;
-      border-radius: 22px; padding: 2px; overflow: hidden;
-      transform-style: preserve-3d; will-change: transform, opacity;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 70px rgba(0,240,255,0.18);
-    }
-    .intro-screen::before {
-      content: ''; position: absolute; left: 50%; top: 50%;
-      width: 220%; aspect-ratio: 1; transform: translate(-50%, -50%);
-      background: conic-gradient(from 0deg, transparent 0deg 250deg, rgba(0,240,255,0.95) 300deg, rgba(255,255,255,0.9) 315deg, transparent 340deg);
-      animation: borderSpin 4.5s linear infinite;
-    }
-    @keyframes borderSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-
-    .intro-inner {
-      position: relative; width: 100%; height: 100%; border-radius: 20px; overflow: hidden;
-      background: linear-gradient(160deg, #0f2a5c 0%, #071432 60%, #040a1c 100%);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .intro-inner::before {
-      content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
-      background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 3px);
-    }
+    /* Efek Cahaya Neon di belakang logo */
     .intro-glow {
-      position: absolute; left: 50%; top: 50%; width: 120%; aspect-ratio: 1;
-      transform: translate(-50%, -50%);
-      background: radial-gradient(circle, rgba(0,240,255,0.28) 0%, rgba(0,240,255,0) 60%);
-      animation: glowPulse 3.2s ease-in-out infinite;
+      position: absolute; width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0) 70%);
+      border-radius: 50%; z-index: 0;
+      animation: pulseGlow 3s ease-in-out infinite alternate;
     }
-    @keyframes glowPulse {
-      0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.92); }
-      50%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.06); }
-    }
-    .intro-reflect {
-      position: absolute; inset: 0; z-index: 4; pointer-events: none;
-      background: linear-gradient(120deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 34%, rgba(255,255,255,0) 66%, rgba(255,255,255,0.06) 100%);
-    }
-    .intro-logo {
-      position: relative; z-index: 2;
-      width: 62%; aspect-ratio: 1; object-fit: contain; border-radius: 50%;
-      background: #ffffff; padding: 6%; box-sizing: border-box;
-      box-shadow: 0 0 0 6px rgba(0,240,255,0.14), 0 0 40px rgba(0,240,255,0.5);
-      user-select: none; -webkit-user-drag: none; pointer-events: none;
-      will-change: transform, filter, opacity;
-    }
-    .intro-sheen {
-      position: absolute; top: -25%; bottom: -25%; left: -60%; width: 38%; z-index: 4;
-      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
-      transform: skewX(-22deg); pointer-events: none; mix-blend-mode: screen;
+    @keyframes pulseGlow {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      100% { transform: scale(1.2); opacity: 1; }
     }
 
-    .intro-caption {
-      position: relative; z-index: 3; margin-top: 34px;
-      color: #cbd5e1; font-size: 0.74rem; letter-spacing: 0.45em; text-transform: uppercase;
-      text-align: center; text-shadow: 0 0 12px rgba(0,240,255,0.5);
+    /* Wadah Logo */
+    .intro-logo-wrap { 
+      perspective: 1000px; position: relative; z-index: 2; 
+      animation: logoEnter 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      opacity: 0; transform: scale(0.8) translateY(20px);
     }
-    .cap-ch { display: inline-block; will-change: transform, opacity, filter; }
-    .intro-rule {
-      position: relative; z-index: 3; margin-top: 14px;
-      width: 200px; height: 1px;
-      background: linear-gradient(90deg, transparent, #00f0ff, transparent);
-      box-shadow: 0 0 10px #00f0ff;
-      transform: scaleX(0);
+    @keyframes logoEnter {
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Gambar Logo (Menyatu dengan background hitam) */
+    .intro-logo {
+      width: 220px; height: 220px; object-fit: contain;
+      /* Trik agar background putih pada gambar hilang dan menyatu dengan hitam */
+      mix-blend-mode: screen; 
+      filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.4));
+      user-select: none; -webkit-user-drag: none; pointer-events: none;
+      transform-style: preserve-3d;
+    }
+
+    /* Teks Bawah */
+    .intro-text {
+      position: relative; z-index: 2; margin-top: 30px;
+      color: #94a3b8; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5em; text-transform: uppercase;
+      opacity: 0; animation: textEnter 1s ease 1.2s forwards;
+    }
+    @keyframes textEnter {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 0.8; transform: translateY(0); }
     }
 
     .intro-skip {
-      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
-      z-index: 5; padding: 8px 20px; border-radius: 999px;
-      border: 1px solid rgba(0,240,255,0.45); background: rgba(0,240,255,0.08);
-      color: #67e8f9; font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
-      cursor: pointer; opacity: 0; backdrop-filter: blur(6px);
+      position: absolute; bottom: 30px; z-index: 2;
+      color: #475569; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      animation: subPulse 2s ease-in-out infinite;
     }
-    .intro-skip:hover { background: rgba(0,240,255,0.2); }
+    @keyframes subPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
 
-    .intro-flash {
-      position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0;
-      background: radial-gradient(circle, rgba(220,250,255,1) 0%, rgba(120,235,255,0.9) 60%, rgba(30,144,255,0.6) 100%);
+    /* Garis Bingkai Sinematik (opsional, memberi kesan profesional) */
+    .intro-frame {
+      position: absolute; inset: 30px; border: 1px solid rgba(255, 255, 255, 0.05); z-index: 1; pointer-events: none;
     }
 
     /* CUSTOM CURSOR */
@@ -324,9 +241,7 @@
     }
     .close-btn:hover { background: #00f0ff; color: #000; transform: rotate(90deg); }
 
-    /* ============================================ */
-    /* PRELOADER (LOADING + WELCOME)                */
-    /* ============================================ */
+    /* PRELOADER */
     #preloader {
       position: fixed; inset: 0; background-color: #0f172a; z-index: 999999;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -336,49 +251,13 @@
     .bg-video {
       position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%;
       width: auto; height: auto; transform: translateX(-50%) translateY(-50%);
-      z-index: 0; object-fit: cover; opacity: 0.35;
+      z-index: 1; object-fit: cover; opacity: 0.6;
     }
     .video-overlay {
       position: absolute; inset: 0;
-      background: radial-gradient(circle, rgba(15,23,42,0.3) 0%, rgba(15,23,42,0.85) 100%);
+      background: radial-gradient(circle, rgba(15,23,42,0.3) 0%, rgba(15,23,42,0.8) 100%);
       z-index: 2;
     }
-    .pre-bg { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
-    .pre-blob { position: absolute; border-radius: 50%; filter: blur(70px); will-change: transform; }
-    .pre-blob.pa {
-      width: 70vmax; height: 70vmax; left: -25%; top: -25%;
-      background: radial-gradient(circle, rgba(30,144,255,0.55) 0%, rgba(30,144,255,0) 70%);
-      animation: blobDriftA 14s ease-in-out infinite alternate;
-    }
-    .pre-blob.pb {
-      width: 60vmax; height: 60vmax; right: -22%; bottom: -25%;
-      background: radial-gradient(circle, rgba(0,240,255,0.4) 0%, rgba(0,240,255,0) 70%);
-      animation: blobDriftB 17s ease-in-out infinite alternate;
-    }
-    .pre-blob.pc {
-      width: 45vmax; height: 45vmax; left: 30%; top: 35%;
-      background: radial-gradient(circle, rgba(124,58,237,0.35) 0%, rgba(124,58,237,0) 70%);
-      animation: blobDriftC 20s ease-in-out infinite alternate;
-    }
-    .pre-grid {
-      position: absolute; left: -50%; right: -50%; bottom: -10%; height: 60%;
-      background-image:
-        linear-gradient(rgba(0,240,255,0.16) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,240,255,0.16) 1px, transparent 1px);
-      background-size: 56px 56px;
-      transform: perspective(480px) rotateX(64deg);
-      transform-origin: 50% 100%;
-      -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.4) 45%, transparent 85%);
-              mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.4) 45%, transparent 85%);
-      animation: gridMove 2.4s linear infinite;
-    }
-    .pre-sweep {
-      position: absolute; left: 0; right: 0; top: 0; height: 160px;
-      background: linear-gradient(to bottom, rgba(0,240,255,0), rgba(0,240,255,0.10) 50%, rgba(0,240,255,0));
-      transform: translateY(-160px);
-      animation: sweepDown 4.5s linear infinite;
-    }
-    .pre-particles { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
     #particles-preloader { position: absolute; inset: 0; z-index: 3; }
     #spotlight {
       position: absolute; width: 600px; height: 600px;
@@ -386,34 +265,12 @@
       border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
       z-index: 4; transition: opacity 0.3s ease;
     }
-
     #loading-phase {
-      position: relative; z-index: 10;
       display: flex; flex-direction: column; align-items: center;
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10;
       width: 100%; max-width: 350px;
     }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
-    .loader-halo {
-      position: absolute; left: 50%; top: 50%;
-      width: min(92vw, 470px); aspect-ratio: 1;
-      transform: translate(-50%, -50%);
-      border-radius: 50%; border: 1px dashed rgba(0,240,255,0.3);
-      box-shadow: 0 0 50px rgba(0,240,255,0.12) inset;
-      animation: ringSpin 22s linear infinite;
-      pointer-events: none; z-index: -1;
-    }
-    .loader-halo::after {
-      content: ''; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px;
-      margin-left: -5px; border-radius: 50%; background: #00f0ff; box-shadow: 0 0 12px #00f0ff;
-    }
-    .loader-halo-2 {
-      width: min(70vw, 340px);
-      border-style: solid; border-color: rgba(30,144,255,0.22);
-      animation-duration: 14s; animation-direction: reverse;
-    }
-    .loader-halo-2::after { display: none; }
-
     .hacker-text-container {
       width: 100%; background: rgba(0, 0, 0, 0.85); border: 1px solid #00f0ff;
       padding: 15px; font-family: 'Courier New', Courier, monospace; color: #00f0ff;
@@ -448,31 +305,19 @@
     }
     .loading-label { margin-left: 5px; color: #00f0ff; }
     .loading-percentage { margin-right: 5px; color: #fff; font-weight: bold; text-shadow: 0 0 8px rgba(0,240,255,0.8); }
-
     #welcome-phase {
       position: absolute; text-align: center; opacity: 0; transform: translateY(20px);
       transition: opacity 1s ease, transform 1s ease; pointer-events: none;
       padding: 0 20px; width: 100%; z-index: 10;
     }
     #welcome-phase.show { opacity: 1; transform: translateY(0); }
-    .welcome-halo {
-      position: absolute; left: 50%; top: 50%;
-      width: min(130vw, 560px); aspect-ratio: 1;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,240,255,0.22) 0%, rgba(30,144,255,0.08) 45%, rgba(0,0,0,0) 70%);
-      animation: haloPulse 3.2s ease-in-out infinite;
-      pointer-events: none; z-index: -1;
-    }
     #welcome-phase .line-1 {
       display: block; color: #fcebd5; font-size: 2.2rem; font-weight: 700; letter-spacing: 2px;
       text-shadow: 0 0 10px rgba(252,235,213,0.8), 0 0 20px rgba(252,235,213,0.5); margin-bottom: 10px;
-      position: relative; z-index: 1;
     }
     #welcome-phase .line-2 {
       display: block; color: #ffffff; font-size: 3rem; font-weight: 900; letter-spacing: 1px;
       text-shadow: 0 0 10px rgba(0,240,255,0.8), 0 0 25px rgba(0,240,255,0.6), 0 0 40px rgba(30,144,255,0.5);
-      position: relative; z-index: 1;
     }
     .sound-hint {
       position: absolute; bottom: 20px; background: rgba(0,240,255,0.1);
@@ -604,6 +449,7 @@
       border: 1px solid rgba(30, 144, 255, 0.25);
       animation: ringSpin 18s linear infinite reverse;
     }
+    @keyframes ringSpin { to { transform: rotate(360deg); } }
 
     .split-title {
       position: relative; z-index: 1; display: flex; flex-wrap: wrap;
@@ -646,7 +492,6 @@
     }
     @keyframes lineGrow { to { width: 220px; } }
     .title-pulse { animation: subPulse 2.4s ease-in-out infinite; }
-    @keyframes subPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
     @media (max-width: 768px) {
       section, .glass, .photo-stack-container { width: 100% !important; max-width: 100vw !important; margin-left: auto !important; margin-right: auto !important; }
@@ -657,38 +502,22 @@
       .title-ring { width: 300px; height: 300px; margin: -150px 0 0 -150px; }
       .title-ring-2 { width: 220px; height: 220px; margin: -110px 0 0 -110px; }
       .logo-3d-wrap { width: 180px; height: 180px; }
-      .intro-grid { height: 50%; }
+      .intro-logo { width: 180px; height: 180px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- INTRO -->
+  <!-- INTRO: LOGO KELAS (DESAIN PREMIUM & MENYATU) -->
   <div id="intro" title="Ketuk untuk lewati">
-    <div class="intro-bg" id="introBg">
-      <div class="intro-blob blob-a"></div>
-      <div class="intro-blob blob-b"></div>
-      <div class="intro-blob blob-c"></div>
+    <div class="intro-frame"></div>
+    <div class="intro-glow"></div>
+    <div class="intro-logo-wrap">
+      <!-- Menggunakan class intro-logo yang sudah diatur mix-blend-mode: screen -->
+      <img class="intro-logo" src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/logo-kelas.png" alt="Logo Kelas D-IV TLM 2026" draggable="false">
     </div>
-    <div class="intro-grid" id="introGrid"></div>
-    <canvas id="introParticles" class="intro-particles"></canvas>
-    <div class="intro-vignette"></div>
-
-    <div class="intro-stage" id="introStage">
-      <div class="intro-screen" id="introScreen">
-        <div class="intro-inner">
-          <div class="intro-glow"></div>
-          <img class="intro-logo" id="introLogo" src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/logo-kelas.png" alt="Logo Kelas D-IV TLM 2026" draggable="false">
-          <div class="intro-reflect"></div>
-          <div class="intro-sheen" id="introSheen"></div>
-        </div>
-      </div>
-      <p class="intro-caption" id="introCaption">D-IV TLM &middot; Angkatan 2026</p>
-      <div class="intro-rule" id="introRule"></div>
-    </div>
-
-    <button class="intro-skip" id="introSkip" type="button">Lewati</button>
-    <div class="intro-flash" id="introFlash"></div>
+    <p class="intro-text">D-IV TLM 2026</p>
+    <p class="intro-skip">Ketuk untuk melewati</p>
   </div>
 
   <div class="cursor-outer"></div>
@@ -715,24 +544,10 @@
       <source src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/video-petir.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
-
-    <!-- Latar hidup untuk loading dan welcome -->
-    <div class="pre-bg">
-      <div class="pre-blob pa"></div>
-      <div class="pre-blob pb"></div>
-      <div class="pre-blob pc"></div>
-      <div class="pre-grid"></div>
-      <div class="pre-sweep"></div>
-    </div>
-    <canvas id="preParticles" class="pre-particles"></canvas>
-
     <div id="particles-preloader"></div>
     <div id="spotlight"></div>
     <div class="sound-hint" id="sound-hint">🔊 Ketuk Layar untuk Nyalakan Suara</div>
-
     <div id="loading-phase">
-      <div class="loader-halo"></div>
-      <div class="loader-halo loader-halo-2"></div>
       <div class="hacker-text-container">
         <div class="hacker-line hacker-text-blur">> INITIALIZING SYSTEM...</div>
         <div class="hacker-line hacker-text-blur">> LOADING WEB CLASS...</div>
@@ -744,9 +559,7 @@
         <span class="loading-percentage" id="progress-percent">0%</span>
       </div>
     </div>
-
     <div id="welcome-phase">
-      <div class="welcome-halo"></div>
       <span class="line-1">Welcome to</span>
       <span class="line-2">D-IV Teknologi Laboratorium Medis</span>
     </div>
@@ -1009,195 +822,24 @@
     };
 
     // ==========================================
-    // FIELD PARTIKEL (dipakai intro dan loading)
-    // ==========================================
-    function createParticleField(canvas, opts = {}) {
-      const ctx = canvas.getContext('2d');
-      const color = opts.color || '0,240,255';
-      const nDesktop = opts.desktop || 75;
-      const nMobile = opts.mobile || 40;
-      let parts = [];
-      let raf = null;
-      let running = false;
-
-      function size() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = innerWidth * dpr;
-        canvas.height = innerHeight * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        const n = innerWidth < 768 ? nMobile : nDesktop;
-        parts = Array.from({ length: n }, () => ({
-          x: Math.random() * innerWidth,
-          y: Math.random() * innerHeight,
-          r: 0.6 + Math.random() * 1.6,
-          vy: 0.12 + Math.random() * 0.45,
-          vx: (Math.random() - 0.5) * 0.15,
-          a: 0.25 + Math.random() * 0.6,
-          tw: Math.random() * Math.PI * 2
-        }));
-      }
-
-      function frame() {
-        ctx.clearRect(0, 0, innerWidth, innerHeight);
-        for (const p of parts) {
-          p.y -= p.vy;
-          p.x += p.vx;
-          p.tw += 0.02;
-          if (p.y < -6) { p.y = innerHeight + 6; p.x = Math.random() * innerWidth; }
-          const alpha = p.a * (0.6 + 0.4 * Math.sin(p.tw));
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${color}, ${alpha})`;
-          ctx.shadowColor = `rgba(${color}, 0.8)`;
-          ctx.shadowBlur = 4;
-          ctx.fill();
-        }
-        if (running) raf = requestAnimationFrame(frame);
-      }
-
-      return {
-        start() { if (running) return; running = true; size(); frame(); },
-        stop() { running = false; cancelAnimationFrame(raf); },
-        resize: size
-      };
-    }
-
-    // ==========================================
-    // INTRO: LATAR HIDUP, LAYAR KACA, KAMERA MASUK
+    // INTRO LOGO -> LALU PRELOADER
     // ==========================================
     document.body.style.overflow = 'hidden';
 
-    const intro = document.getElementById('intro');
-    const introBg = document.getElementById('introBg');
-    const introGrid = document.getElementById('introGrid');
-    const introStage = document.getElementById('introStage');
-    const introScreen = document.getElementById('introScreen');
-    const introLogo = document.getElementById('introLogo');
-    const introSheen = document.getElementById('introSheen');
-    const introCaption = document.getElementById('introCaption');
-    const introRule = document.getElementById('introRule');
-    const introSkip = document.getElementById('introSkip');
-    const introFlash = document.getElementById('introFlash');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const introEl = document.getElementById('intro');
+    let introDone = false;
 
-    // Pecah teks keterangan jadi huruf
-    const capText = 'D-IV TLM \u00B7 Angkatan 2026';
-    introCaption.innerHTML = [...capText].map(ch =>
-      `<span class="cap-ch">${ch === ' ' ? '&nbsp;' : ch}</span>`
-    ).join('');
-    const capChars = introCaption.querySelectorAll('.cap-ch');
-
-    // Grid lantai: miring 3D, dikendalikan GSAP agar bisa ikut parallax
-    gsap.set(introGrid, { rotationX: 64, transformPerspective: 520, transformOrigin: '50% 100%' });
-
-    const introField = createParticleField(document.getElementById('introParticles'), { color: '0,240,255', desktop: 75, mobile: 40 });
-    introField.start();
-
-    // Parallax mengikuti kursor / jari (pada wrapper, tidak bertabrakan dengan animasi CSS)
-    const tiltX = gsap.quickTo(introStage, 'rotationY', { duration: 1.1, ease: 'power3.out' });
-    const tiltY = gsap.quickTo(introStage, 'rotationX', { duration: 1.1, ease: 'power3.out' });
-    const bgX = gsap.quickTo(introBg, 'x', { duration: 1.6, ease: 'power2.out' });
-    const bgY = gsap.quickTo(introBg, 'y', { duration: 1.6, ease: 'power2.out' });
-    const gridX = gsap.quickTo(introGrid, 'x', { duration: 1.4, ease: 'power2.out' });
-
-    let introExiting = false;
-    function parallax(e) {
-      if (introExiting) return;
-      const nx = (e.clientX / innerWidth) - 0.5;
-      const ny = (e.clientY / innerHeight) - 0.5;
-      tiltX(nx * 12);
-      tiltY(-ny * 9);
-      bgX(nx * -36);
-      bgY(ny * -28);
-      gridX(nx * -26);
+    function endIntro() {
+      if (introDone) return;
+      introDone = true;
+      introEl.classList.add('hide');
+      startLoading();   // loading baru mulai setelah intro selesai
     }
-    intro.addEventListener('pointermove', parallax, { passive: true });
-
-    let introFinished = false;
-    let introTl = null;
-
-    function finishIntro() {
-      if (introFinished) return;
-      introFinished = true;
-      if (introTl) introTl.kill();
-      introField.stop();
-      intro.style.display = 'none';
-      startLoading();
-    }
-
-    intro.addEventListener('click', finishIntro);
-    introSkip.addEventListener('click', (e) => { e.stopPropagation(); finishIntro(); });
-
-    // Pengaman: intro selesai paling lambat 9 detik
-    setTimeout(finishIntro, 9000);
-
-    if (reduceMotion) {
-      introTl = gsap.timeline({ onComplete: finishIntro })
-        .set(introScreen, { opacity: 1 })
-        .set(capChars, { opacity: 1 })
-        .set(introRule, { scaleX: 1 })
-        .to(introSkip, { opacity: 1, duration: 0.3 })
-        .to({}, { duration: 1.2 })
-        .to(intro, { opacity: 0, duration: 0.4 });
-    } else {
-      introTl = gsap.timeline({ onComplete: finishIntro });
-
-      introTl
-        // 1. Layar muncul dari kedalaman, miring lalu tegak
-        .set(introScreen, { opacity: 0, scale: 0.7, rotationX: 35, y: 90, transformPerspective: 1400 })
-        .set(introLogo, { opacity: 0, rotationY: -90, scale: 0.6, filter: 'blur(14px)' })
-        .set(capChars, { opacity: 0, y: 18, filter: 'blur(6px)' })
-        .set(introRule, { scaleX: 0 })
-        .set(introSkip, { opacity: 0 })
-        .to(introScreen, { opacity: 1, scale: 1, rotationX: 0, y: 0, duration: 1.5, ease: 'expo.out' })
-
-        // 2. Logo berputar 3D masuk dan menjadi tajam
-        .to(introLogo, { opacity: 1, rotationY: 0, scale: 1, filter: 'blur(0px)', duration: 1.3, ease: 'expo.out' }, '-=1.1')
-
-        // 3. Denyut cahaya di sekeliling logo
-        .to(introLogo, {
-          boxShadow: '0 0 0 10px rgba(0,240,255,0.14), 0 0 70px rgba(0,240,255,0.75)',
-          duration: 0.9, ease: 'sine.inOut', yoyo: true, repeat: 1
-        }, '-=0.4')
-
-        // 4. Kilau melintas di layar
-        .to(introSheen, { xPercent: 460, duration: 1.4, ease: 'power2.inOut' }, '-=1.2')
-
-        // 5. Teks muncul huruf per huruf, lalu garis cahaya
-        .to(capChars, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out', stagger: 0.03 }, '-=1.0')
-        .to(introRule, { scaleX: 1, duration: 1.1, ease: 'expo.out' }, '-=0.7')
-        .to(introSkip, { opacity: 1, duration: 0.5 }, '-=0.6')
-
-        // 6. Jeda untuk dinikmati
-        .to({}, { duration: 1.0 })
-        .addLabel('exit')
-
-        // 7. Reset parallax dan teks menghilang
-        .add(() => {
-          introExiting = true;
-          tiltX(0); tiltY(0); bgX(0); bgY(0); gridX(0);
-        }, 'exit')
-        .to(capChars, { opacity: 0, y: -14, filter: 'blur(6px)', duration: 0.5, ease: 'power2.in', stagger: { each: 0.015 } }, 'exit')
-        .to(introRule, { scaleX: 0, duration: 0.5, ease: 'power2.in' }, 'exit')
-        .to(introSkip, { opacity: 0, duration: 0.3 }, 'exit')
-
-        // 8. Latar dan grid memudar lembut
-        .to(introBg, { scale: 1.3, opacity: 0, duration: 1.4, ease: 'sine.inOut' }, 'exit')
-        .to(introGrid, { opacity: 0, duration: 1.2, ease: 'sine.inOut' }, 'exit')
-
-        // 9. Antisipasi kecil: layar mundur sedikit sebelum kamera masuk
-        .to(introScreen, { scale: 0.96, duration: 0.25, ease: 'power2.out' }, 'exit+=0.1')
-
-        // 10. Kamera masuk ke dalam layar: dorongan halus, melambat di akhir
-        .to(introScreen, { scale: 9, duration: 1.8, ease: 'power3.inOut' }, 'exit+=0.35')
-
-        // 11. Kilatan cahaya naik perlahan, lalu intro memudar ke loading
-        .to(introFlash, { opacity: 1, duration: 0.55, ease: 'sine.in' }, 'exit+=1.6')
-        .to(intro, { opacity: 0, duration: 0.6, ease: 'sine.out' }, 'exit+=2.2');
-    }
+    introEl.addEventListener('click', endIntro);
+    setTimeout(endIntro, 3500); // Sedikit lebih lama agar efek sinematik terasa
 
     // ==========================================
-    // PRELOADER (LOADING + WELCOME)
+    // PRELOADER (LOADING)
     // ==========================================
     let progress = 0;
     const progressBar = document.getElementById('progress-bar');
@@ -1207,8 +849,6 @@
     const preloader = document.getElementById('preloader');
     const thunderAudio = document.getElementById('thunder-audio');
     const soundHint = document.getElementById('sound-hint');
-
-    const preField = createParticleField(document.getElementById('preParticles'), { color: '0,240,255', desktop: 60, mobile: 30 });
 
     let audioPlayed = false;
     function initThunder() {
@@ -1225,13 +865,7 @@
     preloader.addEventListener('click', initThunder, { once: true });
     preloader.addEventListener('touchstart', initThunder, { once: true });
 
-    let loadingStarted = false;
     function startLoading() {
-      if (loadingStarted) return;
-      loadingStarted = true;
-      document.body.style.overflow = 'hidden';
-      preField.start();
-
       const loadInterval = setInterval(() => {
         progress += Math.floor(Math.random() * 4) + 1;
         if (progress >= 100) {
@@ -1242,7 +876,6 @@
           setTimeout(() => {
             preloader.style.opacity = '0';
             preloader.style.visibility = 'hidden';
-            preField.stop();
             document.body.style.overflow = 'auto';
             window.scrollTo(0, 0);
             AOS.refresh();
@@ -1254,12 +887,6 @@
         progressPercent.textContent = progress + '%';
       }, 50);
     }
-
-    // Resize untuk kedua field partikel
-    window.addEventListener('resize', () => {
-      if (!introFinished) introField.resize();
-      if (loadingStarted) preField.resize();
-    });
 
     // ==========================================
     // JUDUL HALAMAN 2: PECAH JADI HURUF
@@ -1286,7 +913,6 @@
     // ==========================================
     // TRANSISI: ZOOM JUDUL -> LATAR PUTIH
     // ==========================================
-    // Jumlah scroll: sekitar 8 putaran mouse. Naikkan/turunkan sesuai selera.
     const SCROLL_DISTANCE = 1000;
 
     function initTransitionEffect() {

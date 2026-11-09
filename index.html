@@ -42,8 +42,7 @@
     /* ============================================ */
     #intro {
       position: fixed; inset: 0; z-index: 1000000;
-      /* Background gradasi radial biru gelap + sedikit pola grid */
-      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%, #050505 100%);
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 60%, #050505 100%);
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       transition: opacity 1s ease, visibility 1s ease;
       overflow: hidden; cursor: pointer;
@@ -56,46 +55,54 @@
       background-image: 
         linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
-      background-size: 40px 40px;
-      animation: gridMove 4s linear infinite;
-      mask-image: radial-gradient(circle at center, black 20%, transparent 80%);
-      -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 80%);
+      background-size: 50px 50px;
+      animation: gridMove 8s linear infinite;
+      mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
+      -webkit-mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
+      transform: perspective(500px) rotateX(20deg) scale(1.5);
     }
     @keyframes gridMove {
       0% { background-position: 0 0; }
-      100% { background-position: 40px 40px; }
+      100% { background-position: 0 50px; }
     }
 
     /* Efek Cahaya Neon di belakang logo */
     .intro-glow {
       position: absolute; width: 350px; height: 350px;
-      background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, rgba(0, 240, 255, 0) 70%);
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.25) 0%, rgba(0, 240, 255, 0) 70%);
       border-radius: 50%; z-index: 1;
       animation: pulseGlow 3s ease-in-out infinite alternate;
     }
     @keyframes pulseGlow {
       0% { transform: scale(0.8); opacity: 0.5; }
-      100% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1.3); opacity: 1; }
     }
 
-    /* Wadah Logo */
+    /* Wadah Logo (Animasi Masuk & Melayang) */
     .intro-logo-wrap { 
       perspective: 1000px; position: relative; z-index: 2; 
+      /* Animasi masuk (spin & zoom) */
       animation: logoEnter 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      opacity: 0; transform: scale(0.6) translateY(30px);
+      opacity: 0; transform: scale(0.2) rotateY(-180deg);
     }
     @keyframes logoEnter {
-      to { opacity: 1; transform: scale(1) translateY(0); }
+      0% { opacity: 0; transform: scale(0.2) rotateY(-180deg); }
+      60% { opacity: 1; transform: scale(1.1) rotateY(10deg); }
+      100% { opacity: 1; transform: scale(1) rotateY(0deg); }
     }
 
-    /* Gambar Logo (Menyatu dengan background gelap) */
+    /* Gambar Logo (Efek melayang/bernafas setelah masuk) */
     .intro-logo {
       width: 220px; height: 220px; object-fit: contain;
-      /* Trik agar background putih pada gambar hilang dan menyatu dengan gelap */
-      mix-blend-mode: screen; 
+      mix-blend-mode: screen; /* Menghilangkan background putih pada gambar */
       filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.6));
       user-select: none; -webkit-user-drag: none; pointer-events: none;
-      transform-style: preserve-3d;
+      /* Animasi mengambang & membesar-mengecil */
+      animation: logoFloatBreath 4s ease-in-out infinite alternate;
+    }
+    @keyframes logoFloatBreath {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-15px) scale(1.05); }
     }
 
     /* Teks Bawah */
@@ -714,7 +721,7 @@
       </section>
     </div>
 
-    <!-- HALAMAN 2: ZOOM JUDUL -->
+    <!-- HALAMAN 2: ZOOM JUDUL + LATAR TOPOGRAFI (FULL HALAMAN) -->
     <div id="page-2-transition">
       <canvas id="bubble-canvas"></canvas>
       <div id="title-content">
@@ -727,7 +734,7 @@
       </div>
     </div>
 
-    <!-- HALAMAN 3: DOKUMENTASI -->
+    <!-- HALAMAN 3: DOKUMENTASI (LATAR PUTIH) -->
     <div id="page-3-content" class="w-full relative z-10 bg-white">
       <div class="w-full py-24 px-4">
         <div class="max-w-4xl mx-auto text-center">

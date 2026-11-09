@@ -307,6 +307,7 @@
       display: flex; flex-direction: column; align-items: center;
       transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10;
       width: 100%; max-width: 350px; position: relative;
+      cursor: pointer; /* Tambahan agar kursor berubah */
     }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
     .hacker-text-container {
@@ -619,6 +620,7 @@
     <div id="spotlight"></div>
     <div class="sound-hint" id="sound-hint">🔊 Ketuk Layar untuk Nyalakan Suara</div>
     
+    <!-- AREA LOADING (DIBERI ID UNTUK EVENT KLIK SUARA) -->
     <div id="loading-phase">
       <div class="hacker-text-container">
         <div class="hacker-line hacker-text-blur">> INITIALIZING SYSTEM...</div>
@@ -1224,28 +1226,37 @@ void main() {
         else last = 0;
       }
 
+      // REVISI: Responsivitas sentuhan HP ditingkatkan
       const onMove = (e) => {
         if (!C.interactive) return;
         const r = canvas.getBoundingClientRect();
         pointer.tx = e.clientX - r.left;
         pointer.ty = r.bottom - e.clientY;
         pointer.inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
-        if (!pointer.seen || pointer.amt === 0) {
+        
+        // Jika jari baru menyentuh, paksa posisi pointer langsung lompat ke titik sentuh
+        if (!pointer.seen || (e.type === 'pointerdown' || e.type === 'touchstart')) {
           pointer.x = pointer.tx;
           pointer.y = pointer.ty;
           pointer.seen = true;
         }
         if (C.interactive) schedule();
       };
+      
       const onLeave = () => { pointer.inside = false; schedule(); };
       const onUp = (e) => {
         if (e.pointerType === 'touch') setTimeout(onLeave, 400);
       };
 
       if (C.interactive) {
+        // Menggunakan pointerrawupdate untuk responsivitas maksimal (khususnya di HP)
+        window.addEventListener('pointerrawupdate', onMove, { passive: true });
         window.addEventListener('pointermove', onMove, { passive: true });
         window.addEventListener('pointerdown', onMove, { passive: true });
+        window.addEventListener('touchstart', onMove, { passive: true });
+        
         window.addEventListener('pointerup', onUp, { passive: true });
+        window.addEventListener('touchend', onUp, { passive: true });
         document.documentElement.addEventListener('pointerleave', onLeave);
         window.addEventListener('blur', onLeave);
       }
@@ -1310,7 +1321,7 @@ void main() {
     if (window.matchMedia('(min-width: 769px)').matches) {
       const cursorOuter = document.querySelector('.cursor-outer');
       const cursorInner = document.querySelector('.cursor-inner');
-      const hoverSelector = 'a, button, .zoomable, .cursor-hover-target, .photo-card, .lanyard-wrap, .glass, .logo-3d-wrap';
+      const hoverSelector = 'a, button, .zoomable, .cursor-hover-target, .photo-card, .lanyard-wrap, .glass, .logo-3d-wrap, #loading-phase';
 
       document.addEventListener('mousemove', (e) => {
         cursorOuter.style.left = cursorInner.style.left = e.clientX + 'px';
@@ -1341,7 +1352,7 @@ void main() {
       src.start();
     }
     document.addEventListener('pointerdown', (e) => {
-      if (e.target.closest('a, button, .cursor-hover-target, .zoomable, .photo-card')) playClickSound();
+      if (e.target.closest('a, button, .cursor-hover-target, .zoomable, .photo-card, #loading-phase')) playClickSound();
     });
 
     // Animasi hex hacker di loading
@@ -1367,6 +1378,7 @@ void main() {
 
     document.body.style.overflow = 'hidden';
 
+    // REVISI: Suara petir dipicu saat area loading-phase diklik
     let audioPlayed = false;
     function initThunder() {
       if (audioPlayed) return;
@@ -1379,8 +1391,8 @@ void main() {
       }
       playClickSound();
     }
-    preloader.addEventListener('click', initThunder, { once: true });
-    preloader.addEventListener('touchstart', initThunder, { once: true });
+    loadingPhase.addEventListener('click', initThunder, { once: true });
+    loadingPhase.addEventListener('touchstart', initThunder, { once: true });
 
     // ==========================================
     // INTRO -> LALU PRELOADER

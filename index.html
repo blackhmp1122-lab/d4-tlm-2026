@@ -270,14 +270,16 @@
     /* PRELOADER (LOADING + WELCOME)                */
     /* ============================================ */
     #preloader {
-      position: fixed; inset: 0; background-color: #050b1a; z-index: 999999;
+      position: fixed; inset: 0; z-index: 999999;
+      /* BACKGROUND GRADASI BIRU GELAP */
+      background: radial-gradient(circle at center, #0f2a4a 0%, #050b1a 100%);
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       transition: opacity 1s ease, visibility 1s ease; overflow: hidden;
       cursor: crosshair; touch-action: none;
     }
     .video-overlay {
       position: absolute; inset: 0;
-      background: radial-gradient(circle, rgba(5,11,26,0) 40%, rgba(5,11,26,0.75) 100%);
+      background: radial-gradient(circle, rgba(5,11,26,0) 30%, rgba(5,11,26,0.85) 100%);
       z-index: 2; pointer-events: none;
     }
     #particles-preloader { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
@@ -296,7 +298,7 @@
       height: 100%;
       object-fit: cover;
       z-index: 1;
-      opacity: 0.35;
+      opacity: 0.45;
       mix-blend-mode: screen;
       pointer-events: none;
     }
@@ -605,11 +607,11 @@
     <img id="lightbox-img" src="" alt="Zoomed Image" onclick="event.stopPropagation()">
   </div>
 
-  <!-- PRELOADER + VIDEO PETIR -->
+  <!-- PRELOADER + VIDEO PETIR + BACKGROUND GRADASI -->
   <div id="preloader">
     <!-- Video Petir -->
     <video id="video-thunder" autoplay muted loop playsinline>
-      <source src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/petir.mp4" type="video/mp4">
+      <source src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/video-petir.mp4" type="video/mp4">
     </video>
     
     <div class="video-overlay"></div>

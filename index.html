@@ -38,71 +38,78 @@
     }
 
     /* ============================================ */
-    /* INTRO REALISTIS (CINEMATIC STUDIO LIGHT)     */
+    /* INTRO SHOWROOM 3D (MEGAH & PROFESIONAL)      */
     /* ============================================ */
     #intro {
       position: fixed; inset: 0; z-index: 1000000;
-      background-color: #050505; /* Hitam pekat dasar */
+      /* Background abu-abu gelap metalik (bukan hitam polos) */
+      background: radial-gradient(circle at center, #2a323d 0%, #12161c 60%, #050505 100%);
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       transition: opacity 1.2s ease, visibility 1.2s ease;
       overflow: hidden; cursor: pointer;
+      perspective: 1200px; /* Penting untuk efek 3D */
     }
     #intro.hide { opacity: 0; visibility: hidden; }
 
-    /* Tekstur Grain/Noise halus seperti kamera film */
+    /* Cahaya Sorot (Spotlight) dari atas */
+    .studio-light {
+      position: absolute; top: -30%; left: 50%; transform: translateX(-50%);
+      width: 80%; height: 80%;
+      background: radial-gradient(ellipse at top, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%);
+      z-index: 1; pointer-events: none;
+    }
+
+    /* Efek Lantai Reflektif (Garis Horizon) */
+    .floor-reflection {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 40%;
+      background: linear-gradient(to top, rgba(0, 240, 255, 0.05) 0%, rgba(0,0,0,0) 100%);
+      border-top: 1px solid rgba(0, 240, 255, 0.1);
+      z-index: 2; pointer-events: none;
+      transform: rotateX(60deg) scale(1.5);
+      transform-origin: bottom;
+    }
+
+    /* Tekstur Halus */
     .film-grain {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.04; /* Sangat halus */
+      opacity: 0.05; 
     }
 
-    /* Cahaya Studio dari atas */
-    .studio-spotlight {
-      position: absolute; top: -10%; left: 50%; transform: translateX(-50%);
-      width: 80%; height: 60%;
-      background: radial-gradient(ellipse at top, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0) 65%);
-      z-index: 0; pointer-events: none;
-    }
-
-    /* Asap Tipis di bawah */
-    .floor-smoke {
-      position: absolute; bottom: 0; left: 0; width: 100%; height: 40%;
-      background: linear-gradient(to top, rgba(15, 23, 42, 0.6) 0%, rgba(0,0,0,0) 100%);
-      z-index: 2; pointer-events: none;
-      filter: blur(30px);
-      animation: smokeFloat 6s ease-in-out infinite alternate;
-    }
-    @keyframes smokeFloat {
-      0% { transform: scale(1) translateY(0); opacity: 0.4; }
-      100% { transform: scale(1.1) translateY(-10px); opacity: 0.7; }
-    }
-
-    /* Wadah Logo (Animasi Kamera: Blur ke Fokus & Zoom In) */
+    /* Wadah Logo 3D */
     .intro-logo-wrap { 
       position: relative; z-index: 3; 
-      animation: cameraFocus 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      opacity: 0; transform: scale(1.1);
+      transform-style: preserve-3d;
+      /* Animasi 3D: Berputar dari samping lalu menghadap depan */
+      animation: logo3DSpin 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
     }
-    @keyframes cameraFocus {
-      0% { opacity: 0; transform: scale(1.1); filter: blur(12px) brightness(0.5); }
-      40% { opacity: 1; filter: blur(4px) brightness(1.1); }
-      100% { opacity: 1; transform: scale(1); filter: blur(0px) brightness(1); }
+    @keyframes logo3DSpin {
+      0% { opacity: 0; transform: rotateY(-90deg) rotateX(20deg) scale(0.5); filter: blur(10px); }
+      50% { opacity: 1; transform: rotateY(20deg) rotateX(-10deg) scale(1.05); filter: blur(0px); }
+      100% { opacity: 1; transform: rotateY(0deg) rotateX(0deg) scale(1); }
     }
 
     /* Gambar Logo */
     .intro-logo {
-      width: 220px; height: 220px; object-fit: contain;
+      width: 240px; height: 240px; object-fit: contain;
       mix-blend-mode: screen; /* Menghilangkan background putih */
-      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.8));
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 15px rgba(0, 240, 255, 0.4));
       user-select: none; -webkit-user-drag: none; pointer-events: none;
+      /* Animasi melayang setelah berhenti berputar */
+      animation: logoFloat 4s ease-in-out infinite alternate;
+      animation-delay: 3s; 
+    }
+    @keyframes logoFloat {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-10px); }
     }
 
     /* Teks Bawah (Muncul Bersamaan dengan Fokus Logo) */
     .intro-text-container {
-      position: relative; z-index: 3; margin-top: 30px; text-align: center;
+      position: relative; z-index: 3; margin-top: 40px; text-align: center;
       opacity: 0; 
-      /* Waktu tunda disamakan dengan tengah-tengah animasi logo */
-      animation: textFadeUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards; 
+      animation: textFadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards; 
     }
     .intro-text-title {
       color: #ffffff; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.8em; text-transform: uppercase;
@@ -575,11 +582,11 @@
 </head>
 <body>
 
-  <!-- INTRO: REALISTIS CINEMATIC -->
+  <!-- INTRO: SHOWROOM 3D -->
   <div id="intro" title="Ketuk untuk lewati">
     <div class="film-grain"></div>
-    <div class="studio-spotlight"></div>
-    <div class="floor-smoke"></div>
+    <div class="studio-light"></div>
+    <div class="floor-reflection"></div>
     
     <div class="intro-logo-wrap">
       <img class="intro-logo" src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/logo-kelas.png" alt="Logo Kelas D-IV TLM 2026" draggable="false">

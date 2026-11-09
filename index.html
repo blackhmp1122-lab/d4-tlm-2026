@@ -46,6 +46,14 @@
     }
 
     /* ============================================ */
+    /* HALFTONE LATAR HALAMAN UTAMA (HERO -> JUDUL) */
+    /* ============================================ */
+    #main-halftone {
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none; opacity: .65;
+    }
+
+    /* ============================================ */
     /* INTRO SHOWROOM 3D                            */
     /* ============================================ */
     #intro {
@@ -466,7 +474,7 @@
     /* HALAMAN 2: TRANSISI                          */
     /* ============================================ */
     #page-2-transition {
-      width: 100%; height: 100vh; position: relative; overflow: hidden; background: #0f172a;
+      width: 100%; height: 100vh; position: relative; overflow: hidden; background: rgba(255,255,255,0);
     }
     #bubble-canvas {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block;
@@ -618,6 +626,8 @@
     </div>
   </div>
 
+  <!-- HALFTONE LATAR HALAMAN UTAMA -->
+  <canvas id="main-halftone" aria-hidden="true"></canvas>
   <div id="particles-main"></div>
 
   <div id="main-content-wrapper">
@@ -1207,6 +1217,7 @@ void main() {
       }
 
       const onMove = (e) => {
+        if (!C.interactive) return;
         const r = canvas.getBoundingClientRect();
         pointer.tx = e.clientX - r.left;
         pointer.ty = r.bottom - e.clientY;
@@ -1223,11 +1234,13 @@ void main() {
         if (e.pointerType === 'touch') setTimeout(onLeave, 400);
       };
 
-      window.addEventListener('pointermove', onMove, { passive: true });
-      window.addEventListener('pointerdown', onMove, { passive: true });
-      window.addEventListener('pointerup', onUp, { passive: true });
-      document.documentElement.addEventListener('pointerleave', onLeave);
-      window.addEventListener('blur', onLeave);
+      if (C.interactive) {
+        window.addEventListener('pointermove', onMove, { passive: true });
+        window.addEventListener('pointerdown', onMove, { passive: true });
+        window.addEventListener('pointerup', onUp, { passive: true });
+        document.documentElement.addEventListener('pointerleave', onLeave);
+        window.addEventListener('blur', onLeave);
+      }
       document.addEventListener('visibilitychange', schedule);
 
       const ro = new ResizeObserver(() => {
@@ -1261,13 +1274,22 @@ void main() {
       };
     }
 
-    // Pengaturan latar intro dan loading
+    // Pengaturan latar intro dan loading — TANPA efek sentuhan (interactive: false)
     const introHT = createHalftone(document.getElementById('introHalftone'), {
-      spacing: 9, speed: 0.9, follow: 0.5, radius: 90, glow: 0.6
+      spacing: 9, speed: 0.9, follow: 0.5, radius: 90, glow: 0.6, interactive: false
     });
     const preHT = createHalftone(document.getElementById('preHalftone'), {
-      spacing: 10, speed: 0.7, radius: 80, glow: 0.45, colors: ['#0a1830', '#1a4fb8', '#1e90ff', '#00f0ff', '#dffcff']
+      spacing: 10, speed: 0.7, radius: 80, glow: 0.45, colors: ['#0a1830', '#1a4fb8', '#1e90ff', '#00f0ff', '#dffcff'], interactive: false
     });
+
+    // Latar halaman utama: dari hero sampai judul "Dokumentasi Kelas" — DENGAN efek sentuhan
+    const mainHT = createHalftone(document.getElementById('main-halftone'), {
+      spacing: 9, speed: 0.6, radius: 90, glow: 0.3, minDot: 0.15,
+      background: '#0f172a',
+      colors: ['#0f172a', '#16325c', '#1e90ff', '#00f0ff'],
+      interactive: true
+    });
+
     introHT.start();
 
     // ==========================================
@@ -1399,6 +1421,7 @@ void main() {
             preloader.style.opacity = '0';
             preloader.style.visibility = 'hidden';
             preHT.stop();
+            mainHT.start();
             document.body.style.overflow = 'auto';
             window.scrollTo(0, 0);
             AOS.refresh();
@@ -1436,7 +1459,6 @@ void main() {
     // ==========================================
     // TRANSISI: ZOOM JUDUL -> LATAR PUTIH
     // ==========================================
-    // Jumlah scroll: sekitar 8 putaran mouse. Naikkan/turunkan sesuai selera.
     const SCROLL_DISTANCE = 1000;
 
     function initTransitionEffect() {
@@ -1447,6 +1469,13 @@ void main() {
 
       const topoState = { p: 0 };
       initTopo(section, canvas, topoState);
+
+      ScrollTrigger.create({
+        trigger: '#page-3-content',
+        start: 'top bottom',
+        onEnter: () => mainHT.stop(),
+        onLeaveBack: () => mainHT.start()
+      });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -1540,7 +1569,7 @@ void main() {
         }
 
         const p = state.p;
-        ctx.strokeStyle = p < 0.5 ? 'rgba(148, 163, 184, 0.3)' : 'rgba(71, 85, 105, 0.22)';
+        ctx.strokeStyle = 'rgba(71, 85, 105,' + (0.22 * p) + ')';
         ctx.lineWidth = 1;
 
         for (let k = 0; k <= LINES; k++) {

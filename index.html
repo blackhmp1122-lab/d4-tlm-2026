@@ -275,7 +275,7 @@
       background: radial-gradient(circle at center, #0f2a4a 0%, #050b1a 100%);
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       transition: opacity 1s ease, visibility 1s ease; overflow: hidden;
-      cursor: crosshair; touch-action: none;
+      cursor: pointer; touch-action: manipulation;
     }
     .video-overlay {
       position: absolute; inset: 0;
@@ -307,7 +307,6 @@
       display: flex; flex-direction: column; align-items: center;
       transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10;
       width: 100%; max-width: 350px; position: relative;
-      cursor: pointer; /* Tambahan agar kursor berubah */
     }
     #loading-phase.hide { opacity: 0; transform: scale(0.9); }
     .hacker-text-container {
@@ -625,7 +624,7 @@
     <div id="spotlight"></div>
     <div class="sound-hint" id="sound-hint">🔊 Ketuk Layar untuk Nyalakan Suara</div>
     
-    <!-- AREA LOADING (DIBERI ID UNTUK EVENT KLIK SUARA) -->
+    <!-- AREA LOADING -->
     <div id="loading-phase">
       <div class="hacker-text-container">
         <div class="hacker-line hacker-text-blur">> INITIALIZING SYSTEM...</div>
@@ -1206,18 +1205,17 @@ void main() {
         const t = now / 1000;
         const amtTo = C.interactive && !still && pointer.inside ? 1 : 0;
         pointer.amt = ease(pointer.amt, amtTo, 3.5, dt, 0.002);
-        const rate = 28 * Math.pow(1 / 9, Math.min(1, Math.max(0, C.follow)));
+        // Mengubah smoothing agar lebih langsung menempel di jari saat di HP
+        const rate = C.isMobile ? 60 : 28 * Math.pow(1 / 9, Math.min(1, Math.max(0, C.follow))); 
         pointer.x = ease(pointer.x, pointer.tx, rate, dt, 0.1);
         pointer.y = ease(pointer.y, pointer.ty, rate, dt, 0.1);
 
-        // Jejak diperlama di HP dengan memperpanjang C.trailLength yang di-set di config
         while (path.length && t - path[path.length - 1].t > C.trailLength) path.pop();
         if (pointer.amt > 0 && !still) {
           const head = path[0];
-          // Jarak antar titik diperkecil agar lebih padat di HP
-          if (!head || Math.hypot(head.x - pointer.x, head.y - pointer.y) > 4) {
+          if (!head || Math.hypot(head.x - pointer.x, head.y - pointer.y) > (C.isMobile ? 2 : 6)) {
             path.unshift({ x: pointer.x, y: pointer.y, t });
-            if (path.length > 20) path.pop(); // Titik maksimal ditambah
+            if (path.length > (C.isMobile ? 24 : 16)) path.pop();
           }
         }
         for (const p of path) {
@@ -1233,7 +1231,6 @@ void main() {
         else last = 0;
       }
 
-      // REVISI: Responsivitas sentuhan HP ditingkatkan
       const onMove = (e) => {
         if (!C.interactive) return;
         const r = canvas.getBoundingClientRect();
@@ -1241,7 +1238,6 @@ void main() {
         pointer.ty = r.bottom - e.clientY;
         pointer.inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
         
-        // Jika jari baru menyentuh, paksa posisi pointer langsung lompat ke titik sentuh
         if (!pointer.seen || (e.type === 'pointerdown' || e.type === 'touchstart')) {
           pointer.x = pointer.tx;
           pointer.y = pointer.ty;
@@ -1256,12 +1252,10 @@ void main() {
       };
 
       if (C.interactive) {
-        // Menggunakan pointerrawupdate untuk responsivitas maksimal (khususnya di HP)
         window.addEventListener('pointerrawupdate', onMove, { passive: true });
         window.addEventListener('pointermove', onMove, { passive: true });
         window.addEventListener('pointerdown', onMove, { passive: true });
         window.addEventListener('touchstart', onMove, { passive: true });
-        
         window.addEventListener('pointerup', onUp, { passive: true });
         window.addEventListener('touchend', onUp, { passive: true });
         document.documentElement.addEventListener('pointerleave', onLeave);
@@ -1300,17 +1294,16 @@ void main() {
       };
     }
 
-    // Latar halaman utama: HANYA INI YANG INTERAKTIF (efek sentuh biru)
-    // REVISI: radius dan trailLength diperbesar untuk HP agar efek lebih terasa
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
     const mainHT = createHalftone(document.getElementById('main-halftone'), {
-      spacing: isMobile ? 12 : 9, // Jarak antar titik dilonggarkan sedikit di HP agar ringan
+      isMobile: isMobile,
+      spacing: isMobile ? 10 : 9, 
       speed: 0.6, 
-      radius: isMobile ? 200 : 90, // Radius sentuhan diperbesar drastis di HP
+      radius: isMobile ? 160 : 90, 
       glow: 0.3, 
       minDot: 0.15,
-      trailLength: isMobile ? 2.5 : 0.9, // Jejak bertahan lebih lama di HP
-      follow: isMobile ? 0.7 : 0.55, // Jari lebih reaktif
+      trailLength: isMobile ? 2.0 : 0.9, 
+      follow: isMobile ? 1.0 : 0.55, 
       background: '#0f172a',
       colors: ['#0f172a', '#16325c', '#1e90ff', '#00f0ff'],
       interactive: true
@@ -1393,7 +1386,7 @@ void main() {
 
     document.body.style.overflow = 'hidden';
 
-    // REVISI: Suara petir dipicu saat area loading-phase diklik
+    // REVISI: Suara petir dipicu oleh touchend dan click pada preloader itu sendiri
     let audioPlayed = false;
     function initThunder() {
       if (audioPlayed) return;
@@ -1406,8 +1399,8 @@ void main() {
       }
       playClickSound();
     }
-    loadingPhase.addEventListener('click', initThunder, { once: true });
-    loadingPhase.addEventListener('touchstart', initThunder, { once: true });
+    preloader.addEventListener('click', initThunder, { once: true });
+    preloader.addEventListener('touchend', initThunder, { once: true });
 
     // ==========================================
     // INTRO -> LALU PRELOADER

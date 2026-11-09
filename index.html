@@ -38,13 +38,14 @@
     }
 
     /* ============================================ */
-    /* INTRO LOGO PREMIUM (SINEMATIK)               */
+    /* INTRO LOGO PREMIUM (SINEMATIK KAMERA)        */
     /* ============================================ */
     #intro {
       position: fixed; inset: 0; z-index: 1000000;
+      /* Background gradasi radial biru gelap yang mewah */
       background: radial-gradient(circle at center, #1e293b 0%, #0f172a 60%, #050505 100%);
       display: flex; flex-direction: column; justify-content: center; align-items: center;
-      transition: opacity 1s ease, visibility 1s ease;
+      transition: opacity 1.5s ease, visibility 1.5s ease;
       overflow: hidden; cursor: pointer;
     }
     #intro.hide { opacity: 0; visibility: hidden; }
@@ -55,21 +56,21 @@
       background-image: 
         linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
-      background-size: 50px 50px;
-      animation: gridMove 8s linear infinite;
-      mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
-      -webkit-mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
-      transform: perspective(500px) rotateX(20deg) scale(1.5);
+      background-size: 60px 60px;
+      animation: gridMove 10s linear infinite;
+      mask-image: radial-gradient(circle at center, black 10%, transparent 70%);
+      -webkit-mask-image: radial-gradient(circle at center, black 10%, transparent 70%);
+      transform: perspective(600px) rotateX(15deg) scale(1.5);
     }
     @keyframes gridMove {
       0% { background-position: 0 0; }
-      100% { background-position: 0 50px; }
+      100% { background-position: 0 60px; }
     }
 
     /* Efek Cahaya Neon di belakang logo */
     .intro-glow {
-      position: absolute; width: 350px; height: 350px;
-      background: radial-gradient(circle, rgba(0, 240, 255, 0.25) 0%, rgba(0, 240, 255, 0) 70%);
+      position: absolute; width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, rgba(0, 240, 255, 0) 70%);
       border-radius: 50%; z-index: 1;
       animation: pulseGlow 3s ease-in-out infinite alternate;
     }
@@ -78,41 +79,37 @@
       100% { transform: scale(1.3); opacity: 1; }
     }
 
-    /* Wadah Logo (Animasi Masuk & Melayang) */
+    /* Wadah Logo */
     .intro-logo-wrap { 
       perspective: 1000px; position: relative; z-index: 2; 
-      /* Animasi masuk (spin & zoom) */
-      animation: logoEnter 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      opacity: 0; transform: scale(0.2) rotateY(-180deg);
+      /* Animasi masuk: Zoom out (jauh) -> Zoom in (dekat) -> Berhenti */
+      animation: cinematicZoom 3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      opacity: 0; transform: scale(2.5) rotateY(0deg);
     }
-    @keyframes logoEnter {
-      0% { opacity: 0; transform: scale(0.2) rotateY(-180deg); }
-      60% { opacity: 1; transform: scale(1.1) rotateY(10deg); }
-      100% { opacity: 1; transform: scale(1) rotateY(0deg); }
+    @keyframes cinematicZoom {
+      0% { opacity: 0; transform: scale(2.5) rotateY(0deg); filter: blur(10px); }
+      40% { opacity: 1; transform: scale(1) rotateY(0deg); filter: blur(0px); }
+      70% { transform: scale(1.05) rotateY(10deg); }
+      100% { transform: scale(1) rotateY(0deg); }
     }
 
-    /* Gambar Logo (Efek melayang/bernafas setelah masuk) */
+    /* Gambar Logo (Menyatu dengan background gelap) */
     .intro-logo {
-      width: 220px; height: 220px; object-fit: contain;
-      mix-blend-mode: screen; /* Menghilangkan background putih pada gambar */
-      filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.6));
+      width: 240px; height: 240px; object-fit: contain;
+      /* Trik agar background putih pada gambar hilang dan menyatu dengan gelap */
+      mix-blend-mode: screen; 
+      filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.7));
       user-select: none; -webkit-user-drag: none; pointer-events: none;
-      /* Animasi mengambang & membesar-mengecil */
-      animation: logoFloatBreath 4s ease-in-out infinite alternate;
-    }
-    @keyframes logoFloatBreath {
-      0% { transform: translateY(0) scale(1); }
-      100% { transform: translateY(-15px) scale(1.05); }
     }
 
     /* Teks Bawah */
     .intro-text {
       position: relative; z-index: 2; margin-top: 30px;
-      color: #94a3b8; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5em; text-transform: uppercase;
-      opacity: 0; animation: textEnter 1s ease 1.5s forwards;
+      color: #94a3b8; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.6em; text-transform: uppercase;
+      opacity: 0; animation: textEnter 1s ease 2s forwards;
     }
     @keyframes textEnter {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(15px); }
       to { opacity: 0.8; transform: translateY(0); }
     }
 
@@ -277,7 +274,7 @@
     
     /* Efek Garis Grid Matrix di Background Loading */
     .matrix-bg {
-      position: absolute; inset: 0; z-index: 3; /* Di atas video, di bawah teks */
+      position: absolute; inset: 0; z-index: 3;
       background-image: 
         linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
@@ -294,7 +291,7 @@
     .bg-video {
       position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%;
       width: auto; height: auto; transform: translateX(-50%) translateY(-50%);
-      z-index: 1; object-fit: cover; opacity: 0.4; /* Dikurangi agar grid terlihat */
+      z-index: 1; object-fit: cover; opacity: 0.4;
     }
     .video-overlay {
       position: absolute; inset: 0;

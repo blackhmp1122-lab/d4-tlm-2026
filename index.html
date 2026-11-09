@@ -517,7 +517,8 @@
     .split-title {
       position: relative; z-index: 1; display: flex; flex-wrap: wrap;
       justify-content: center; line-height: 1.1; font-weight: 800;
-      filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.8)) drop-shadow(0 0 30px rgba(0, 240, 255, 0.5));
+      /* Shadow ditebalkan agar sangat terang di HP */
+      filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6)) drop-shadow(0 0 30px rgba(0, 240, 255, 0.8));
     }
     .split-char {
       display: inline-block; white-space: pre;
@@ -528,12 +529,13 @@
     .split-char.is-space { width: 0.3em; }
     .split-glyph {
       display: inline-block;
-      background: linear-gradient(180deg, #ffffff 0%, #ffffff 50%, #00f0ff 100%);
+      /* Menggunakan warna putih penuh, gradasi biru hanya di bagian bawah teks */
+      background: linear-gradient(180deg, #ffffff 0%, #ffffff 40%, #00f0ff 100%);
       background-size: 100% 200%;
       -webkit-background-clip: text; background-clip: text; color: transparent;
       animation: charWave 2.8s ease-in-out infinite;
       animation-delay: var(--w);
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); /* Fallback shadow */
+      text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(0,240,255,0.6); /* Fallback shadow ekstra */
     }
     @keyframes charIn {
       from { opacity: 0; transform: translateY(24px) scale(0.9); }
@@ -545,9 +547,9 @@
     }
 
     .title-sub {
-      letter-spacing: 0.4em; text-transform: uppercase; color: #94a3b8;
-      font-size: 0.75rem; position: relative; z-index: 1;
-      text-shadow: 0 0 10px rgba(0,0,0,0.8); /* Biar ga gelap */
+      letter-spacing: 0.4em; text-transform: uppercase; color: #e2e8f0;
+      font-size: 0.75rem; position: relative; z-index: 1; font-weight: 600;
+      text-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 15px rgba(0,240,255,0.5); /* Biar ga gelap */
     }
     .title-line {
       width: 0; height: 2px; position: relative; z-index: 1;
@@ -1304,10 +1306,10 @@ void main() {
     const mainHT = createHalftone(document.getElementById('main-halftone'), {
       spacing: isMobile ? 12 : 9, // Jarak antar titik dilonggarkan sedikit di HP agar ringan
       speed: 0.6, 
-      radius: isMobile ? 140 : 90, // Radius sentuhan diperbesar drastis di HP
+      radius: isMobile ? 200 : 90, // Radius sentuhan diperbesar drastis di HP
       glow: 0.3, 
       minDot: 0.15,
-      trailLength: isMobile ? 2.0 : 0.9, // Jejak bertahan lebih lama di HP
+      trailLength: isMobile ? 2.5 : 0.9, // Jejak bertahan lebih lama di HP
       follow: isMobile ? 0.7 : 0.55, // Jari lebih reaktif
       background: '#0f172a',
       colors: ['#0f172a', '#16325c', '#1e90ff', '#00f0ff'],

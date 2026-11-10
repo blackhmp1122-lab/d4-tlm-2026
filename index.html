@@ -1288,6 +1288,7 @@ precision mediump float;
 #endif
 uniform vec2 resolution;
 uniform float time;
+uniform float ss;
 float ring(vec2 uv, float off) {
   float v = 0.0;
   for (int i = 0; i < 5; i++) {
@@ -1296,9 +1297,23 @@ float ring(vec2 uv, float off) {
   }
   return v;
 }
+vec3 colorAt(vec2 frag) {
+  vec2 uv = (frag * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
+  return clamp(vec3(ring(uv, 0.0), ring(uv, 0.01), ring(uv, 0.02)), 0.0, 1.0);
+}
 void main() {
-  vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
-  gl_FragColor = vec4(ring(uv, 0.0), ring(uv, 0.01), ring(uv, 0.02), 1.0);
+  vec2 f = gl_FragCoord.xy;
+  vec3 c;
+  if (ss > 0.5) {
+    c = colorAt(f + vec2( 0.125,  0.375))
+      + colorAt(f + vec2(-0.375,  0.125))
+      + colorAt(f + vec2(-0.125, -0.375))
+      + colorAt(f + vec2( 0.375, -0.125));
+    c *= 0.25;
+  } else {
+    c = colorAt(f);
+  }
+  gl_FragColor = vec4(c, 1.0);
 }`;
 
       const sh = (type, src) => {
@@ -1325,9 +1340,10 @@ void main() {
 
       const uRes = gl.getUniformLocation(prog, 'resolution');
       const uTime = gl.getUniformLocation(prog, 'time');
+      const uSS = gl.getUniformLocation(prog, 'ss');
 
       function resize() {
-        const d = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 1.5);
+        const d = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 1.5);   // resolusi tinggi + AA 4 sampel
         const w = cv.clientWidth || window.innerWidth;
         const h = cv.clientHeight || window.innerHeight;
         cv.width = Math.max(1, Math.round(w * d));
@@ -1342,6 +1358,7 @@ void main() {
       const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const start = performance.now();
       let hideAt = 0;
+      let ssOn = true, prev = 0, nFrame = 0, acc = 0;   // pengaman: matikan AA kalau HP lambat
 
       function frame(now) {
         // berhenti total setelah intro selesai memudar
@@ -1349,6 +1366,13 @@ void main() {
           if (!hideAt) hideAt = now;
           if (now - hideAt > 1400) { shaderRO.disconnect(); return; }
         }
+        if (prev && ssOn) {
+          nFrame++;
+          if (nFrame > 6) acc += now - prev;
+          if (nFrame === 26 && acc / 20 > 26) ssOn = false;
+        }
+        prev = now;
+        gl.uniform1f(uSS, ssOn ? 1 : 0);
         gl.uniform2f(uRes, cv.width, cv.height);
         gl.uniform1f(uTime, T0 + (still ? 0.3 : (now - start) / 1000 * SPEED));
         gl.drawArrays(gl.TRIANGLES, 0, 3);

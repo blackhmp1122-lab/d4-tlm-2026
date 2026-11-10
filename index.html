@@ -123,12 +123,17 @@
     }
     #back-to-top.show { opacity: 1; visibility: visible; }
     #back-to-top:hover { background: #00f0ff; color: #000; transform: translateY(-5px) scale(1.1); box-shadow: 0 0 25px rgba(0,240,255,0.8); }
+    body.in-video #back-to-top { opacity: 0 !important; visibility: hidden !important; }
 
     #particles-main { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; pointer-events: none; }
     #main-content-wrapper { position: relative; z-index: 10; pointer-events: none; width: 100%; overflow-x: hidden; }
     #main-content-wrapper nav, #main-content-wrapper section, #main-content-wrapper footer,
     #main-content-wrapper .zoomable, #main-content-wrapper a, #main-content-wrapper button,
     #main-content-wrapper .cursor-hover-target, #page-2-transition, #page-3-content { pointer-events: auto; }
+
+    /* NAV: disembunyikan saat video tur kampus aktif */
+    #main-content-wrapper > nav { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+    #main-content-wrapper > nav.nav-hide { transform: translateY(-115%); }
 
     .glass {
       background: rgba(30,41,59,0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
@@ -239,6 +244,88 @@
     }
     @keyframes pulseHint { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
 
+    /* HALAMAN 1: VIDEO TUR KAMPUS (SCROLL SCRUB) */
+    #page-1-video { position: relative; width: 100%; height: 100vh; height: 100svh; overflow: hidden; }
+    #vid-stage { position: absolute; inset: 0; will-change: transform, opacity; transform-origin: 50% 50%; }
+    #vid-frame {
+      position: absolute; inset: 0; overflow: hidden; background: #050b1a;
+      transform: translateZ(0);
+    }
+    #scroll-video {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      transform-origin: 100% 0%; pointer-events: none; background: #050b1a;
+    }
+    .vid-shade {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        linear-gradient(to top, rgba(5,11,26,0.88) 0%, rgba(5,11,26,0.4) 30%, rgba(5,11,26,0) 55%),
+        linear-gradient(to bottom, rgba(5,11,26,0.35) 0%, rgba(5,11,26,0) 18%);
+    }
+    #vid-caps { position: absolute; inset: 0; pointer-events: none; }
+    .vcap {
+      position: absolute; left: 0; right: 0; bottom: 15%; padding: 0 26px; text-align: center;
+      opacity: 0; will-change: opacity, transform;
+    }
+    .vcap .k {
+      display: block; margin-bottom: 12px; color: #00f0ff; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.35em; text-transform: uppercase; text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+    }
+    .vcap .t {
+      display: block; color: #fff; font-weight: 800; line-height: 1.15; letter-spacing: -0.01em;
+      font-size: clamp(1.7rem, 7vw, 2.5rem);
+      text-shadow: 0 2px 18px rgba(0,0,0,0.85), 0 0 3px rgba(0,0,0,0.9);
+    }
+    .vcap .s {
+      display: block; margin-top: 12px; color: #cbd5e1; font-size: 0.8rem; letter-spacing: 0.18em;
+      text-transform: uppercase; text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+    }
+    #vid-loading {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      color: #00f0ff; font: 700 0.75rem/1 'Courier New', monospace; letter-spacing: 0.25em; text-transform: uppercase;
+      background: #050b1a; transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #vid-loading.done { opacity: 0; visibility: hidden; }
+    #vid-hint {
+      position: absolute; left: 0; right: 0; bottom: 4.5%; text-align: center; pointer-events: none;
+      color: #e2e8f0; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+    }
+    #vid-hint span { display: block; margin-top: 8px; font-size: 1.1rem; animation: hintBounce 1.6s ease-in-out infinite; }
+    @keyframes hintBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+    #vid-prog {
+      position: absolute; right: 12px; top: 50%; width: 3px; height: 96px; margin-top: -48px;
+      border-radius: 3px; background: rgba(255,255,255,0.22); overflow: hidden; pointer-events: none;
+    }
+    #vid-prog span { display: block; width: 100%; height: 0%; background: #00f0ff; box-shadow: 0 0 8px #00f0ff; }
+    #vid-side-l, #vid-chapters { display: none; }
+
+    @media (min-width: 769px) {
+      #vid-frame {
+        inset: auto; top: 50%; left: 50%; height: calc(100svh - 48px); aspect-ratio: 9 / 16;
+        transform: translate(-50%, -50%); border-radius: 28px;
+        border: 1px solid rgba(0,240,255,0.35);
+        box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 30px 80px rgba(0,0,0,0.55), 0 0 60px rgba(0,240,255,0.18);
+      }
+      #vid-prog { right: 28px; }
+      .vcap .t { font-size: 2rem; }
+    }
+    @media (min-width: 1100px) {
+      #vid-side-l, #vid-chapters { display: block; position: absolute; top: 50%; transform: translateY(-50%); width: 260px; }
+      #vid-side-l { right: calc(50% + (100svh - 48px) * 0.28125 + 48px); text-align: right; }
+      #vid-chapters { left: calc(50% + (100svh - 48px) * 0.28125 + 48px); list-style: none; margin: 0; padding: 0; }
+      #vid-side-l .k { display: block; color: #00f0ff; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 14px; }
+      #vid-side-l .t { display: block; color: #fff; font-size: 1.9rem; font-weight: 800; line-height: 1.15; text-shadow: 0 0 20px rgba(0,240,255,0.35); }
+      #vid-side-l .s { display: block; margin-top: 14px; color: #94a3b8; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; }
+      #vid-chapters li {
+        display: flex; gap: 14px; align-items: baseline; padding: 12px 0 12px 16px; border-left: 2px solid rgba(148,163,184,0.25);
+        color: #94a3b8; opacity: 0.45; transition: opacity 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+        font-size: 0.85rem; letter-spacing: 0.04em;
+      }
+      #vid-chapters li b { font: 700 0.7rem 'Courier New', monospace; letter-spacing: 0.1em; }
+      #vid-chapters li.on { opacity: 1; color: #fff; border-left-color: #00f0ff; }
+      #vid-chapters li.on b { color: #00f0ff; }
+    }
+
     /* LOGO KELAS 3D */
     .logo-3d-wrap { position: relative; width: 220px; height: 220px; margin: 0 auto 40px; perspective: 800px; cursor: pointer; touch-action: none; animation: logoFloat 4s ease-in-out infinite; }
     .logo-3d {
@@ -274,7 +361,7 @@
     .photo-stack-container.is-spread .stack-label { background: #00f0ff; color: #000; }
     .stack-hint { position: absolute; top: -28px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #64748b; white-space: nowrap; pointer-events: none; }
 
-    /* HALAMAN 2: TRANSISI */
+    /* HALAMAN 3: TRANSISI JUDUL DOKUMENTASI */
     #page-2-transition { width: 100%; height: 100vh; position: relative; overflow: hidden; background: rgba(255,255,255,0); }
     #bubble-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; }
     #title-content {
@@ -550,6 +637,41 @@
       </div>
     </nav>
 
+    <!-- HALAMAN 1: VIDEO TUR KAMPUS (di-pin, diputar mengikuti scroll) -->
+    <section id="page-1-video" aria-label="Tur kampus STIKES Nasional Surakarta">
+      <div id="vid-stage">
+        <div id="vid-side-l" aria-hidden="true">
+          <span class="k">Tur Kampus</span>
+          <span class="t">STIKES Nasional Surakarta</span>
+          <span class="s">D-IV TLM &middot; Angkatan 2026</span>
+        </div>
+
+        <div id="vid-frame">
+          <video id="scroll-video" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture tabindex="-1"></video>
+          <div class="vid-shade"></div>
+          <div id="vid-caps">
+            <div class="vcap" data-a="0.02" data-b="0.17"><span class="t">Pernah kepikiran</span></div>
+            <div class="vcap" data-a="0.17" data-b="0.36"><span class="t">Kuliah itu sebenarnya buat apa, sih?</span></div>
+            <div class="vcap" data-a="0.36" data-b="0.50"><span class="t">Buat cari gelar?</span></div>
+            <div class="vcap" data-a="0.50" data-b="0.66"><span class="t">Atau buat menemukan versi terbaik dirimu?</span></div>
+            <div class="vcap" data-a="0.66" data-b="0.80"><span class="k">Dan ceritanya dimulai</span><span class="t">dari sini</span></div>
+            <div class="vcap" data-a="0.78" data-b="1.0"><span class="k">Selamat datang</span><span class="t">STIKES Nasional Surakarta</span><span class="s">D-IV Teknologi Laboratorium Medis 2026</span></div>
+          </div>
+          <div id="vid-hint">Scroll untuk memulai<span>&darr;</span></div>
+          <div id="vid-loading">Memuat video...</div>
+        </div>
+
+        <ol id="vid-chapters" aria-hidden="true">
+          <li class="on"><b>01</b>Kampus dari udara</li>
+          <li><b>02</b>Fasad gedung</li>
+          <li><b>03</b>Papan nama &amp; balkon</li>
+          <li><b>04</b>Area mahasiswa</li>
+        </ol>
+        <div id="vid-prog" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+
+    <!-- HALAMAN 2: HERO, TENTANG KAMI, STRUKTUR & ANGGOTA -->
     <div id="page-1-content">
       <section class="relative min-h-screen flex items-center justify-center px-6 pt-24 w-full overflow-hidden" id="hero-section">
         <div class="text-center max-w-3xl w-full" data-aos="fade-up" data-aos-duration="1000" id="hero-content">
@@ -598,6 +720,7 @@
       </section>
     </div>
 
+    <!-- HALAMAN 3: JUDUL DOKUMENTASI KELAS -->
     <div id="page-2-transition">
       <canvas id="bubble-canvas"></canvas>
       <div id="title-content">
@@ -610,8 +733,9 @@
       </div>
     </div>
 
+    <!-- HALAMAN 4: LOGO KELAS 3D, FOLDER, BUKU TAMU -->
     <div id="page-3-content" class="w-full relative z-10 bg-white">
-      <div class="w-full py-24 px-4">
+      <div class="w-full py-24 px-4" id="gallery">
         <div class="max-w-4xl mx-auto text-center">
           <div class="logo-3d-wrap" id="logo3d">
             <div class="logo-3d">
@@ -701,11 +825,25 @@
     import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
     AOS.init({ once: false, mirror: false });
     window.scrollTo(0, 0);
 
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
     let particlesContainer = null;
+
+    // ==========================================
+    // PENGATUR LATAR (halftone + partikel) -> hemat baterai saat tertutup
+    // ==========================================
+    const bgFlags = { video: false, white: false, page3: false };
+    let bgReady = false;
+    function updateBg() {
+      if (!bgReady) return;
+      if (bgFlags.video || bgFlags.white) mainHT.stop(); else mainHT.start();
+      if (particlesContainer) {
+        if (bgFlags.video || bgFlags.page3) particlesContainer.pause(); else particlesContainer.play();
+      }
+    }
 
     // ==========================================
     // HALFTONE (WEBGL2)
@@ -1166,6 +1304,55 @@ void main() {
     });
 
     // ==========================================
+    // VIDEO TUR KAMPUS: PENGATURAN
+    // ==========================================
+    // Upload file kampus-scroll.mp4 ke repo GitHub yang sama, lalu pastikan namanya sama dengan di bawah.
+    const VIDEO_URL = 'https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/kampus-scroll.mp4';
+    // Pembesaran sedikit supaya sisi kiri video (sisa watermark IG yang samar) terpotong. Isi 1 untuk mematikan.
+    const VIDEO_CROP = 1.16;
+    // Berapa tinggi layar yang dipakai untuk scroll (makin besar = video makin pelan)
+    const VIDEO_SCROLL_SCREENS = isMobile ? 4.5 : 5.5;
+    // Bagian awal scroll (0-1) untuk memutar video; sisanya untuk transisi keluar ke halaman berikutnya
+    const VID_END = 0.9;
+
+    const vid = document.getElementById('scroll-video');
+    const vidLoading = document.getElementById('vid-loading');
+    let vidReady = false;
+    let vidDuration = 0;
+
+    vid.style.transform = 'scale(' + VIDEO_CROP + ')';
+
+    // Muat seluruh video ke memori dulu (blob) supaya lompat frame instan dan tidak tergantung jaringan saat scroll
+    (function loadScrollVideo() {
+      fetch(VIDEO_URL)
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.blob(); })
+        .then(b => { vid.src = URL.createObjectURL(b); vid.load(); })
+        .catch(() => { vid.src = VIDEO_URL; vid.load(); });
+    })();
+
+    vid.addEventListener('loadedmetadata', () => { vidDuration = vid.duration || 0; });
+    vid.addEventListener('loadeddata', () => {
+      vidDuration = vid.duration || vidDuration;
+      vidReady = true;
+      try { vid.currentTime = 0.001; } catch (e) {}
+      vidLoading.classList.add('done');
+    });
+    vid.addEventListener('error', () => { vidLoading.textContent = 'Video gagal dimuat'; });
+
+    // Safari iOS: video baru boleh di-seek mulus setelah "dibuka kuncinya" oleh sentuhan pertama
+    let vidUnlocked = false;
+    function unlockVideo() {
+      if (vidUnlocked || !vidReady) return;
+      const pr = vid.play();
+      if (pr && pr.then) {
+        pr.then(() => { vid.pause(); vidUnlocked = true; }).catch(() => {});
+      } else { vid.pause(); vidUnlocked = true; }
+    }
+    ['touchstart', 'touchend', 'pointerdown', 'click', 'scroll'].forEach(ev =>
+      window.addEventListener(ev, unlockVideo, { passive: true })
+    );
+
+    // ==========================================
     // JAM DIGITAL
     // ==========================================
     const clockElement = document.getElementById('digital-clock');
@@ -1368,11 +1555,14 @@ void main() {
           setTimeout(() => {
             preloader.style.opacity = '0';
             preloader.style.visibility = 'hidden';
-            mainHT.start();
+            bgReady = true;
             document.body.style.overflow = 'auto';
             window.scrollTo(0, 0);
             AOS.refresh();
+            // Urutan penting: video (halaman 1) dibuat lebih dulu daripada transisi judul (halaman 3)
+            initVideoScroll();
             initTransitionEffect();
+            updateBg();
             ScrollTrigger.refresh();
           }, 3000);
         }
@@ -1382,7 +1572,90 @@ void main() {
     }
 
     // ==========================================
-    // JUDUL HALAMAN 2: PECAH JADI HURUF
+    // HALAMAN 1: VIDEO TUR KAMPUS (PIN + SCRUB)
+    // ==========================================
+    function initVideoScroll() {
+      const section = document.getElementById('page-1-video');
+      const stage = document.getElementById('vid-stage');
+      const nav = document.querySelector('#main-content-wrapper > nav');
+      const hint = document.getElementById('vid-hint');
+      const progFill = document.querySelector('#vid-prog span');
+      const chapters = [...document.querySelectorAll('#vid-chapters li')];
+      const CH_AT = [0, 0.3, 0.5, 0.7];
+      const caps = [...document.querySelectorAll('.vcap')].map(el => ({
+        el, a: parseFloat(el.dataset.a), b: parseFloat(el.dataset.b)
+      }));
+      const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+      const FADE = 0.035;
+
+      let target = 0, cur = 0, lastT = -1, lastRenderP = -1, chIdx = -1;
+
+      function setActive(a) {
+        document.body.classList.toggle('in-video', a);
+        nav.classList.toggle('nav-hide', a);
+        bgFlags.video = isMobile && a;
+        updateBg();
+      }
+
+      function renderUI(p) {
+        // teks bergantian
+        for (const c of caps) {
+          const i = clamp((p - c.a) / FADE, 0, 1);
+          const o = clamp((c.b - p) / FADE, 0, 1);
+          c.el.style.opacity = Math.min(i, o).toFixed(3);
+          c.el.style.transform = 'translate3d(0,' + ((1 - i) * 26 - (1 - o) * 26).toFixed(1) + 'px,0)';
+        }
+        // petunjuk scroll + bar progres
+        hint.style.opacity = (1 - clamp(p / 0.03, 0, 1)).toFixed(3);
+        progFill.style.height = (clamp(p / VID_END, 0, 1) * 100).toFixed(1) + '%';
+        // bab di samping (desktop)
+        const vp = clamp(p / VID_END, 0, 1);
+        let idx = 0;
+        for (let k = 0; k < CH_AT.length; k++) if (vp >= CH_AT[k]) idx = k;
+        if (idx !== chIdx) {
+          chIdx = idx;
+          chapters.forEach((li, k) => li.classList.toggle('on', k === idx));
+        }
+        // transisi keluar ke halaman berikutnya: membesar sambil memudar
+        const out = clamp((p - VID_END) / (1 - VID_END), 0, 1);
+        stage.style.opacity = (1 - out).toFixed(3);
+        stage.style.transform = 'scale(' + (1 + out * 0.22).toFixed(4) + ')';
+        stage.style.visibility = out >= 0.999 ? 'hidden' : 'visible';
+      }
+
+      const st = ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: () => '+=' + Math.round(window.innerHeight * VIDEO_SCROLL_SCREENS),
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => { target = self.progress; },
+        onToggle: (self) => setActive(self.isActive)
+      });
+      setActive(st.isActive);
+      target = cur = st.progress;
+      renderUI(cur);
+
+      // Satu loop: menghaluskan progres scroll, lalu menggerakkan video + teks
+      gsap.ticker.add(() => {
+        const d = target - cur;
+        if (Math.abs(d) > 0.0002) cur += d * (1 - Math.pow(0.86, gsap.ticker.deltaRatio(60)));
+        else cur = target;
+
+        // video: lompat ke frame sesuai progres (hanya saat tidak sedang seek)
+        if (vidReady && vidDuration) {
+          const t = clamp(cur / VID_END, 0, 1) * Math.max(0, vidDuration - 0.05);
+          if (!vid.seeking && Math.abs(t - lastT) >= 0.02) {
+            try { vid.currentTime = t; lastT = t; } catch (e) {}
+          }
+        }
+        if (Math.abs(cur - lastRenderP) > 0.00005) { lastRenderP = cur; renderUI(cur); }
+      });
+    }
+
+    // ==========================================
+    // JUDUL HALAMAN 3: PECAH JADI HURUF
     // ==========================================
     function splitTitle(el) {
       const text = el.textContent;
@@ -1419,13 +1692,12 @@ void main() {
       ScrollTrigger.create({
         trigger: '#page-3-content',
         start: 'top bottom',
-        onEnter: () => particlesContainer && particlesContainer.pause(),
-        onLeaveBack: () => particlesContainer && particlesContainer.play()
+        onEnter: () => { bgFlags.page3 = true; updateBg(); },
+        onLeaveBack: () => { bgFlags.page3 = false; updateBg(); }
       });
 
       gsap.set(titleContent, { transformOrigin: '50% 50%', force3D: true });
 
-      let htOff = false;
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -1440,8 +1712,8 @@ void main() {
             // Bekukan animasi CSS di dalam judul selama zoom (kurangi repaint)
             section.classList.toggle('zooming', p > 0.005 && p < 0.995);
             // Hentikan halftone saat latar sudah memutih
-            if (p > 0.7 && !htOff) { htOff = true; mainHT.stop(); }
-            else if (p <= 0.7 && htOff) { htOff = false; mainHT.start(); }
+            const white = p > 0.7;
+            if (white !== bgFlags.white) { bgFlags.white = white; updateBg(); }
           }
         }
       });
@@ -1665,7 +1937,7 @@ void main() {
         }
       },
       detectRetina: true
-    }).then((c) => { particlesContainer = c; });
+    }).then((c) => { particlesContainer = c; updateBg(); });
 
     // ==========================================
     // ZOOM FOTO

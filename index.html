@@ -1272,7 +1272,7 @@ void main() {
     setTimeout(endIntro, 3500);
 
     // ==========================================
-    // INTRO: SHADER ANIMATION (WEBGL)
+    // INTRO: SHADER ANIMATION (WEBGL) - DIPERBARUI PRESISI
     // ==========================================
     (function initIntroShader() {
       const cv = document.getElementById('intro-shader');
@@ -1289,17 +1289,32 @@ precision mediump float;
 uniform vec2 resolution;
 uniform float time;
 uniform float ss;
+
+// Fungsi ring yang dimodifikasi agar membentuk garis diagonal presisi
 float ring(vec2 uv, float off) {
   float v = 0.0;
   for (int i = 0; i < 5; i++) {
     float fi = float(i);
-    v += 0.002 * fi * fi / abs(fract(time - off + fi * 0.01) * 5.0 - length(uv) + mod(uv.x + uv.y, 0.2));
+    // Zoom out: uv * 0.6, fokus di tengah
+    float dist = length(uv * 0.6);
+    v += 0.002 * fi * fi / abs(fract(time - off + fi * 0.01) * 5.0 - dist + mod((uv.x + uv.y) * 0.6, 0.2));
   }
   return v;
 }
 vec3 colorAt(vec2 frag) {
+  // Normalisasi koordinat ke tengah
   vec2 uv = (frag * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
-  return clamp(vec3(ring(uv, 0.0), ring(uv, 0.01), ring(uv, 0.02)), 0.0, 1.0);
+  
+  // Vignette effect: Memudarkan warna di pinggir layar agar fokus ke tengah
+  float vignette = smoothstep(1.8, 0.3, length(uv));
+  
+  // Warna garis
+  vec3 baseColor = clamp(vec3(ring(uv, 0.0), ring(uv, 0.01), ring(uv, 0.02)), 0.0, 1.0);
+  
+  // Efek glow di tengah
+  vec3 glow = vec3(0.0, 0.5, 0.8) * 0.2 * exp(-length(uv) * 2.0);
+  
+  return (baseColor + glow) * vignette;
 }
 void main() {
   vec2 f = gl_FragCoord.xy;
@@ -1343,7 +1358,7 @@ void main() {
       const uSS = gl.getUniformLocation(prog, 'ss');
 
       function resize() {
-        const d = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 1.5);   // resolusi tinggi + AA 4 sampel
+        const d = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 1.5);
         const w = cv.clientWidth || window.innerWidth;
         const h = cv.clientHeight || window.innerHeight;
         cv.width = Math.max(1, Math.round(w * d));
@@ -1358,10 +1373,9 @@ void main() {
       const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const start = performance.now();
       let hideAt = 0;
-      let ssOn = true, prev = 0, nFrame = 0, acc = 0;   // pengaman: matikan AA kalau HP lambat
+      let ssOn = true, prev = 0, nFrame = 0, acc = 0;
 
       function frame(now) {
-        // berhenti total setelah intro selesai memudar
         if (introEl.classList.contains('hide')) {
           if (!hideAt) hideAt = now;
           if (now - hideAt > 1400) { shaderRO.disconnect(); return; }

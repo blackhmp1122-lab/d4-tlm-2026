@@ -303,14 +303,18 @@
       .vcap .s { font-size: 0.95rem; }
     }
 
-    /* MODE LAYAR LEBAR (landscape): video portrait di tengah, kiri-kanan diisi latar halftone situs */
-    #vid-bg, #vid-side-l, #vid-chapters { display: none; }
-    #page-1-video.strip { background: transparent; --sr: 0.5625; }
+    /* MODE LAYAR LEBAR (laptop/landscape): video portrait di tengah, kiri-kanan diisi latar SHADER */
+    #vid-bg { display: none; }
+    #page-1-video.strip { background: #050b1a; --sr: 0.5625; }
     #page-1-video.strip #vid-bg {
-      display: block; position: absolute; inset: 0; pointer-events: none;
+      display: block; position: absolute; inset: 0; pointer-events: none; overflow: hidden; background: #050b1a;
+    }
+    #vid-shader { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    #page-1-video.strip #vid-bg::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
       background:
-        radial-gradient(ellipse at 50% 50%, rgba(30,144,255,0.20) 0%, rgba(5,11,26,0) 55%),
-        linear-gradient(90deg, rgba(5,11,26,0.7) 0%, rgba(5,11,26,0) 28%, rgba(5,11,26,0) 72%, rgba(5,11,26,0.7) 100%);
+        radial-gradient(ellipse at 50% 50%, rgba(30,144,255,0.14) 0%, rgba(5,11,26,0) 55%),
+        linear-gradient(90deg, rgba(5,11,26,0.45) 0%, rgba(5,11,26,0) 25%, rgba(5,11,26,0) 75%, rgba(5,11,26,0.45) 100%);
     }
     #page-1-video.strip #vid-frame {
       inset: 0 auto 0 50%; width: calc(100svh * var(--sr)); transform: translateX(-50%);
@@ -320,24 +324,6 @@
     #page-1-video.strip .vcap .k { font-size: 0.7rem; }
     #page-1-video.strip .vcap .t { font-size: clamp(1.6rem, 3.8svh, 2.5rem); }
     #page-1-video.strip .vcap .s { font-size: 0.75rem; }
-    @media (min-width: 1000px) {
-      #page-1-video.strip #vid-side-l, #page-1-video.strip #vid-chapters {
-        display: block; position: absolute; top: 50%; transform: translateY(-50%); width: 250px;
-      }
-      #page-1-video.strip #vid-side-l { right: calc(50% + 50svh * var(--sr) + 48px); text-align: right; }
-      #page-1-video.strip #vid-chapters { left: calc(50% + 50svh * var(--sr) + 48px); list-style: none; margin: 0; padding: 0; }
-      #vid-side-l .k { display: block; color: #00f0ff; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 14px; }
-      #vid-side-l .t { display: block; color: #fff; font-size: 1.9rem; font-weight: 800; line-height: 1.15; text-shadow: 0 0 20px rgba(0,240,255,0.35); }
-      #vid-side-l .s { display: block; margin-top: 14px; color: #94a3b8; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; }
-      #vid-chapters li {
-        display: flex; gap: 14px; align-items: baseline; padding: 12px 0 12px 16px; border-left: 2px solid rgba(148,163,184,0.3);
-        color: #94a3b8; opacity: 0.45; transition: opacity 0.4s ease, border-color 0.4s ease, color 0.4s ease;
-        font-size: 0.85rem; letter-spacing: 0.04em;
-      }
-      #vid-chapters li b { font: 700 0.7rem 'Courier New', monospace; letter-spacing: 0.1em; }
-      #vid-chapters li.on { opacity: 1; color: #fff; border-left-color: #00f0ff; }
-      #vid-chapters li.on b { color: #00f0ff; }
-    }
 
     /* LOGO KELAS 3D */
     .logo-3d-wrap { position: relative; width: 220px; height: 220px; margin: 0 auto 40px; perspective: 800px; cursor: pointer; touch-action: none; animation: logoFloat 4s ease-in-out infinite; }
@@ -653,12 +639,7 @@
     <!-- HALAMAN 1: VIDEO TUR KAMPUS (di-pin, diputar mengikuti scroll) -->
     <section id="page-1-video" aria-label="Tur kampus STIKES Nasional Surakarta">
       <div id="vid-stage">
-        <div id="vid-bg"></div>
-        <div id="vid-side-l" aria-hidden="true">
-          <span class="k">Tur Kampus</span>
-          <span class="t">STIKES Nasional Surakarta</span>
-          <span class="s">D-IV TLM &middot; Angkatan 2026</span>
-        </div>
+        <div id="vid-bg"><canvas id="vid-shader" aria-hidden="true"></canvas></div>
         <div id="vid-frame">
           <video id="scroll-video" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture tabindex="-1"></video>
           <div class="vid-shade"></div>
@@ -674,13 +655,6 @@
           <div id="vid-prog" aria-hidden="true"><span></span></div>
           <div id="vid-loading">Memuat video...</div>
         </div>
-
-        <ol id="vid-chapters" aria-hidden="true">
-          <li class="on"><b>01</b>Kampus dari udara</li>
-          <li><b>02</b>Fasad gedung</li>
-          <li><b>03</b>Papan nama &amp; balkon</li>
-          <li><b>04</b>Area mahasiswa</li>
-        </ol>
       </div>
     </section>
 
@@ -1322,7 +1296,7 @@ void main() {
     // Dua video: layar tegak (HP) memakai POTRAIT, layar lebar (laptop) memakai LANDSCAPE.
     const PORT_URL = 'https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/potrait.mp4';
     const LAND_URL = 'https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/landscape.mp4';
-    // true  = landscape.mp4 berisi video portrait di tengah + blur di kiri-kanan -> blur dibuang, diganti latar situs.
+    // true  = landscape.mp4 berisi video portrait di tengah + blur di kiri-kanan -> blur dibuang, diganti latar SHADER.
     // false = landscape.mp4 adalah video 16:9 sungguhan -> ditampilkan penuh dari kiri ke kanan.
     const LANDSCAPE_AS_STRIP = true;
     // Rasio lebar/tinggi bagian video yang dipakai di tengah (9:16 = 0.5625). Perbesar jika sisa blur masih terlihat di tepi, perkecil jika gambar terpotong.
@@ -1340,6 +1314,175 @@ void main() {
       sec.classList.toggle('strip', stripMode);
       sec.style.setProperty('--sr', LAND_STRIP_RATIO);
     }
+
+    // ==========================================
+    // LATAR SHADER HALAMAN VIDEO (khusus laptop / mode landscape)
+    // ==========================================
+    const vidShader = (function createVidShader() {
+      const noop = { start() {}, stop() {} };
+      const cv = document.getElementById('vid-shader');
+      if (!stripMode || !cv) return noop;
+
+      const gl = cv.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'high-performance' });
+      if (!gl) { cv.style.display = 'none'; return noop; }
+
+      const VS = 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }';
+      const FS = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform vec2 iResolution;
+uniform float iTime;
+
+const float overallSpeed = 0.2;
+const float gridSmoothWidth = 0.015;
+const float axisWidth = 0.05;
+const float majorLineWidth = 0.025;
+const float minorLineWidth = 0.0125;
+const float majorLineFrequency = 5.0;
+const float minorLineFrequency = 1.0;
+const vec4 gridColor = vec4(0.5);
+const float scale = 5.0;
+const vec4 lineColor = vec4(0.4, 0.2, 0.8, 1.0);
+const float minLineWidth = 0.01;
+const float maxLineWidth = 0.2;
+const float lineSpeed = 1.0 * overallSpeed;
+const float lineAmplitude = 1.0;
+const float lineFrequency = 0.2;
+const float warpSpeed = 0.2 * overallSpeed;
+const float warpFrequency = 0.5;
+const float warpAmplitude = 1.0;
+const float offsetFrequency = 0.5;
+const float offsetSpeed = 1.33 * overallSpeed;
+const float minOffsetSpread = 0.6;
+const float maxOffsetSpread = 2.0;
+const int linesPerGroup = 16;
+
+#define drawCircle(pos, radius, coord) smoothstep(radius + gridSmoothWidth, radius, length(coord - (pos)))
+#define drawSmoothLine(pos, halfWidth, t) smoothstep(halfWidth, 0.0, abs(pos - (t)))
+#define drawCrispLine(pos, halfWidth, t) smoothstep(halfWidth + gridSmoothWidth, halfWidth, abs(pos - (t)))
+#define drawPeriodicLine(freq, width, t) drawCrispLine(freq / 2.0, width, abs(mod(t, freq) - (freq) / 2.0))
+
+float random(float t) {
+  return (cos(t) + cos(t * 1.3 + 1.3) + cos(t * 1.4 + 1.4)) / 3.0;
+}
+
+float getPlasmaY(float x, float horizontalFade, float offset) {
+  return random(x * lineFrequency + iTime * lineSpeed) * horizontalFade * lineAmplitude + offset;
+}
+
+void main() {
+  vec2 fragCoord = gl_FragCoord.xy;
+  vec4 fragColor;
+  vec2 uv = fragCoord.xy / iResolution.xy;
+  vec2 space = (fragCoord - iResolution.xy / 2.0) / iResolution.x * 2.0 * scale;
+
+  float horizontalFade = 1.0 - (cos(uv.x * 6.28) * 0.5 + 0.5);
+  float verticalFade = 1.0 - (cos(uv.y * 6.28) * 0.5 + 0.5);
+
+  space.y += random(space.x * warpFrequency + iTime * warpSpeed) * warpAmplitude * (0.5 + horizontalFade);
+  space.x += random(space.y * warpFrequency + iTime * warpSpeed + 2.0) * warpAmplitude * horizontalFade;
+
+  vec4 lines = vec4(0.0);
+  vec4 bgColor1 = vec4(0.1, 0.1, 0.3, 1.0);
+  vec4 bgColor2 = vec4(0.3, 0.1, 0.5, 1.0);
+
+  for (int l = 0; l < linesPerGroup; l++) {
+    float normalizedLineIndex = float(l) / float(linesPerGroup);
+    float offsetTime = iTime * offsetSpeed;
+    float offsetPosition = float(l) + space.x * offsetFrequency;
+    float rand = random(offsetPosition + offsetTime) * 0.5 + 0.5;
+    float halfWidth = mix(minLineWidth, maxLineWidth, rand * horizontalFade) / 2.0;
+    float offset = random(offsetPosition + offsetTime * (1.0 + normalizedLineIndex)) * mix(minOffsetSpread, maxOffsetSpread, horizontalFade);
+    float linePosition = getPlasmaY(space.x, horizontalFade, offset);
+    float line = drawSmoothLine(linePosition, halfWidth, space.y) / 2.0 + drawCrispLine(linePosition, halfWidth * 0.15, space.y);
+
+    float circleX = mod(float(l) + iTime * lineSpeed, 25.0) - 12.0;
+    vec2 circlePosition = vec2(circleX, getPlasmaY(circleX, horizontalFade, offset));
+    float circle = drawCircle(circlePosition, 0.01, space) * 4.0;
+
+    line = line + circle;
+    lines += line * lineColor * rand;
+  }
+
+  fragColor = mix(bgColor1, bgColor2, uv.x);
+  fragColor *= verticalFade;
+  fragColor.a = 1.0;
+  fragColor += lines;
+
+  gl_FragColor = fragColor;
+}`;
+
+      const sh = (type, src) => {
+        const o = gl.createShader(type);
+        gl.shaderSource(o, src);
+        gl.compileShader(o);
+        if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) { console.error('Shader error:', gl.getShaderInfoLog(o)); return null; }
+        return o;
+      };
+      const vs = sh(gl.VERTEX_SHADER, VS), fs = sh(gl.FRAGMENT_SHADER, FS);
+      if (!vs || !fs) { cv.style.display = 'none'; return noop; }
+      const prog = gl.createProgram();
+      gl.attachShader(prog, vs); gl.attachShader(prog, fs);
+      gl.bindAttribLocation(prog, 0, 'p');
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(prog)); cv.style.display = 'none'; return noop; }
+      gl.useProgram(prog);
+
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(0);
+      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+      const uRes = gl.getUniformLocation(prog, 'iResolution');
+      const uTime = gl.getUniformLocation(prog, 'iTime');
+
+      // Resolusi dikurangi sedikit (0.75x) agar tetap ringan; garisnya halus jadi tidak terlihat bedanya
+      const QUALITY = 0.75;
+      function resize() {
+        const d = Math.min(window.devicePixelRatio || 1, 1) * QUALITY;
+        const w = cv.clientWidth || window.innerWidth;
+        const h = cv.clientHeight || window.innerHeight;
+        cv.width = Math.max(1, Math.round(w * d));
+        cv.height = Math.max(1, Math.round(h * d));
+        gl.viewport(0, 0, cv.width, cv.height);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let running = false, raf = 0;
+      let startTime = performance.now();
+
+      function render(now) {
+        raf = 0;
+        if (!running || document.hidden) return;
+        gl.uniform2f(uRes, cv.width, cv.height);
+        gl.uniform1f(uTime, reduce.matches ? 1.5 : (now - startTime) / 1000);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        if (!reduce.matches) raf = requestAnimationFrame(render);
+      }
+      function kick() { if (running && !raf) raf = requestAnimationFrame(render); }
+      document.addEventListener('visibilitychange', kick);
+
+      return {
+        start() {
+          if (running) return;
+          running = true;
+          resize();
+          kick();
+        },
+        stop() {
+          running = false;
+          if (raf) cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      };
+    })();
+
     // Titik fokus vertikal video (0 = atas, 1 = bawah) menurut progres video 0-1.
     // Di layar lebar hanya sebagian tinggi video yang terlihat, jadi kamera "digeser" mengikuti adegan.
     const VID_FOCUS = [[0, 0.45], [0.25, 0.42], [0.32, 0.22], [0.45, 0.2], [0.52, 0.42], [0.7, 0.42], [1, 0.55]];
@@ -1648,9 +1791,6 @@ void main() {
       const caps = [...document.querySelectorAll('.vcap')].map(el => ({
         el, a: parseFloat(el.dataset.a), b: parseFloat(el.dataset.b)
       }));
-      const chapters = [...document.querySelectorAll('#vid-chapters li')];
-      const CH_AT = [0, 0.3, 0.5, 0.7];
-      let chIdx = -1;
       const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
       const FADE = 0.035;
 
@@ -1696,8 +1836,11 @@ void main() {
       function setActive(a) {
         document.body.classList.toggle('in-video', a);
         nav.classList.toggle('nav-hide', a);
-        bgFlags.video = !stripMode && a;
+        // Latar halftone + partikel dihentikan saat halaman video tampil (di laptop tertutup shader, di HP tertutup video)
+        bgFlags.video = a;
         updateBg();
+        // Shader latar video hanya jalan saat halaman video aktif (khusus laptop)
+        if (a) vidShader.start(); else vidShader.stop();
       }
 
       function renderUI(p) {
@@ -1713,12 +1856,6 @@ void main() {
         progFill.style.height = (clamp(p / VID_END, 0, 1) * 100).toFixed(1) + '%';
         const vp = clamp(p / VID_END, 0, 1);
         placeVideo(vp);
-        let idx = 0;
-        for (let k = 0; k < CH_AT.length; k++) if (vp >= CH_AT[k]) idx = k;
-        if (idx !== chIdx) {
-          chIdx = idx;
-          chapters.forEach((li, k) => li.classList.toggle('on', k === idx));
-        }
         // transisi keluar ke halaman berikutnya: membesar sambil memudar
         const out = clamp((p - VID_END) / (1 - VID_END), 0, 1);
         stage.style.opacity = (1 - out).toFixed(3);

@@ -244,27 +244,26 @@
     }
     @keyframes pulseHint { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
 
-    /* HALAMAN 1: VIDEO TUR KAMPUS (SCROLL SCRUB) */
-    #page-1-video { position: relative; width: 100%; height: 100vh; height: 100svh; overflow: hidden; }
+    /* HALAMAN 1: VIDEO TUR KAMPUS (FULL LAYAR EDGE-TO-EDGE, SCROLL SCRUB) */
+    #page-1-video { position: relative; width: 100%; height: 100vh; height: 100svh; overflow: hidden; background: #050b1a; }
     #vid-stage { position: absolute; inset: 0; will-change: transform, opacity; transform-origin: 50% 50%; }
-    #vid-frame {
-      position: absolute; inset: 0; overflow: hidden; background: #050b1a;
-      transform: translateZ(0);
-    }
+    #vid-frame { position: absolute; inset: 0; overflow: hidden; background: #050b1a; }
+    /* Ukuran asli video; posisi + zoom diatur JS supaya selalu menutup layar penuh (cover) dan bisa digeser mengikuti adegan */
     #scroll-video {
-      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-      transform-origin: 100% 0%; pointer-events: none; background: #050b1a;
+      position: absolute; left: 0; top: 0; width: 576px; height: 1024px; max-width: none;
+      transform-origin: 0 0; will-change: transform; pointer-events: none; background: #050b1a;
     }
     .vid-shade {
       position: absolute; inset: 0; pointer-events: none;
       background:
         linear-gradient(to top, rgba(5,11,26,0.88) 0%, rgba(5,11,26,0.4) 30%, rgba(5,11,26,0) 55%),
-        linear-gradient(to bottom, rgba(5,11,26,0.35) 0%, rgba(5,11,26,0) 18%);
+        linear-gradient(to bottom, rgba(5,11,26,0.35) 0%, rgba(5,11,26,0) 18%),
+        radial-gradient(ellipse at center, rgba(5,11,26,0) 55%, rgba(5,11,26,0.4) 100%);
     }
     #vid-caps { position: absolute; inset: 0; pointer-events: none; }
     .vcap {
       position: absolute; left: 0; right: 0; bottom: 15%; padding: 0 26px; text-align: center;
-      opacity: 0; will-change: opacity, transform;
+      max-width: 1000px; margin: 0 auto; opacity: 0; will-change: opacity, transform;
     }
     .vcap .k {
       display: block; margin-bottom: 12px; color: #00f0ff; font-size: 0.7rem; font-weight: 700;
@@ -297,33 +296,12 @@
       border-radius: 3px; background: rgba(255,255,255,0.22); overflow: hidden; pointer-events: none;
     }
     #vid-prog span { display: block; width: 100%; height: 0%; background: #00f0ff; box-shadow: 0 0 8px #00f0ff; }
-    #vid-side-l, #vid-chapters { display: none; }
-
     @media (min-width: 769px) {
-      #vid-frame {
-        inset: auto; top: 50%; left: 50%; height: calc(100svh - 48px); aspect-ratio: 9 / 16;
-        transform: translate(-50%, -50%); border-radius: 28px;
-        border: 1px solid rgba(0,240,255,0.35);
-        box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 30px 80px rgba(0,0,0,0.55), 0 0 60px rgba(0,240,255,0.18);
-      }
+      .vcap { bottom: 14%; }
+      .vcap .k { font-size: 0.85rem; }
+      .vcap .t { font-size: clamp(2.4rem, 4.4vw, 4.2rem); }
+      .vcap .s { font-size: 0.95rem; }
       #vid-prog { right: 28px; }
-      .vcap .t { font-size: 2rem; }
-    }
-    @media (min-width: 1100px) {
-      #vid-side-l, #vid-chapters { display: block; position: absolute; top: 50%; transform: translateY(-50%); width: 260px; }
-      #vid-side-l { right: calc(50% + (100svh - 48px) * 0.28125 + 48px); text-align: right; }
-      #vid-chapters { left: calc(50% + (100svh - 48px) * 0.28125 + 48px); list-style: none; margin: 0; padding: 0; }
-      #vid-side-l .k { display: block; color: #00f0ff; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 14px; }
-      #vid-side-l .t { display: block; color: #fff; font-size: 1.9rem; font-weight: 800; line-height: 1.15; text-shadow: 0 0 20px rgba(0,240,255,0.35); }
-      #vid-side-l .s { display: block; margin-top: 14px; color: #94a3b8; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; }
-      #vid-chapters li {
-        display: flex; gap: 14px; align-items: baseline; padding: 12px 0 12px 16px; border-left: 2px solid rgba(148,163,184,0.25);
-        color: #94a3b8; opacity: 0.45; transition: opacity 0.4s ease, border-color 0.4s ease, color 0.4s ease;
-        font-size: 0.85rem; letter-spacing: 0.04em;
-      }
-      #vid-chapters li b { font: 700 0.7rem 'Courier New', monospace; letter-spacing: 0.1em; }
-      #vid-chapters li.on { opacity: 1; color: #fff; border-left-color: #00f0ff; }
-      #vid-chapters li.on b { color: #00f0ff; }
     }
 
     /* LOGO KELAS 3D */
@@ -640,12 +618,6 @@
     <!-- HALAMAN 1: VIDEO TUR KAMPUS (di-pin, diputar mengikuti scroll) -->
     <section id="page-1-video" aria-label="Tur kampus STIKES Nasional Surakarta">
       <div id="vid-stage">
-        <div id="vid-side-l" aria-hidden="true">
-          <span class="k">Tur Kampus</span>
-          <span class="t">STIKES Nasional Surakarta</span>
-          <span class="s">D-IV TLM &middot; Angkatan 2026</span>
-        </div>
-
         <div id="vid-frame">
           <video id="scroll-video" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture tabindex="-1"></video>
           <div class="vid-shade"></div>
@@ -661,12 +633,6 @@
           <div id="vid-loading">Memuat video...</div>
         </div>
 
-        <ol id="vid-chapters" aria-hidden="true">
-          <li class="on"><b>01</b>Kampus dari udara</li>
-          <li><b>02</b>Fasad gedung</li>
-          <li><b>03</b>Papan nama &amp; balkon</li>
-          <li><b>04</b>Area mahasiswa</li>
-        </ol>
         <div id="vid-prog" aria-hidden="true"><span></span></div>
       </div>
     </section>
@@ -1308,8 +1274,14 @@ void main() {
     // ==========================================
     // Upload file kampus-scroll.mp4 ke repo GitHub yang sama, lalu pastikan namanya sama dengan di bawah.
     const VIDEO_URL = 'https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/kampus-scroll.mp4';
-    // Pembesaran sedikit supaya sisi kiri video (sisa watermark IG yang samar) terpotong. Isi 1 untuk mematikan.
-    const VIDEO_CROP = 1.16;
+    // Pembesaran tambahan. Di HP 1.16 memotong sisi kiri video (sisa watermark IG yang samar). Isi 1 untuk mematikan.
+    const VIDEO_CROP_MOBILE = 1.16;
+    const VIDEO_CROP_DESKTOP = 1;
+    // Ukuran asli file video (jangan diubah kecuali video diganti dengan rasio lain)
+    const VID_W = 576, VID_H = 1024;
+    // Titik fokus vertikal video (0 = atas, 1 = bawah) menurut progres video 0-1.
+    // Di layar lebar hanya sebagian tinggi video yang terlihat, jadi kamera "digeser" mengikuti adegan.
+    const VID_FOCUS = [[0, 0.45], [0.25, 0.42], [0.32, 0.22], [0.45, 0.2], [0.52, 0.42], [0.7, 0.42], [1, 0.55]];
     // Berapa tinggi layar yang dipakai untuk scroll (makin besar = video makin pelan)
     const VIDEO_SCROLL_SCREENS = isMobile ? 4.5 : 5.5;
     // Bagian awal scroll (0-1) untuk memutar video; sisanya untuk transisi keluar ke halaman berikutnya
@@ -1320,7 +1292,6 @@ void main() {
     let vidReady = false;
     let vidDuration = 0;
 
-    vid.style.transform = 'scale(' + VIDEO_CROP + ')';
 
     // Muat seluruh video ke memori dulu (blob) supaya lompat frame instan dan tidak tergantung jaringan saat scroll
     (function loadScrollVideo() {
@@ -1580,15 +1551,45 @@ void main() {
       const nav = document.querySelector('#main-content-wrapper > nav');
       const hint = document.getElementById('vid-hint');
       const progFill = document.querySelector('#vid-prog span');
-      const chapters = [...document.querySelectorAll('#vid-chapters li')];
-      const CH_AT = [0, 0.3, 0.5, 0.7];
       const caps = [...document.querySelectorAll('.vcap')].map(el => ({
         el, a: parseFloat(el.dataset.a), b: parseFloat(el.dataset.b)
       }));
       const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
       const FADE = 0.035;
 
-      let target = 0, cur = 0, lastT = -1, lastRenderP = -1, chIdx = -1;
+      const frame = document.getElementById('vid-frame');
+      let target = 0, cur = 0, lastT = -1, lastRenderP = -1;
+      let cw = 1, ch = 1, S = 1, lastPlace = '';
+
+      function focusAt(vp) {
+        const K = VID_FOCUS;
+        if (vp <= K[0][0]) return K[0][1];
+        for (let i = 1; i < K.length; i++) {
+          if (vp <= K[i][0]) {
+            const t = (vp - K[i - 1][0]) / (K[i][0] - K[i - 1][0]);
+            const e = t * t * (3 - 2 * t);
+            return K[i - 1][1] + (K[i][1] - K[i - 1][1]) * e;
+          }
+        }
+        return K[K.length - 1][1];
+      }
+
+      // Video selalu menutup layar penuh (cover) dari ujung kiri ke kanan; digeser vertikal mengikuti adegan
+      function placeVideo(vp) {
+        const dw = VID_W * S, dh = VID_H * S;
+        const x = Math.min(0, cw - dw);
+        const y = Math.min(0, Math.max(ch - dh, ch / 2 - focusAt(vp) * dh));
+        const tr = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) scale(' + S.toFixed(4) + ')';
+        if (tr !== lastPlace) { vid.style.transform = tr; lastPlace = tr; }
+      }
+
+      function measure() {
+        cw = frame.clientWidth || window.innerWidth;
+        ch = frame.clientHeight || window.innerHeight;
+        S = Math.max(cw / VID_W, ch / VID_H) * (isMobile ? VIDEO_CROP_MOBILE : VIDEO_CROP_DESKTOP);
+        lastPlace = '';
+        placeVideo(clamp(cur / VID_END, 0, 1));
+      }
 
       function setActive(a) {
         document.body.classList.toggle('in-video', a);
@@ -1608,14 +1609,8 @@ void main() {
         // petunjuk scroll + bar progres
         hint.style.opacity = (1 - clamp(p / 0.03, 0, 1)).toFixed(3);
         progFill.style.height = (clamp(p / VID_END, 0, 1) * 100).toFixed(1) + '%';
-        // bab di samping (desktop)
         const vp = clamp(p / VID_END, 0, 1);
-        let idx = 0;
-        for (let k = 0; k < CH_AT.length; k++) if (vp >= CH_AT[k]) idx = k;
-        if (idx !== chIdx) {
-          chIdx = idx;
-          chapters.forEach((li, k) => li.classList.toggle('on', k === idx));
-        }
+        placeVideo(vp);
         // transisi keluar ke halaman berikutnya: membesar sambil memudar
         const out = clamp((p - VID_END) / (1 - VID_END), 0, 1);
         stage.style.opacity = (1 - out).toFixed(3);
@@ -1635,7 +1630,10 @@ void main() {
       });
       setActive(st.isActive);
       target = cur = st.progress;
+      measure();
       renderUI(cur);
+      window.addEventListener('resize', measure);
+      ScrollTrigger.addEventListener('refresh', measure);
 
       // Satu loop: menghaluskan progres scroll, lalu menggerakkan video + teks
       gsap.ticker.add(() => {

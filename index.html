@@ -1354,13 +1354,35 @@ void main() {
     let vidDuration = 0;
 
 
-    // Muat seluruh video ke memori dulu (blob) supaya lompat frame instan dan tidak tergantung jaringan saat scroll
-    (function loadScrollVideo() {
-      fetch(VIDEO_URL)
-        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.blob(); })
-        .then(b => { vid.src = URL.createObjectURL(b); vid.load(); })
-        .catch(() => { vid.src = VIDEO_URL; vid.load(); });
-    })();
+    // Muat video dengan beberapa percobaan berurutan (kalau satu gagal, otomatis coba cara/alamat berikutnya):
+    // 1-2) diunduh penuh ke memori (blob, diberi tipe video/mp4 supaya diterima Safari iPhone), dari 2 alamat berbeda
+    // 3-4) diputar langsung dari alamatnya (tanpa blob), dari 2 alamat berbeda
+    const VIDEO_SOURCES = [VIDEO_URL, VIDEO_URL.replace('https://raw.githack.com/', 'https://raw.githubusercontent.com/')];
+    let vidAttempt = -1;
+    let vidBlobUrl = '';
+    function vidLoadBlob(u) {
+      fetch(u)
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
+        .then(buf => {
+          vidBlobUrl = URL.createObjectURL(new Blob([buf], { type: 'video/mp4' }));
+          vid.src = vidBlobUrl; vid.load();
+        })
+        .catch(() => vidNext());
+    }
+    function vidLoadDirect(u) { vid.src = u; vid.load(); }
+    const VID_ATTEMPTS = [
+      () => vidLoadBlob(VIDEO_SOURCES[0]),
+      () => vidLoadBlob(VIDEO_SOURCES[1]),
+      () => vidLoadDirect(VIDEO_SOURCES[0]),
+      () => vidLoadDirect(VIDEO_SOURCES[1])
+    ];
+    function vidNext() {
+      if (vidReady) return;
+      vidAttempt++;
+      if (vidAttempt >= VID_ATTEMPTS.length) { vidLoading.textContent = 'Video gagal dimuat'; return; }
+      VID_ATTEMPTS[vidAttempt]();
+    }
+    vidNext();
 
     vid.addEventListener('loadedmetadata', () => {
       vidDuration = vid.duration || 0;
@@ -1369,14 +1391,18 @@ void main() {
         vid.style.width = vidW + 'px'; vid.style.height = vidH + 'px';
         if (onVidMeta) onVidMeta();
       }
+      // memaksa frame pertama dibuat (Safari iPhone kadang menunda sampai ada interaksi)
+      try { vid.currentTime = 0.001; } catch (e) {}
     });
-    vid.addEventListener('loadeddata', () => {
+    function vidMarkReady() {
+      if (vidReady) return;
       vidDuration = vid.duration || vidDuration;
       vidReady = true;
-      try { vid.currentTime = 0.001; } catch (e) {}
       vidLoading.classList.add('done');
-    });
-    vid.addEventListener('error', () => { vidLoading.textContent = 'Video gagal dimuat'; });
+    }
+    vid.addEventListener('loadeddata', vidMarkReady);
+    vid.addEventListener('canplay', vidMarkReady);
+    vid.addEventListener('error', () => { if (!vidReady) vidNext(); });
 
     // Safari iOS: video baru boleh di-seek mulus setelah "dibuka kuncinya" oleh sentuhan pertama
     let vidUnlocked = false;

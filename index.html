@@ -250,7 +250,7 @@
     #vid-frame { position: absolute; inset: 0; overflow: hidden; background: #050b1a; }
     /* Ukuran asli video; posisi + zoom diatur JS supaya selalu menutup layar penuh (cover) dan bisa digeser mengikuti adegan */
     #scroll-video {
-      position: absolute; left: 0; top: 0; width: 576px; height: 1024px; max-width: none;
+      position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; max-width: none;
       transform-origin: 0 0; will-change: transform; pointer-events: none; background: #050b1a;
     }
     .vid-shade {
@@ -301,7 +301,42 @@
       .vcap .k { font-size: 0.85rem; }
       .vcap .t { font-size: clamp(2.4rem, 4.4vw, 4.2rem); }
       .vcap .s { font-size: 0.95rem; }
-      #vid-prog { right: 28px; }
+    }
+
+    /* MODE LAYAR LEBAR (landscape): video portrait di tengah, kiri-kanan diisi latar halftone situs */
+    #vid-bg, #vid-side-l, #vid-chapters { display: none; }
+    #page-1-video.strip { background: transparent; --sr: 0.5625; }
+    #page-1-video.strip #vid-bg {
+      display: block; position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(30,144,255,0.20) 0%, rgba(5,11,26,0) 55%),
+        linear-gradient(90deg, rgba(5,11,26,0.7) 0%, rgba(5,11,26,0) 28%, rgba(5,11,26,0) 72%, rgba(5,11,26,0.7) 100%);
+    }
+    #page-1-video.strip #vid-frame {
+      inset: 0 auto 0 50%; width: calc(100svh * var(--sr)); transform: translateX(-50%);
+      box-shadow: 0 0 0 1px rgba(0,240,255,0.35), 0 0 60px rgba(0,240,255,0.22), 0 0 140px rgba(30,144,255,0.18);
+    }
+    #page-1-video.strip .vcap { bottom: 15%; padding: 0 22px; }
+    #page-1-video.strip .vcap .k { font-size: 0.7rem; }
+    #page-1-video.strip .vcap .t { font-size: clamp(1.6rem, 3.8svh, 2.5rem); }
+    #page-1-video.strip .vcap .s { font-size: 0.75rem; }
+    @media (min-width: 1000px) {
+      #page-1-video.strip #vid-side-l, #page-1-video.strip #vid-chapters {
+        display: block; position: absolute; top: 50%; transform: translateY(-50%); width: 250px;
+      }
+      #page-1-video.strip #vid-side-l { right: calc(50% + 50svh * var(--sr) + 48px); text-align: right; }
+      #page-1-video.strip #vid-chapters { left: calc(50% + 50svh * var(--sr) + 48px); list-style: none; margin: 0; padding: 0; }
+      #vid-side-l .k { display: block; color: #00f0ff; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 14px; }
+      #vid-side-l .t { display: block; color: #fff; font-size: 1.9rem; font-weight: 800; line-height: 1.15; text-shadow: 0 0 20px rgba(0,240,255,0.35); }
+      #vid-side-l .s { display: block; margin-top: 14px; color: #94a3b8; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; }
+      #vid-chapters li {
+        display: flex; gap: 14px; align-items: baseline; padding: 12px 0 12px 16px; border-left: 2px solid rgba(148,163,184,0.3);
+        color: #94a3b8; opacity: 0.45; transition: opacity 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+        font-size: 0.85rem; letter-spacing: 0.04em;
+      }
+      #vid-chapters li b { font: 700 0.7rem 'Courier New', monospace; letter-spacing: 0.1em; }
+      #vid-chapters li.on { opacity: 1; color: #fff; border-left-color: #00f0ff; }
+      #vid-chapters li.on b { color: #00f0ff; }
     }
 
     /* LOGO KELAS 3D */
@@ -618,6 +653,12 @@
     <!-- HALAMAN 1: VIDEO TUR KAMPUS (di-pin, diputar mengikuti scroll) -->
     <section id="page-1-video" aria-label="Tur kampus STIKES Nasional Surakarta">
       <div id="vid-stage">
+        <div id="vid-bg"></div>
+        <div id="vid-side-l" aria-hidden="true">
+          <span class="k">Tur Kampus</span>
+          <span class="t">STIKES Nasional Surakarta</span>
+          <span class="s">D-IV TLM &middot; Angkatan 2026</span>
+        </div>
         <div id="vid-frame">
           <video id="scroll-video" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture tabindex="-1"></video>
           <div class="vid-shade"></div>
@@ -630,10 +671,16 @@
             <div class="vcap" data-a="0.78" data-b="1.0"><span class="k">Selamat datang</span><span class="t">STIKES Nasional Surakarta</span><span class="s">D-IV Teknologi Laboratorium Medis 2026</span></div>
           </div>
           <div id="vid-hint">Scroll untuk memulai<span>&darr;</span></div>
+          <div id="vid-prog" aria-hidden="true"><span></span></div>
           <div id="vid-loading">Memuat video...</div>
         </div>
 
-        <div id="vid-prog" aria-hidden="true"><span></span></div>
+        <ol id="vid-chapters" aria-hidden="true">
+          <li class="on"><b>01</b>Kampus dari udara</li>
+          <li><b>02</b>Fasad gedung</li>
+          <li><b>03</b>Papan nama &amp; balkon</li>
+          <li><b>04</b>Area mahasiswa</li>
+        </ol>
       </div>
     </section>
 
@@ -1272,13 +1319,27 @@ void main() {
     // ==========================================
     // VIDEO TUR KAMPUS: PENGATURAN
     // ==========================================
-    // Upload file kampus-scroll.mp4 ke repo GitHub yang sama, lalu pastikan namanya sama dengan di bawah.
-    const VIDEO_URL = 'https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/kampus-scroll.mp4';
-    // Pembesaran tambahan. Di HP 1.16 memotong sisi kiri video (sisa watermark IG yang samar). Isi 1 untuk mematikan.
-    const VIDEO_CROP_MOBILE = 1.16;
-    const VIDEO_CROP_DESKTOP = 1;
-    // Ukuran asli file video (jangan diubah kecuali video diganti dengan rasio lain)
-    const VID_W = 576, VID_H = 1024;
+    // Dua video: layar tegak (HP) memakai POTRAIT, layar lebar (laptop) memakai LANDSCAPE.
+    const PORT_URL = 'https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/potrait.mp4';
+    const LAND_URL = 'https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/landscape.mp4';
+    // true  = landscape.mp4 berisi video portrait di tengah + blur di kiri-kanan -> blur dibuang, diganti latar situs.
+    // false = landscape.mp4 adalah video 16:9 sungguhan -> ditampilkan penuh dari kiri ke kanan.
+    const LANDSCAPE_AS_STRIP = true;
+    // Rasio lebar/tinggi bagian video yang dipakai di tengah (9:16 = 0.5625). Perbesar jika sisa blur masih terlihat di tepi, perkecil jika gambar terpotong.
+    const LAND_STRIP_RATIO = 0.5625;
+    // Zoom tambahan khusus layar tegak. Isi 1.16 jika masih ada watermark samar di sisi kiri video.
+    const VIDEO_CROP_MOBILE = 1;
+    // Ukuran asli video (dibaca otomatis dari file saat dimuat; angka ini hanya nilai awal)
+    let vidW = 1920, vidH = 1080;
+    let onVidMeta = null;
+    const isLandscapeScreen = window.innerWidth > window.innerHeight;
+    const VIDEO_URL = isLandscapeScreen ? LAND_URL : PORT_URL;
+    const stripMode = isLandscapeScreen && LANDSCAPE_AS_STRIP;
+    {
+      const sec = document.getElementById('page-1-video');
+      sec.classList.toggle('strip', stripMode);
+      sec.style.setProperty('--sr', LAND_STRIP_RATIO);
+    }
     // Titik fokus vertikal video (0 = atas, 1 = bawah) menurut progres video 0-1.
     // Di layar lebar hanya sebagian tinggi video yang terlihat, jadi kamera "digeser" mengikuti adegan.
     const VID_FOCUS = [[0, 0.45], [0.25, 0.42], [0.32, 0.22], [0.45, 0.2], [0.52, 0.42], [0.7, 0.42], [1, 0.55]];
@@ -1301,7 +1362,14 @@ void main() {
         .catch(() => { vid.src = VIDEO_URL; vid.load(); });
     })();
 
-    vid.addEventListener('loadedmetadata', () => { vidDuration = vid.duration || 0; });
+    vid.addEventListener('loadedmetadata', () => {
+      vidDuration = vid.duration || 0;
+      if (vid.videoWidth && vid.videoHeight) {
+        vidW = vid.videoWidth; vidH = vid.videoHeight;
+        vid.style.width = vidW + 'px'; vid.style.height = vidH + 'px';
+        if (onVidMeta) onVidMeta();
+      }
+    });
     vid.addEventListener('loadeddata', () => {
       vidDuration = vid.duration || vidDuration;
       vidReady = true;
@@ -1554,12 +1622,15 @@ void main() {
       const caps = [...document.querySelectorAll('.vcap')].map(el => ({
         el, a: parseFloat(el.dataset.a), b: parseFloat(el.dataset.b)
       }));
+      const chapters = [...document.querySelectorAll('#vid-chapters li')];
+      const CH_AT = [0, 0.3, 0.5, 0.7];
+      let chIdx = -1;
       const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
       const FADE = 0.035;
 
       const frame = document.getElementById('vid-frame');
       let target = 0, cur = 0, lastT = -1, lastRenderP = -1;
-      let cw = 1, ch = 1, S = 1, lastPlace = '';
+      let cw = 1, ch = 1, S = 1, XOFF = 0, lastPlace = '';
 
       function focusAt(vp) {
         const K = VID_FOCUS;
@@ -1576,8 +1647,8 @@ void main() {
 
       // Video selalu menutup layar penuh (cover) dari ujung kiri ke kanan; digeser vertikal mengikuti adegan
       function placeVideo(vp) {
-        const dw = VID_W * S, dh = VID_H * S;
-        const x = Math.min(0, cw - dw);
+        const dh = vidH * S;
+        const x = XOFF;
         const y = Math.min(0, Math.max(ch - dh, ch / 2 - focusAt(vp) * dh));
         const tr = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) scale(' + S.toFixed(4) + ')';
         if (tr !== lastPlace) { vid.style.transform = tr; lastPlace = tr; }
@@ -1586,7 +1657,12 @@ void main() {
       function measure() {
         cw = frame.clientWidth || window.innerWidth;
         ch = frame.clientHeight || window.innerHeight;
-        S = Math.max(cw / VID_W, ch / VID_H) * (isMobile ? VIDEO_CROP_MOBILE : VIDEO_CROP_DESKTOP);
+        // bagian video yang dipakai: seluruhnya, atau hanya strip portrait di tengah (mode landscape)
+        let srcW = vidW, srcX = 0;
+        if (stripMode) { srcW = Math.min(vidW, vidH * LAND_STRIP_RATIO); srcX = (vidW - srcW) / 2; }
+        const crop = isLandscapeScreen ? 1 : VIDEO_CROP_MOBILE;
+        S = Math.max(cw / srcW, ch / vidH) * crop;
+        XOFF = crop > 1 ? cw - (srcX + srcW) * S : (cw - srcW * S) / 2 - srcX * S;
         lastPlace = '';
         placeVideo(clamp(cur / VID_END, 0, 1));
       }
@@ -1594,7 +1670,7 @@ void main() {
       function setActive(a) {
         document.body.classList.toggle('in-video', a);
         nav.classList.toggle('nav-hide', a);
-        bgFlags.video = isMobile && a;
+        bgFlags.video = !stripMode && a;
         updateBg();
       }
 
@@ -1611,6 +1687,12 @@ void main() {
         progFill.style.height = (clamp(p / VID_END, 0, 1) * 100).toFixed(1) + '%';
         const vp = clamp(p / VID_END, 0, 1);
         placeVideo(vp);
+        let idx = 0;
+        for (let k = 0; k < CH_AT.length; k++) if (vp >= CH_AT[k]) idx = k;
+        if (idx !== chIdx) {
+          chIdx = idx;
+          chapters.forEach((li, k) => li.classList.toggle('on', k === idx));
+        }
         // transisi keluar ke halaman berikutnya: membesar sambil memudar
         const out = clamp((p - VID_END) / (1 - VID_END), 0, 1);
         stage.style.opacity = (1 - out).toFixed(3);
@@ -1630,6 +1712,7 @@ void main() {
       });
       setActive(st.isActive);
       target = cur = st.progress;
+      onVidMeta = measure;
       measure();
       renderUI(cur);
       window.addEventListener('resize', measure);

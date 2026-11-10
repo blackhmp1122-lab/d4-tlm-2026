@@ -329,6 +329,94 @@
       .intro-text-title { font-size: 0.7rem; letter-spacing: 0.5em; }
       .intro-text-sub { font-size: 0.55rem; letter-spacing: 0.3em; }
     }
+
+    /* FOLDER KACA (GLASSMORPHISM) */
+    .gf {
+      --w: 320px; --h: 230px; --cw: 270px; --ch: 170px; --off: 95px;
+      position: relative; width: var(--w); height: calc(var(--h) + 170px);
+      margin: 10px auto 70px; cursor: pointer; perspective: 1100px;
+      touch-action: pan-y; -webkit-tap-highlight-color: transparent; outline: none;
+    }
+    .gf-inner {
+      --rx: 0deg; --ry: 0deg;
+      position: absolute; left: 0; bottom: 0; width: 100%; height: var(--h);
+      transform-origin: 50% 100%;
+      transform: rotateX(var(--rx)) rotateY(var(--ry));
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .gf-shadow {
+      position: absolute; left: 6%; right: 6%; bottom: -14px; height: 26px; border-radius: 50%;
+      background: rgba(15,23,42,0.4); filter: blur(16px);
+      transition: transform 0.6s ease, opacity 0.6s ease;
+    }
+    .gf.is-open .gf-shadow { transform: scaleX(1.25); opacity: 0.8; }
+    .gf-back {
+      position: absolute; inset: 0; border-radius: 6px 24px 24px 24px;
+      background: linear-gradient(145deg, #334155, #0f172a);
+      box-shadow: 0 24px 40px rgba(15,23,42,0.35);
+    }
+    .gf-back::before {
+      content: ''; position: absolute; left: 0; top: -20px; width: 42%; height: 22px;
+      border-radius: 14px 22px 0 0; background: #334155;
+    }
+    .gf-card {
+      --tx: 0px; --ty: 0px; --r: 0deg; --s: 1;
+      position: absolute; left: 50%; bottom: 16px; width: var(--cw); height: var(--ch);
+      border-radius: 14px; overflow: hidden; background: #1e293b;
+      border: 2px solid rgba(255,255,255,0.18); box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      transform: translateX(calc(-50% + var(--tx))) translateY(var(--ty)) rotate(var(--r)) scale(var(--s));
+      transition: transform 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .gf-card img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+    .gf-tag {
+      position: absolute; top: 8px; left: 10px; right: 10px; display: flex; justify-content: space-between;
+      font: 600 10px/1 'Courier New', monospace; color: #fff; letter-spacing: 0.05em;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8); pointer-events: none;
+    }
+    .gf-card.c1 { --ty: -40px; --s: 0.92; }
+    .gf-card.c2 { --ty: -30px; --s: 0.96; }
+    .gf-card.c3 { --ty: -20px; --s: 1; }
+    .gf.is-open .gf-card.c1 { --tx: calc(var(--off) * -1); --ty: -135px; --r: -9deg; --s: 1; }
+    .gf.is-open .gf-card.c2 { --tx: var(--off); --ty: -120px; --r: 9deg; --s: 1; }
+    .gf.is-open .gf-card.c3 { --tx: 0px; --ty: -155px; --r: 0deg; --s: 1.04; }
+    .gf.is-open .gf-card:hover { filter: brightness(1.08); }
+
+    .gf-front {
+      --fx: 0deg;
+      position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--h) - 34px);
+      border-radius: 0 24px 26px 26px; transform-origin: 50% 100%;
+      transform: perspective(900px) rotateX(var(--fx));
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      background: linear-gradient(155deg, rgba(150,90,100,0.55) 0%, rgba(70,35,50,0.74) 45%, rgba(20,12,24,0.9) 100%);
+      -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+      border: 1px solid rgba(255,255,255,0.22); border-top-color: rgba(255,255,255,0.4);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -20px 40px rgba(0,0,0,0.25), 0 18px 30px rgba(0,0,0,0.3);
+      color: #fff;
+    }
+    .gf-front::before {
+      content: ''; position: absolute; left: -1px; top: -19px; width: calc(44% + 1px); height: 20px;
+      border-radius: 16px 26px 0 0; background: rgba(120,75,90,0.72);
+      border: 1px solid rgba(255,255,255,0.3); border-bottom: 0;
+    }
+    .gf-meta { position: absolute; right: 26px; top: 34%; text-align: right; pointer-events: none; }
+    .gf-title { font: 600 1.15rem/1.2 ui-sans-serif, system-ui, sans-serif; text-shadow: 0 2px 8px rgba(0,0,0,0.45); }
+    .gf-sub { margin-top: 4px; font: 0.72rem 'Courier New', monospace; color: rgba(255,255,255,0.7); letter-spacing: 0.04em; }
+    .gf.is-open .gf-front { --fx: -10deg; }
+    @media (hover: hover) {
+      .gf:not(.is-open):hover .gf-card.c1 { --ty: -52px; }
+      .gf:not(.is-open):hover .gf-card.c2 { --ty: -42px; }
+      .gf:not(.is-open):hover .gf-card.c3 { --ty: -32px; }
+      .gf:not(.is-open):hover .gf-front { --fx: -6deg; }
+    }
+    .gf:focus-visible .gf-front { box-shadow: 0 0 0 3px rgba(0,240,255,0.7), 0 18px 30px rgba(0,0,0,0.3); }
+    .gf-hint {
+      position: absolute; left: 50%; bottom: -44px; transform: translateX(-50%); white-space: nowrap;
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #64748b; pointer-events: none;
+    }
+    @media (max-width: 768px) {
+      .gf { --w: 280px; --h: 200px; --cw: 232px; --ch: 146px; --off: 62px; }
+      .gf-hint { font-size: 0.6rem; letter-spacing: 0.12em; }
+    }
   </style>
 </head>
 <body>
@@ -490,23 +578,30 @@
 
           <h2 class="text-3xl font-bold text-slate-900 mb-12 opacity-0" id="gallery-title-actual">Dokumentasi Kelas</h2>
 
-          <div class="photo-stack-container cursor-hover-target mx-auto" id="photoStack">
-            <span class="stack-hint">Sentuh untuk membuka</span>
-            <div class="photo-stack-inner">
-              <div class="photo-card shine-effect" onclick="zoomImage('https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%201.jpg')">
-                <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%201.jpg" alt="Dok 1">
+          <div class="gf cursor-hover-target" id="glassFolder" role="button" tabindex="0" aria-expanded="false" aria-label="Folder dokumentasi kelas, tekan untuk membuka">
+            <div class="gf-inner">
+              <div class="gf-shadow"></div>
+              <div class="gf-back"></div>
+              <div class="gf-card c1" data-src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%201.jpg">
+                <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%201.jpg" alt="Dok 1" draggable="false">
+                <div class="gf-tag"><span>DOK 1</span><span>JPG</span></div>
               </div>
-              <div class="photo-card shine-effect" onclick="zoomImage('https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%202.jpg')">
-                <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%202.jpg" alt="Dok 2">
+              <div class="gf-card c2" data-src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%202.jpg">
+                <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%202.jpg" alt="Dok 2" draggable="false">
+                <div class="gf-tag"><span>DOK 2</span><span>JPG</span></div>
               </div>
-              <div class="photo-card shine-effect" onclick="zoomImage('https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%203.jpg')">
-                <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%203.jpg" alt="Dok 3">
-                <div class="stack-label">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                  3 Photos
+              <div class="gf-card c3" data-src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%203.jpg">
+                <img src="https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/dok%203.jpg" alt="Dok 3" draggable="false">
+                <div class="gf-tag"><span>DOK 3</span><span>JPG</span></div>
+              </div>
+              <div class="gf-front">
+                <div class="gf-meta">
+                  <p class="gf-title">Dokumentasi</p>
+                  <p class="gf-sub">3 Photos</p>
                 </div>
               </div>
             </div>
+            <span class="gf-hint">Arahkan untuk miring &middot; Ketuk untuk membuka</span>
           </div>
         </div>
       </div>
@@ -1379,25 +1474,36 @@ void main() {
     logoWrap.addEventListener('touchend', resetLogo);
 
     // ==========================================
-    // TUMPUKAN FOTO
+    // FOLDER KACA DOKUMENTASI
     // ==========================================
-    const photoStack = document.getElementById('photoStack');
-    photoStack.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') photoStack.classList.add('is-spread'); });
-    photoStack.addEventListener('pointermove', (e) => {
+    const gFolder = document.getElementById('glassFolder');
+    const gInner = gFolder.querySelector('.gf-inner');
+
+    gFolder.addEventListener('pointermove', (e) => {
       if (e.pointerType !== 'mouse') return;
-      const r = photoStack.getBoundingClientRect();
+      const r = gFolder.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - 0.5;
       const y = (e.clientY - r.top) / r.height - 0.5;
-      photoStack.style.setProperty('--ry', (x * 20) + 'deg');
-      photoStack.style.setProperty('--rx', (-y * 16) + 'deg');
+      const k = gFolder.classList.contains('is-open') ? 0.5 : 1;
+      gInner.style.setProperty('--ry', (x * 18 * k) + 'deg');
+      gInner.style.setProperty('--rx', (-y * 10 * k) + 'deg');
     });
-    photoStack.addEventListener('pointerleave', (e) => {
-      photoStack.style.setProperty('--rx', '0deg');
-      photoStack.style.setProperty('--ry', '0deg');
-      if (e.pointerType === 'mouse') photoStack.classList.remove('is-spread');
+    gFolder.addEventListener('pointerleave', () => {
+      gInner.style.setProperty('--rx', '0deg');
+      gInner.style.setProperty('--ry', '0deg');
     });
-    photoStack.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'touch') photoStack.classList.toggle('is-spread');
+
+    function toggleFolder() {
+      const open = gFolder.classList.toggle('is-open');
+      gFolder.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    gFolder.addEventListener('click', (e) => {
+      const card = e.target.closest('.gf-card');
+      if (gFolder.classList.contains('is-open') && card) { zoomImage(card.dataset.src); return; }
+      toggleFolder();
+    });
+    gFolder.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleFolder(); }
     });
 
     // ==========================================

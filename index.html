@@ -420,7 +420,36 @@
 
     /* INTRO: SHADER ANIMATION (logo tampil sendiri di tengah) */
     #intro-shader { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
-    #intro .studio-light, #intro .floor-reflection, #intro .intro-text-container { display: none; }
+    #intro .studio-light, #intro .floor-reflection { display: none; }
+
+    /* INTRO: TEKS DI BAWAH LOGO */
+    #intro .intro-text-container { opacity: 1; animation: none; max-width: 92vw; padding: 0 12px; margin-top: 34px; }
+    #intro .intro-text-container::before {
+      content: ''; position: absolute; inset: -22px -48px; z-index: -1; pointer-events: none;
+      background: radial-gradient(ellipse at center, rgba(5,11,26,0.7) 0%, rgba(5,11,26,0) 72%);
+    }
+    #intro .intro-text-container::after {
+      content: ''; display: block; height: 2px; width: 0; margin: 16px auto 0;
+      background: linear-gradient(90deg, transparent, #00f0ff, transparent); box-shadow: 0 0 10px #00f0ff;
+      animation: introLine 1.2s ease-out 2s forwards;
+    }
+    @keyframes introLine { to { width: min(260px, 60vw); } }
+    #intro .intro-text-title {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 0.9em; margin: 0;
+      color: #fff; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.95), 0 0 22px rgba(0,240,255,0.55);
+    }
+    .it-word { display: inline-block; white-space: nowrap; }
+    .it-char {
+      display: inline-block; opacity: 0; transform: translateY(16px) scale(0.9); filter: blur(8px);
+      animation: itIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: calc(1.1s + var(--i) * 0.035s);
+    }
+    @keyframes itIn { to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+    @media (max-width: 768px) {
+      #intro .intro-text-title { font-size: 0.72rem; letter-spacing: 0.2em; gap: 4px 0.6em; }
+      #intro .intro-text-container { margin-top: 26px; }
+    }
   </style>
 </head>
 <body>
@@ -434,8 +463,7 @@
       <img class="intro-logo" src="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/logo-kelas.png" alt="Logo Kelas D-IV TLM 2026" draggable="false">
     </div>
     <div class="intro-text-container">
-      <p class="intro-text-title">D-IV TLM 2026</p>
-      <p class="intro-text-sub">STIKES NASIONAL SURAKARTA</p>
+      <p class="intro-text-title" aria-label="D-IV TEKNOLOGI LABORATORIUM MEDIK 2026"><span class="it-word"><span class="it-char" style="--i:0">D</span><span class="it-char" style="--i:1">-</span><span class="it-char" style="--i:2">I</span><span class="it-char" style="--i:3">V</span></span><span class="it-word"><span class="it-char" style="--i:4">T</span><span class="it-char" style="--i:5">E</span><span class="it-char" style="--i:6">K</span><span class="it-char" style="--i:7">N</span><span class="it-char" style="--i:8">O</span><span class="it-char" style="--i:9">L</span><span class="it-char" style="--i:10">O</span><span class="it-char" style="--i:11">G</span><span class="it-char" style="--i:12">I</span></span><span class="it-word"><span class="it-char" style="--i:13">L</span><span class="it-char" style="--i:14">A</span><span class="it-char" style="--i:15">B</span><span class="it-char" style="--i:16">O</span><span class="it-char" style="--i:17">R</span><span class="it-char" style="--i:18">A</span><span class="it-char" style="--i:19">T</span><span class="it-char" style="--i:20">O</span><span class="it-char" style="--i:21">R</span><span class="it-char" style="--i:22">I</span><span class="it-char" style="--i:23">U</span><span class="it-char" style="--i:24">M</span></span><span class="it-word"><span class="it-char" style="--i:25">M</span><span class="it-char" style="--i:26">E</span><span class="it-char" style="--i:27">D</span><span class="it-char" style="--i:28">I</span><span class="it-char" style="--i:29">K</span></span><span class="it-word"><span class="it-char" style="--i:30">2</span><span class="it-char" style="--i:31">0</span><span class="it-char" style="--i:32">2</span><span class="it-char" style="--i:33">6</span></span></p>
     </div>
     <p class="intro-skip">Ketuk untuk melewati</p>
   </div>

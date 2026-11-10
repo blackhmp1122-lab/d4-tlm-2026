@@ -303,19 +303,17 @@
       .vcap .s { font-size: 0.95rem; }
     }
 
-    /* MODE LAYAR LEBAR (laptop/landscape): video portrait di tengah, kiri-kanan diisi latar SHADER */
-    #vid-bg { display: none; }
-    #page-1-video.strip { background: #050b1a; --sr: 0.5625; }
-    #page-1-video.strip #vid-bg {
-      display: block; position: absolute; inset: 0; pointer-events: none; overflow: hidden; background: #050b1a;
-    }
+    /* LATAR SHADER HALAMAN VIDEO (di belakang stage, tidak ikut memudar; laptop + HP) */
+    #vid-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; background: #050b1a; }
+    #page-1-video.strip { --sr: 0.5625; }
     #vid-shader { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-    #page-1-video.strip #vid-bg::after {
+    #vid-bg::after {
       content: ''; position: absolute; inset: 0; pointer-events: none;
       background:
         radial-gradient(ellipse at 50% 50%, rgba(30,144,255,0.14) 0%, rgba(5,11,26,0) 55%),
-        linear-gradient(90deg, rgba(5,11,26,0.45) 0%, rgba(5,11,26,0) 25%, rgba(5,11,26,0) 75%, rgba(5,11,26,0.45) 100%);
+        linear-gradient(90deg, rgba(5,11,26,0.35) 0%, rgba(5,11,26,0) 25%, rgba(5,11,26,0) 75%, rgba(5,11,26,0.35) 100%);
     }
+    #vid-stage { z-index: 1; }
     #page-1-video.strip #vid-frame {
       inset: 0 auto 0 50%; width: calc(100svh * var(--sr)); transform: translateX(-50%);
       box-shadow: 0 0 0 1px rgba(0,240,255,0.35), 0 0 60px rgba(0,240,255,0.22), 0 0 140px rgba(30,144,255,0.18);
@@ -638,8 +636,8 @@
 
     <!-- HALAMAN 1: VIDEO TUR KAMPUS (di-pin, diputar mengikuti scroll) -->
     <section id="page-1-video" aria-label="Tur kampus STIKES Nasional Surakarta">
+      <div id="vid-bg"><canvas id="vid-shader" aria-hidden="true"></canvas></div>
       <div id="vid-stage">
-        <div id="vid-bg"><canvas id="vid-shader" aria-hidden="true"></canvas></div>
         <div id="vid-frame">
           <video id="scroll-video" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture tabindex="-1"></video>
           <div class="vid-shade"></div>
@@ -1316,12 +1314,12 @@ void main() {
     }
 
     // ==========================================
-    // LATAR SHADER HALAMAN VIDEO (khusus laptop / mode landscape)
+    // LATAR SHADER HALAMAN VIDEO (laptop + HP, aktif selama section video terlihat)
     // ==========================================
     const vidShader = (function createVidShader() {
       const noop = { start() {}, stop() {} };
       const cv = document.getElementById('vid-shader');
-      if (!stripMode || !cv) return noop;
+      if (!cv) return noop;
 
       const gl = cv.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'high-performance' });
       if (!gl) { cv.style.display = 'none'; return noop; }
@@ -1440,8 +1438,8 @@ void main() {
       const uRes = gl.getUniformLocation(prog, 'iResolution');
       const uTime = gl.getUniformLocation(prog, 'iTime');
 
-      // Resolusi dikurangi sedikit (0.75x) agar tetap ringan; garisnya halus jadi tidak terlihat bedanya
-      const QUALITY = 0.75;
+      // Resolusi dikurangi (HP 0.5x, laptop 0.75x) agar tetap ringan; garisnya halus jadi tidak terlihat bedanya
+      const QUALITY = isMobile ? 0.5 : 0.75;
       function resize() {
         const d = Math.min(window.devicePixelRatio || 1, 1) * QUALITY;
         const w = cv.clientWidth || window.innerWidth;
@@ -1468,7 +1466,7 @@ void main() {
       function kick() { if (running && !raf) raf = requestAnimationFrame(render); }
       document.addEventListener('visibilitychange', kick);
 
-      return {
+      const api = {
         start() {
           if (running) return;
           running = true;
@@ -1481,6 +1479,13 @@ void main() {
           raf = 0;
         }
       };
+
+      // Jalan selama section video terlihat di layar (termasuk saat scroll naik dari bawah), berhenti kalau tidak terlihat
+      new IntersectionObserver(([en]) => {
+        if (en.isIntersecting) api.start(); else api.stop();
+      }).observe(document.getElementById('page-1-video'));
+
+      return api;
     })();
 
     // Titik fokus vertikal video (0 = atas, 1 = bawah) menurut progres video 0-1.
@@ -1836,11 +1841,9 @@ void main() {
       function setActive(a) {
         document.body.classList.toggle('in-video', a);
         nav.classList.toggle('nav-hide', a);
-        // Latar halftone + partikel dihentikan saat halaman video tampil (di laptop tertutup shader, di HP tertutup video)
+        // Latar halftone + partikel dihentikan saat halaman video tampil (tertutup shader/video)
         bgFlags.video = a;
         updateBg();
-        // Shader latar video hanya jalan saat halaman video aktif (khusus laptop)
-        if (a) vidShader.start(); else vidShader.stop();
       }
 
       function renderUI(p) {

@@ -450,6 +450,17 @@
       #intro .intro-text-title { font-size: 0.72rem; letter-spacing: 0.2em; gap: 4px 0.6em; }
       #intro .intro-text-container { margin-top: 26px; }
     }
+
+    /* INTRO: LOGO TEPAT DI TENGAH, TEKS DI BAWAHNYA (tidak menggeser logo) */
+    #intro .intro-logo-wrap { position: absolute; top: 50%; left: 50%; width: 240px; height: 240px; margin: -120px 0 0 -120px; }
+    #intro .intro-logo { width: 100%; height: 100%; display: block; }
+    #intro .intro-text-container {
+      position: absolute; top: calc(50% + 120px + 30px); left: 0; right: 0; margin: 0 auto; width: max-content;
+    }
+    @media (max-width: 768px) {
+      #intro .intro-logo-wrap { width: 180px; height: 180px; margin: -90px 0 0 -90px; }
+      #intro .intro-text-container { top: calc(50% + 90px + 24px); margin-top: 0; }
+    }
   </style>
 </head>
 <body>
@@ -1316,13 +1327,16 @@ void main() {
       const uTime = gl.getUniformLocation(prog, 'time');
 
       function resize() {
-        const d = isMobile ? 0.75 : Math.min(window.devicePixelRatio || 1, 1.5);
-        cv.width = Math.max(1, Math.round(window.innerWidth * d));
-        cv.height = Math.max(1, Math.round(window.innerHeight * d));
+        const d = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 1.5);
+        const w = cv.clientWidth || window.innerWidth;
+        const h = cv.clientHeight || window.innerHeight;
+        cv.width = Math.max(1, Math.round(w * d));
+        cv.height = Math.max(1, Math.round(h * d));
         gl.viewport(0, 0, cv.width, cv.height);
       }
       resize();
-      window.addEventListener('resize', resize);
+      const shaderRO = new ResizeObserver(resize);
+      shaderRO.observe(cv);
 
       const SPEED = 0.1, T0 = 0.05;
       const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1333,7 +1347,7 @@ void main() {
         // berhenti total setelah intro selesai memudar
         if (introEl.classList.contains('hide')) {
           if (!hideAt) hideAt = now;
-          if (now - hideAt > 1400) { window.removeEventListener('resize', resize); return; }
+          if (now - hideAt > 1400) { shaderRO.disconnect(); return; }
         }
         gl.uniform2f(uRes, cv.width, cv.height);
         gl.uniform1f(uTime, T0 + (still ? 0.3 : (now - start) / 1000 * SPEED));

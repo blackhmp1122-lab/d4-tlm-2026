@@ -374,6 +374,91 @@
     #page-1-video.strip .vcap .t { font-size: clamp(1.6rem, 3.8svh, 2.5rem); }
     #page-1-video.strip .vcap .s { font-size: 0.75rem; }
 
+    /* KARTU ANGGOTA: KACA PREPARAT 3D (tilt + kilau + parallax + putar) */
+    .msl-wrap { perspective: 900px; }
+    .msl {
+      --rx: 0deg; --ry: 0deg; --gx: 50%; --gy: 30%; --lift: 0px;
+      position: relative; width: 100%; aspect-ratio: 3 / 4.1; cursor: pointer; outline: none;
+      -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
+      transform-style: preserve-3d;
+      transform: translateZ(var(--lift)) rotateX(var(--rx)) rotateY(var(--ry));
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .msl.is-hover { --lift: 18px; transition: transform 0.12s linear; z-index: 6; }
+    .msl:focus-visible .msl-front { box-shadow: 0 0 0 3px rgba(0,240,255,0.7), 0 14px 30px rgba(0,0,0,0.45); }
+    .msl-flip { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1); }
+    .msl.is-flipped .msl-flip { transform: rotateY(180deg); }
+    .msl-face {
+      position: absolute; inset: 0; border-radius: 14px; transform-style: preserve-3d;
+      -webkit-backface-visibility: hidden; backface-visibility: hidden;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.03) 38%, rgba(120,200,255,0.07) 100%),
+        rgba(18,34,60,0.62);
+      border: 1px solid rgba(190,235,255,0.28);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 0 30px rgba(120,200,255,0.06);
+    }
+    .msl.is-hover .msl-face { box-shadow: 0 26px 46px rgba(0,0,0,0.55), 0 0 26px rgba(0,240,255,0.18), inset 0 1px 0 rgba(255,255,255,0.45), inset 0 0 30px rgba(120,200,255,0.08); }
+    .msl-back { transform: rotateY(180deg); }
+
+    .msl-strip {
+      position: absolute; top: 0; left: 0; right: 0; height: 23%; box-sizing: border-box; padding: 9px 12px 0;
+      border-radius: 14px 14px 0 0; border-bottom: 1px solid rgba(255,255,255,0.32);
+      background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1.2px), linear-gradient(180deg, rgba(255,255,255,0.34), rgba(255,255,255,0.14));
+      background-size: 4px 4px, 100% 100%;
+      transform: translateZ(18px);
+    }
+    .msl-strip b { display: block; color: #fff; font: 700 0.8rem/1.2 ui-sans-serif, system-ui, sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 4px rgba(0,0,0,0.45); }
+    .msl-strip span { display: block; margin-top: 3px; color: #c9f6ff; font: 600 0.58rem/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.14em; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+
+    .msl-lens {
+      position: absolute; left: 50%; top: 57%; width: 66%; aspect-ratio: 1; border-radius: 50%; box-sizing: border-box;
+      transform: translate(-50%, -50%) translateZ(12px);
+      border: 2px solid rgba(0,240,255,0.55);
+      background: #050b1a;
+      box-shadow: 0 0 0 5px rgba(5,11,26,0.55), 0 0 24px rgba(0,240,255,0.25), inset 0 0 18px rgba(0,0,0,0.6);
+    }
+    .msl-lens img { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 30%; pointer-events: none; }
+    .msl-lens::after {
+      content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+      background:
+        linear-gradient(rgba(0,240,255,0.28), rgba(0,240,255,0.28)) 50% 0 / 1px 100% no-repeat,
+        linear-gradient(rgba(0,240,255,0.28), rgba(0,240,255,0.28)) 0 50% / 100% 1px no-repeat,
+        radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.38) 100%);
+    }
+    .msl-ticks {
+      position: absolute; inset: -11px; border-radius: 50%; pointer-events: none;
+      background: repeating-conic-gradient(rgba(255,255,255,0.5) 0 1deg, transparent 1deg 15deg);
+      -webkit-mask-image: radial-gradient(circle, transparent calc(100% - 6px), #000 calc(100% - 6px));
+      mask-image: radial-gradient(circle, transparent calc(100% - 6px), #000 calc(100% - 6px));
+    }
+    .msl-foot {
+      position: absolute; left: 12px; right: 12px; bottom: 9px; display: flex; justify-content: space-between;
+      color: rgba(226,245,255,0.7); font: 500 0.5rem/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.16em;
+      transform: translateZ(8px);
+    }
+    .msl-glare {
+      position: absolute; inset: 0; border-radius: 14px; pointer-events: none; opacity: 0; transition: opacity 0.3s ease;
+      background: radial-gradient(circle at var(--gx) var(--gy), rgba(255,255,255,0.38), rgba(255,255,255,0) 55%);
+      transform: translateZ(30px);
+    }
+    .msl.is-hover .msl-glare { opacity: 1; }
+
+    .msl-bk { position: absolute; inset: 0; box-sizing: border-box; padding: 14px 14px 12px; display: flex; flex-direction: column; transform: translateZ(14px); }
+    .msl-bk .k { color: #00f0ff; font: 700 0.52rem/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.3em; }
+    .msl-bk h5 { margin: 10px 0 0; color: #fff; font: 800 1rem/1.15 ui-sans-serif, system-ui, sans-serif; text-shadow: 0 2px 8px rgba(0,0,0,0.5); word-break: break-word; }
+    .msl-bk .r { margin-top: 5px; color: #94a3b8; font: 600 0.55rem/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.16em; text-transform: uppercase; }
+    .msl-bk dl { margin: auto 0 0; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.16); display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: baseline; }
+    .msl-bk dt { color: #64748b; font: 500 0.5rem/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.14em; text-transform: uppercase; }
+    .msl-bk dd { margin: 0; color: #e2e8f0; font: 700 0.66rem/1 ui-monospace, 'Courier New', monospace; }
+    .msl-btn {
+      margin-top: 12px; align-self: stretch; padding: 7px 0; border-radius: 999px; cursor: pointer;
+      border: 1px solid rgba(0,240,255,0.6); background: rgba(0,240,255,0.1); color: #00f0ff;
+      font: 700 0.58rem/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.18em; text-transform: uppercase; transition: background 0.2s ease, color 0.2s ease;
+    }
+    .msl-btn:hover { background: #00f0ff; color: #050b1a; }
+    @media (hover: none) { .msl.is-hover { --lift: 0px; } }
+    @media (prefers-reduced-motion: reduce) { .msl-flip, .msl { transition-duration: 0.01s; } }
+
     /* LOGO KELAS 3D */
     .logo-3d-wrap { position: relative; width: 220px; height: 220px; margin: 0 auto 40px; perspective: 800px; cursor: pointer; touch-action: none; animation: logoFloat 4s ease-in-out infinite; }
     .logo-3d {
@@ -2497,7 +2582,7 @@ void main() {
     });
 
     // ==========================================
-    // KARTU ANGGOTA
+    // KARTU ANGGOTA (KACA PREPARAT 3D)
     // ==========================================
     const memberNames = { 3: "Aprelia", 6: "Dania Rahma", 7: "Devita", 9: "Helena", 10: "Jocelin", 16: "Shafira", 18: "Talita" };
     const memberImages = {
@@ -2509,6 +2594,8 @@ void main() {
       16: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/saf.jpg",
       18: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/lita.jpg"
     };
+    // Titik fokus foto di lingkaran (opsional). Contoh: { 3: "50% 20%" }. Angka ke-2 makin kecil = menampilkan bagian atas foto.
+    const memberPos = {};
 
     const memberGrid = document.getElementById('memberGrid');
     for (let i = 1; i <= 24; i++) {
@@ -2520,21 +2607,85 @@ void main() {
         displayName = memberNames[i];
         if (i === 3 || i === 10 || i === 18) nimDisplay = "0" + i;
       }
-      const card = document.createElement('div');
-      card.className = 'glass rounded-xl p-4 text-center hover:shadow-neon hover:-translate-y-1 transition zoom-scroll shine-effect cursor-hover-target';
-      card.setAttribute('data-aos', 'fade-up');
-      card.setAttribute('data-aos-delay', (i % 4) * 100);
-      card.innerHTML = `
-        <img src="${imgSrc}" alt="" class="w-20 h-20 rounded-full mx-auto mb-3 ring-1 ring-slate-600 object-cover object-top zoomable">
-        <p class="text-sm font-medium text-white"></p>
-        <p class="text-xs text-slate-400"></p>`;
-      card.querySelector('img').alt = displayName;
-      card.querySelector('img').addEventListener('click', () => zoomImage(imgSrc));
-      card.querySelector('.text-white').textContent = displayName;
-      card.querySelector('.text-slate-400').textContent = 'NIM: ' + nimDisplay;
-      memberGrid.appendChild(card);
+
+      const wrap = document.createElement('div');
+      wrap.className = 'msl-wrap';
+      wrap.setAttribute('data-aos', 'fade-up');
+      wrap.setAttribute('data-aos-delay', (i % 4) * 100);
+      wrap.innerHTML = `
+        <div class="msl cursor-hover-target" role="button" tabindex="0" aria-pressed="false">
+          <div class="msl-flip">
+            <div class="msl-face msl-front">
+              <div class="msl-strip"><b></b><span class="nim"></span></div>
+              <div class="msl-lens">
+                <img src="${imgSrc}" alt="" draggable="false" loading="lazy">
+                <div class="msl-ticks"></div>
+              </div>
+              <div class="msl-foot"><span>D-IV TLM &middot; 2026</span><span>&times;400</span></div>
+              <div class="msl-glare"></div>
+            </div>
+            <div class="msl-face msl-back">
+              <div class="msl-bk">
+                <div class="k">SPESIMEN</div>
+                <h5></h5>
+                <div class="r">Anggota Kelas</div>
+                <dl>
+                  <dt>NIM</dt><dd class="nim"></dd>
+                  <dt>Prodi</dt><dd>D-IV TLM</dd>
+                  <dt>Angkatan</dt><dd>2026</dd>
+                </dl>
+                <button type="button" class="msl-btn">Lihat Foto</button>
+              </div>
+              <div class="msl-glare"></div>
+            </div>
+          </div>
+        </div>`;
+
+      const card = wrap.querySelector('.msl');
+      const img = wrap.querySelector('.msl-lens img');
+      img.alt = displayName;
+      if (memberPos[i]) img.style.objectPosition = memberPos[i];
+      wrap.querySelector('.msl-strip b').textContent = displayName;
+      wrap.querySelector('.msl-strip .nim').textContent = 'NIM ' + nimDisplay;
+      wrap.querySelector('.msl-bk h5').textContent = displayName;
+      wrap.querySelector('.msl-bk .nim').textContent = nimDisplay;
+      card.setAttribute('aria-label', 'Kartu ' + displayName + ', ketuk untuk memutar');
+
+      // Tilt 3D + kilau: hanya untuk mouse, dihitung dari wrapper (tidak ikut berputar)
+      wrap.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        const r = wrap.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        card.style.setProperty('--ry', ((x - 0.5) * 26).toFixed(1) + 'deg');
+        card.style.setProperty('--rx', (-(y - 0.5) * 20).toFixed(1) + 'deg');
+        card.style.setProperty('--gx', (x * 100).toFixed(1) + '%');
+        card.style.setProperty('--gy', (y * 100).toFixed(1) + '%');
+        card.classList.add('is-hover');
+      });
+      wrap.addEventListener('pointerleave', () => {
+        card.classList.remove('is-hover');
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+      });
+
+      // Ketuk / Enter = putar kartu
+      const flip = () => {
+        const on = card.classList.toggle('is-flipped');
+        card.setAttribute('aria-pressed', on ? 'true' : 'false');
+      };
+      card.addEventListener('click', flip);
+      card.addEventListener('keydown', (e) => {
+        if (e.target !== card) return;
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); }
+      });
+      wrap.querySelector('.msl-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        zoomImage(imgSrc);
+      });
+
+      memberGrid.appendChild(wrap);
     }
-    VanillaTilt.init(document.querySelectorAll("#memberGrid > div"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 });
 
     // ==========================================
     // FIREBASE & BUKU TAMU

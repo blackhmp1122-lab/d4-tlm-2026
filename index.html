@@ -465,6 +465,28 @@
     @media (hover: none) { .msl.is-hover { --lift: 0px; } }
     @media (prefers-reduced-motion: reduce) { .msl-flip, .msl { transition-duration: 0.01s; } }
 
+    /* TEKS PENUTUP VIDEO: gaya "Dokumentasi Kelas" */
+    #vid-finale {
+      position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; padding: 0 24px; pointer-events: none; opacity: 0; visibility: hidden;
+      transform-origin: 50% 50%; will-change: transform, opacity; backface-visibility: hidden;
+    }
+    #vid-finale::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at center, rgba(5,11,26,0.72) 0%, rgba(5,11,26,0.35) 38%, rgba(5,11,26,0) 70%);
+    }
+    #vid-finale .title-ring, #vid-finale .title-ring-2 { z-index: 0; }
+    .vf-title { font-size: clamp(1.9rem, 7.2vw, 3.75rem); }
+    .split-word { display: inline-flex; white-space: nowrap; margin: 0 0.14em; }
+    /* animasi baru jalan saat teks masuk (kelas .play), dan mulai ulang kalau scroll balik */
+    #vid-finale .split-char { animation: none; opacity: 0; }
+    #vid-finale.play .split-char { animation: charIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: var(--d); }
+    #vid-finale .title-line { animation: none; width: 0; }
+    #vid-finale.play .title-line { animation: lineGrow 1.6s ease-out 1.1s forwards; }
+    /* hemat tenaga: animasi berhenti saat teks belum tampil / sedang zoom keluar */
+    #vid-finale:not(.play) *, #vid-finale.zooming * { animation-play-state: paused; }
+    @media (max-width: 768px) { #vid-finale .title-sub { letter-spacing: 0.2em; font-size: 0.62rem; } }
+
     /* LOGO KELAS 3D */
     .logo-3d-wrap { position: relative; width: 220px; height: 220px; margin: 0 auto 40px; perspective: 800px; cursor: pointer; touch-action: none; animation: logoFloat 4s ease-in-out infinite; }
     .logo-3d {
@@ -788,13 +810,22 @@
             <div class="vcap" data-a="0.17" data-b="0.36"><span class="t">Kuliah itu sebenarnya buat apa, sih?</span></div>
             <div class="vcap" data-a="0.36" data-b="0.50"><span class="t">Buat cari gelar?</span></div>
             <div class="vcap" data-a="0.50" data-b="0.66"><span class="t">Atau buat menemukan versi terbaik dirimu?</span></div>
-            <div class="vcap" data-a="0.66" data-b="0.80"><span class="k">Dan ceritanya dimulai</span><span class="t">dari sini</span></div>
-            <div class="vcap" data-a="0.78" data-b="1.0"><span class="k">Selamat datang</span><span class="t">STIKES Nasional Surakarta</span><span class="s">D-IV Teknologi Laboratorium Medis 2026</span></div>
+            <div class="vcap" data-a="0.66" data-b="0.79"><span class="k">Dan ceritanya dimulai</span><span class="t">dari sini</span></div>
           </div>
           <div id="vid-hint">Scroll untuk memulai<span>&darr;</span></div>
           <div id="vid-prog" aria-hidden="true"><span></span></div>
           <div id="vid-loading">Memuat video...</div>
         </div>
+      </div>
+
+      <!-- TEKS PENUTUP: efek yang sama dengan judul "Dokumentasi Kelas" (huruf muncul bergelombang + cincin + zoom keluar) -->
+      <div id="vid-finale" aria-label="Selamat datang, STIKES Nasional Surakarta, D-IV Teknologi Laboratorium Medis Angkatan 2026">
+        <div class="title-ring"></div>
+        <div class="title-ring-2"></div>
+        <p class="title-sub title-pulse mb-6">Selamat datang</p>
+        <h2 class="split-title vf-title" id="vid-finale-title">STIKES Nasional Surakarta</h2>
+        <div class="title-line mt-8"></div>
+        <p class="title-sub title-pulse mt-6">D-IV Teknologi Laboratorium Medis &middot; Angkatan 2026</p>
       </div>
     </section>
 
@@ -1941,6 +1972,8 @@ void main() {
       }));
       const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
       const FADE = 0.035;
+      const finale = document.getElementById('vid-finale');
+      const FIN_ON = 0.78; // progres saat teks penutup mulai muncul
 
       const frame = document.getElementById('vid-frame');
       let target = 0, cur = 0, lastT = -1, lastRenderP = -1;
@@ -2007,6 +2040,21 @@ void main() {
         stage.style.opacity = (1 - out).toFixed(3);
         stage.style.transform = 'scale(' + (1 + out * 0.22).toFixed(4) + ')';
         stage.style.visibility = out >= 0.999 ? 'hidden' : 'visible';
+
+        // teks penutup: muncul huruf demi huruf, lalu zoom membesar + memudar seperti "Dokumentasi Kelas"
+        const fin = clamp((p - FIN_ON) / 0.04, 0, 1);
+        const outE = out * out;
+        finale.classList.toggle('play', p >= FIN_ON);
+        finale.classList.toggle('zooming', out > 0.005 && out < 0.995);
+        if (fin > 0 && out < 0.999) {
+          finale.style.visibility = 'visible';
+          finale.style.opacity = (fin * (1 - outE)).toFixed(3);
+          finale.style.transform = 'scale(' + (1 + outE * 2).toFixed(4) + ')';
+        } else {
+          finale.style.visibility = 'hidden';
+          finale.style.opacity = '0';
+          finale.style.transform = 'scale(1)';
+        }
       }
 
       const st = ScrollTrigger.create({
@@ -2063,6 +2111,31 @@ void main() {
       });
     }
     splitTitle(document.getElementById('gallery-title-transition'));
+
+    // Versi per kata (supaya baris baru hanya terjadi di antara kata, bukan di tengah kata)
+    function splitTitleWords(el) {
+      const words = el.textContent.trim().split(/\s+/);
+      el.textContent = '';
+      let i = 0;
+      words.forEach((word) => {
+        const w = document.createElement('span');
+        w.className = 'split-word';
+        [...word].forEach((ch) => {
+          const outer = document.createElement('span');
+          outer.className = 'split-char';
+          outer.style.setProperty('--d', (i * 0.05) + 's');
+          const inner = document.createElement('span');
+          inner.className = 'split-glyph';
+          inner.style.setProperty('--w', (i * 0.12) + 's');
+          inner.textContent = ch;
+          outer.appendChild(inner);
+          w.appendChild(outer);
+          i++;
+        });
+        el.appendChild(w);
+      });
+    }
+    splitTitleWords(document.getElementById('vid-finale-title'));
 
     // ==========================================
     // TRANSISI: ZOOM JUDUL -> LATAR PUTIH (DIHALUSKAN)

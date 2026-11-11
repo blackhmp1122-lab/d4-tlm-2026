@@ -398,7 +398,12 @@
       box-shadow: 0 14px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 0 30px rgba(120,200,255,0.06);
     }
     .msl.is-hover .msl-face { box-shadow: 0 26px 46px rgba(0,0,0,0.55), 0 0 26px rgba(0,240,255,0.18), inset 0 1px 0 rgba(255,255,255,0.45), inset 0 0 30px rgba(120,200,255,0.08); }
-    .msl-back { transform: rotateY(180deg); }
+    /* sisi belakang: solid (tidak transparan) supaya teks jelas terbaca */
+    .msl-back {
+      transform: rotateY(180deg);
+      background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 45%), linear-gradient(160deg, #16284a 0%, #0b1730 100%);
+      border-color: rgba(0,240,255,0.35);
+    }
 
     .msl-strip {
       position: absolute; top: 0; left: 0; right: 0; height: 23%; box-sizing: border-box; padding: 9px 12px 0;
@@ -444,8 +449,7 @@
     .msl.is-hover .msl-glare { opacity: 1; }
 
     .msl-bk { position: absolute; inset: 0; box-sizing: border-box; padding: 14px 14px 12px; display: flex; flex-direction: column; transform: translateZ(14px); }
-    .msl-bk .k { color: #00f0ff; font: 700 0.52rem/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.3em; }
-    .msl-bk h5 { margin: 10px 0 0; color: #fff; font: 800 1rem/1.15 ui-sans-serif, system-ui, sans-serif; text-shadow: 0 2px 8px rgba(0,0,0,0.5); word-break: break-word; }
+    .msl-bk h5 { margin: 6px 0 0; color: #fff; font: 800 1rem/1.15 ui-sans-serif, system-ui, sans-serif; text-shadow: 0 2px 8px rgba(0,0,0,0.5); word-break: break-word; }
     .msl-bk .r { margin-top: 5px; color: #94a3b8; font: 600 0.55rem/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.16em; text-transform: uppercase; }
     .msl-bk dl { margin: auto 0 0; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.16); display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: baseline; }
     .msl-bk dt { color: #64748b; font: 500 0.5rem/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.14em; text-transform: uppercase; }
@@ -2626,7 +2630,6 @@ void main() {
             </div>
             <div class="msl-face msl-back">
               <div class="msl-bk">
-                <div class="k">SPESIMEN</div>
                 <h5></h5>
                 <div class="r">Anggota Kelas</div>
                 <dl>

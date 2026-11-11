@@ -146,7 +146,7 @@
 
     /* KARTU PENGURUS: ID CARD LANYARD (berayun dengan fisika, bisa ditarik) */
     .idc-wrap { width: 100%; display: flex; justify-content: center; }
-    .idc { --cw: 240px; --ch: 352px; --sl: 120px; position: relative; width: var(--cw); height: calc(var(--sl) + var(--ch) - 14px); user-select: none; -webkit-user-select: none; }
+    .idc { --cw: 240px; --ch: 384px; --sl: 120px; position: relative; width: var(--cw); height: calc(var(--sl) + var(--ch) - 14px); user-select: none; -webkit-user-select: none; }
     .idc.is-drag { z-index: 40; }
     .idc-pin {
       position: absolute; top: -7px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; z-index: 3;
@@ -183,21 +183,19 @@
     .idc-tags { text-align: right; font: 500 6px/1.5 ui-monospace, 'Courier New', monospace; letter-spacing: 0.14em; color: #444; }
     .idc-tags span { display: block; }
     .idc-tags em { display: block; width: 18px; height: 1.5px; background: #16161a; margin: 2px 0 0 auto; }
-    .idc-photo { position: relative; margin-top: 12px; height: 128px; flex: none; }
+    .idc-photo { position: relative; margin-top: 12px; height: 160px; flex: none; }
     .idc-photo img {
-      display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 10px; pointer-events: none;
+      display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; border-radius: 10px; pointer-events: none;
       background-color: #0d1117; background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1.2px); background-size: 6px 6px;
     }
     .idc-photo::after { content: ''; position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1.2px); background-size: 5px 5px; }
     .idc-badge { position: absolute; right: -5px; bottom: -5px; z-index: 2; width: 22px; height: 22px; border-radius: 50%; background: #3b6cf4; border: 2px solid #ece6d4; display: flex; align-items: center; justify-content: center; }
     .idc-name { margin: 12px 0 0; font: 800 18px/1.1 ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.01em; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .idc-role { margin: 5px 0 0; font: 600 7.5px/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.16em; text-transform: uppercase; color: #4a4a4a; }
-    .idc-info { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 11px; padding-top: 9px; border-top: 1px solid rgba(0,0,0,0.12); }
+    .idc-info { display: block; margin-top: 11px; padding-top: 9px; border-top: 1px solid rgba(0,0,0,0.12); }
     .idc-info dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 5px 12px; align-items: baseline; }
     .idc-info dt { font: 500 5.5px/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #777; }
     .idc-info dd { margin: 0; font: 700 7.5px/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.04em; color: #16161a; }
-    .idc-qr { width: 40px; height: 40px; flex: none; box-sizing: border-box; padding: 3px; background: #fff; border-radius: 4px; box-shadow: 0 0 0 1px rgba(0,0,0,0.06); }
-    .idc-qr svg { display: block; width: 100%; height: 100%; }
     .idc-foot { margin-top: auto; display: flex; justify-content: space-around; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font: 500 6px/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.2em; color: #777; }
     .idc-gloss {
       position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
@@ -2306,13 +2304,13 @@ void main() {
     // KARTU PENGURUS (ID CARD LANYARD + FISIKA AYUNAN)
     // ==========================================
     const committeeData = [
-      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/vanes%20revisi.jpg" },
+      { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", pos: "50% 65%", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/vanes%20revisi.jpg" },
       { name: "Nur Azizah", role: "Sekretaris", nim: "13", img: "https://ui-avatars.com/api/?name=Nur+Azizah&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Viera Nada", role: "Bendahara 1", nim: "22", img: "https://ui-avatars.com/api/?name=Viera+Nada&background=0f172a&color=00f0ff&size=120&bold=true" },
       { name: "Rizka Oktaviani", role: "Bendahara 2", nim: "15", img: "https://ui-avatars.com/api/?name=Rizka+Oktaviani&background=0f172a&color=00f0ff&size=120&bold=true" },
-      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "14", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Phuan.jpg" },
+      { name: "Phuan Hizkia", role: "Dokumentasi 1", nim: "14", pos: "50% 55%", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/4792d1fa2a43c0183c28760d512662a33381a414/Phuan.jpg" },
       { name: "Trealyta", role: "Dokumentasi 2", nim: "11", img: "https://ui-avatars.com/api/?name=Trealyta&background=0f172a&color=00f0ff&size=120&bold=true" },
-      { name: "Veronica Laura", role: "Sarpras", nim: "21", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/vero.jpg" }
+      { name: "Veronica Laura", role: "Sarpras", nim: "21", pos: "50% 35%", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/vero.jpg" }
     ];
 
     const idcClamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
@@ -2320,27 +2318,6 @@ void main() {
     const IDC_TILT_MAX = 0.9; // batas sudut tarikan (radian, sekitar 50 derajat)
     const idcCards = [];
     let idcRaf = 0, idcLast = 0;
-
-    // Pola mirip QR (piksel acak tetap per nama)
-    function idcQR(seed) {
-      let s = 7;
-      for (const ch of seed) s = (s * 31 + ch.charCodeAt(0)) >>> 0;
-      const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
-      const N = 9;
-      let rects = '';
-      for (let y = 0; y < N; y++) {
-        for (let x = 0; x < N; x++) {
-          const fx = x < 3 ? x : (x > 5 ? x - 6 : -1);
-          const fy = y < 3 ? y : (y > 5 ? y - 6 : -1);
-          const inFinder = fx >= 0 && fy >= 0 && !(x > 2 && y > 2);
-          let dark;
-          if (inFinder) dark = !(fx === 1 && fy === 1);
-          else dark = rnd() > 0.48;
-          if (dark) rects += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>';
-        }
-      }
-      return '<svg viewBox="0 0 ' + N + ' ' + N + '" shape-rendering="crispEdges" fill="#111" aria-hidden="true">' + rects + '</svg>';
-    }
 
     function idcApply(c) {
       c.sp.style.transform = 'rotate(' + c.th.toFixed(4) + 'rad)';
@@ -2438,7 +2415,6 @@ void main() {
                     <dt>PRODI</dt><dd>D-IV TLM</dd>
                     <dt>ANGKATAN</dt><dd>2026</dd>
                   </dl>
-                  <div class="idc-qr"></div>
                 </div>
                 <div class="idc-foot"><span>KOMPAK</span><span>SOLID</span><span>AKURAT</span></div>
                 <div class="idc-gloss"></div>
@@ -2450,10 +2426,10 @@ void main() {
       const root = wrap.querySelector('.idc');
       const card = wrap.querySelector('.idc-card');
       card.querySelector('img').alt = data.name;
+      if (data.pos) card.querySelector('img').style.objectPosition = data.pos;
       card.querySelector('.idc-name').textContent = data.name;
       card.querySelector('.idc-role').textContent = data.role;
       card.querySelector('.idc-nim').textContent = data.nim;
-      card.querySelector('.idc-qr').innerHTML = idcQR(data.name);
 
       const c = {
         root, card, img: data.img,

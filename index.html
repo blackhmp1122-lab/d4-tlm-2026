@@ -482,6 +482,9 @@
       margin: 0 0 1rem; font-size: 0.875rem; line-height: 1.4; letter-spacing: 0.3em; text-transform: uppercase;
       color: #00f0ff; text-shadow: 0 0 10px rgba(0,0,0,0.9); opacity: 0; transform: translateY(10px);
     }
+    /* Hanya baris atas yang zoom; berada di depan judul saat membesar */
+    .vf-eb-wrap { position: relative; z-index: 2; transform-origin: 50% 50%; }
+    .vf-h-wrap { position: relative; z-index: 1; will-change: opacity; }
     .vf-title { font-size: 2.25rem; line-height: 1.25; font-weight: 800; }
     @media (min-width: 768px) { .vf-eyebrow { font-size: 1rem; } .vf-title { font-size: 3.75rem; } }
     #vid-finale .split-title { filter: none; }
@@ -837,8 +840,8 @@
         <div class="title-ring"></div>
         <div class="title-ring-2"></div>
         <div class="vf-inner">
-          <p class="vf-eyebrow">STIKES Nasional Surakarta | Angkatan 2026</p>
-          <h2 class="split-title vf-title" id="vid-finale-title">D-IV Teknologi Laboratorium Medis</h2>
+          <div id="vf-eb" class="vf-eb-wrap"><p class="vf-eyebrow">STIKES Nasional Surakarta | Angkatan 2026</p></div>
+          <div id="vf-h" class="vf-h-wrap"><h2 class="split-title vf-title" id="vid-finale-title">D-IV Teknologi Laboratorium Medis</h2></div>
         </div>
       </div>
     </section>
@@ -1987,6 +1990,9 @@ void main() {
       const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
       const FADE = 0.035;
       const finale = document.getElementById('vid-finale');
+      const vfEb = document.getElementById('vf-eb');
+      const vfH = document.getElementById('vf-h');
+      const vfRings = finale.querySelectorAll('.title-ring, .title-ring-2');
       const FIN_ON = 0.78; // progres saat teks penutup mulai muncul
 
       const frame = document.getElementById('vid-frame');
@@ -2070,17 +2076,27 @@ void main() {
 
         // teks penutup: muncul huruf demi huruf, lalu zoom membesar + memudar seperti "Dokumentasi Kelas"
         const fin = clamp((p - FIN_ON) / 0.04, 0, 1);
-        const outE = out * out;
+        const zE = out * out; // zoom makin cepat ke ujung (ease-in), dan otomatis mundur saat scroll balik
         finale.classList.toggle('play', p >= FIN_ON);
         finale.classList.toggle('zooming', out > 0.005 && out < 0.995);
         if (fin > 0 && out < 0.999) {
           finale.style.visibility = 'visible';
-          finale.style.opacity = (fin * (1 - outE)).toFixed(3);
-          finale.style.transform = 'scale(' + (1 + outE * 2).toFixed(4) + ')';
+          finale.style.opacity = fin.toFixed(3);
+          finale.style.transform = '';
+          // HANYA "STIKES Nasional Surakarta | Angkatan 2026" yang zoom menembus layar
+          vfEb.style.transform = 'scale(' + (1 + zE * 6).toFixed(4) + ')';
+          vfEb.style.opacity = (1 - clamp((out - 0.15) / 0.6, 0, 1)).toFixed(3);
+          // judul "D-IV Teknologi Laboratorium Medis" tidak ikut zoom: diam, lalu memudar
+          vfH.style.opacity = (1 - clamp((out - 0.35) / 0.5, 0, 1)).toFixed(3);
+          const ro = (1 - clamp(out / 0.7, 0, 1)).toFixed(3);
+          vfRings.forEach(r => { r.style.opacity = ro; });
         } else {
           finale.style.visibility = 'hidden';
           finale.style.opacity = '0';
-          finale.style.transform = 'scale(1)';
+          finale.style.transform = '';
+          vfEb.style.transform = 'scale(1)';
+          vfEb.style.opacity = '1';
+          vfH.style.opacity = '1';
         }
       }
 

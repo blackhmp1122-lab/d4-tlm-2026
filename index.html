@@ -144,14 +144,67 @@
     .zoom-scroll { transition: transform 0.4s ease, box-shadow 0.4s ease; }
     .zoom-scroll:hover { transform: scale(1.05) translateY(-8px); box-shadow: 0 20px 40px rgba(0,240,255,0.3); z-index: 20; }
 
-    /* KARTU LANYARD */
-    .lanyard-wrap { display: flex; flex-direction: column; align-items: center; perspective: 1000px; }
-    .lanyard { width: 4px; height: 46px; background: linear-gradient(#00f0ff, #1e90ff); box-shadow: 0 0 8px rgba(0,240,255,0.6); }
-    .lanyard-clip { width: 14px; height: 14px; border-radius: 3px; background: #94a3b8; margin-top: -4px; box-shadow: 0 0 6px rgba(148,163,184,0.6); }
-    .float { animation: floatY 4s ease-in-out infinite; }
-    .float-delay { animation-delay: -2s; }
-    @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-    .hole-punch { width: 36px; height: 8px; border-radius: 999px; background: #0f172a; margin: 0 auto 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
+    /* KARTU PENGURUS: ID CARD LANYARD (berayun dengan fisika, bisa ditarik) */
+    .idc-wrap { width: 100%; display: flex; justify-content: center; }
+    .idc { --cw: 240px; --ch: 352px; --sl: 120px; position: relative; width: var(--cw); height: calc(var(--sl) + var(--ch) - 14px); user-select: none; -webkit-user-select: none; }
+    .idc.is-drag { z-index: 40; }
+    .idc-pin {
+      position: absolute; top: -7px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; z-index: 3;
+      background: radial-gradient(circle at 35% 30%, #e2e8f0, #64748b 60%, #334155);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6), 0 0 0 3px rgba(255,255,255,0.06);
+    }
+    .idc-sp { position: absolute; left: 50%; top: 0; width: 0; height: 0; transform-origin: 0 0; will-change: transform; }
+    .idc-strap {
+      position: absolute; left: -8px; top: 0; width: 16px; height: var(--sl); z-index: 2; border-radius: 0 0 2px 2px;
+      background: linear-gradient(90deg, #0b0b0c, #28282c 50%, #0b0b0c); box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
+    .idc-strap::after { content: 'V'; position: absolute; left: 0; right: 0; top: 16px; text-align: center; font: 700 9px/1 ui-monospace, 'Courier New', monospace; color: rgba(255,255,255,0.35); }
+    .idc-cp { position: absolute; left: 0; top: var(--sl); width: 0; height: 0; transform-origin: 0 0; z-index: 1; will-change: transform; }
+    .idc-card {
+      position: absolute; left: calc(var(--cw) / -2); top: -14px; width: var(--cw); height: var(--ch);
+      box-sizing: border-box; padding: 28px 16px 12px; border-radius: 16px; overflow: hidden;
+      display: flex; flex-direction: column; color: #16161a; cursor: grab; touch-action: pan-y;
+      background-color: #ece6d4;
+      background-image: radial-gradient(rgba(60,50,20,0.07) 1px, transparent 1.2px), linear-gradient(180deg, #f3eedf 0%, #e5dfca 100%);
+      background-size: 4px 4px, 100% 100%;
+      box-shadow: 0 30px 50px -10px rgba(0,0,0,0.65), 0 8px 18px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.55);
+    }
+    .idc.is-drag .idc-card { cursor: grabbing; }
+    .idc-card::after {
+      content: ''; position: absolute; top: 0; right: 6px; bottom: 0; width: 6px; pointer-events: none;
+      background: linear-gradient(90deg, rgba(120,140,220,0), rgba(120,140,220,0.28), rgba(120,140,220,0));
+    }
+    .idc-slot { position: absolute; top: 9.5px; left: 50%; width: 38px; height: 9px; margin-left: -19px; border-radius: 6px; background: #16161a; box-shadow: inset 0 2px 3px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.6); }
+    .idc-head { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 4px; }
+    .idc-brand { display: flex; gap: 5px; align-items: flex-start; }
+    .idc-tri { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid #3b6cf4; margin-top: 3px; }
+    .idc-brand b { display: block; font: 800 11.5px/1.1 ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.01em; }
+    .idc-brand span { display: block; margin-top: 2px; font: 500 5.5px/1.2 ui-monospace, 'Courier New', monospace; letter-spacing: 0.12em; color: #555; }
+    .idc-tags { text-align: right; font: 500 6px/1.5 ui-monospace, 'Courier New', monospace; letter-spacing: 0.14em; color: #444; }
+    .idc-tags span { display: block; }
+    .idc-tags em { display: block; width: 18px; height: 1.5px; background: #16161a; margin: 2px 0 0 auto; }
+    .idc-photo { position: relative; margin-top: 12px; height: 128px; flex: none; }
+    .idc-photo img {
+      display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 10px; pointer-events: none;
+      background-color: #0d1117; background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1.2px); background-size: 6px 6px;
+    }
+    .idc-photo::after { content: ''; position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1.2px); background-size: 5px 5px; }
+    .idc-badge { position: absolute; right: -5px; bottom: -5px; z-index: 2; width: 22px; height: 22px; border-radius: 50%; background: #3b6cf4; border: 2px solid #ece6d4; display: flex; align-items: center; justify-content: center; }
+    .idc-name { margin: 12px 0 0; font: 800 18px/1.1 ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.01em; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .idc-role { margin: 5px 0 0; font: 600 7.5px/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.16em; text-transform: uppercase; color: #4a4a4a; }
+    .idc-info { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 11px; padding-top: 9px; border-top: 1px solid rgba(0,0,0,0.12); }
+    .idc-info dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 5px 12px; align-items: baseline; }
+    .idc-info dt { font: 500 5.5px/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #777; }
+    .idc-info dd { margin: 0; font: 700 7.5px/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.04em; color: #16161a; }
+    .idc-qr { width: 40px; height: 40px; flex: none; box-sizing: border-box; padding: 3px; background: #fff; border-radius: 4px; box-shadow: 0 0 0 1px rgba(0,0,0,0.06); }
+    .idc-qr svg { display: block; width: 100%; height: 100%; }
+    .idc-foot { margin-top: auto; display: flex; justify-content: space-around; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font: 500 6px/1 ui-monospace, 'Courier New', monospace; letter-spacing: 0.2em; color: #777; }
+    .idc-gloss {
+      position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      background: linear-gradient(115deg, rgba(255,255,255,0) 35%, rgba(255,255,255,0.38) 50%, rgba(255,255,255,0) 65%);
+      background-size: 260% 100%; background-position: 50% 0;
+    }
+    @media (max-width: 768px) { .idc { --sl: 100px; } }
 
     .shine-effect { position: relative; overflow: hidden; }
     .shine-effect::before {
@@ -697,7 +750,8 @@
       <section id="directory" class="py-24 px-6 relative z-10 w-full overflow-hidden">
         <div class="max-w-6xl mx-auto w-full">
           <h2 class="text-3xl font-bold text-center text-neon neon-text mb-16" data-aos="fade-up">Struktur &amp; Anggota</h2>
-          <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Pengurus Kelas</h3>
+          <h3 class="text-xl font-semibold text-slate-300 mb-3 text-center" data-aos="fade-up" data-aos-delay="100">Pengurus Kelas</h3>
+          <p class="text-center text-xs tracking-[0.2em] uppercase text-slate-500 mb-14" data-aos="fade-up" data-aos-delay="150">Tarik &amp; ayunkan kartunya</p>
           <div id="committeeGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center mb-24 w-full"></div>
           <h3 class="text-xl font-semibold text-slate-300 mb-10 text-center" data-aos="fade-up" data-aos-delay="100">Anggota Kelas</h3>
           <div id="memberGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 w-full"></div>
@@ -1585,7 +1639,7 @@ void main() {
     if (!isMobile) {
       const cursorOuter = document.querySelector('.cursor-outer');
       const cursorInner = document.querySelector('.cursor-inner');
-      const hoverSelector = 'a, button, .zoomable, .cursor-hover-target, .photo-card, .lanyard-wrap, .glass, .logo-3d-wrap, #loading-phase';
+      const hoverSelector = 'a, button, .zoomable, .cursor-hover-target, .photo-card, .idc-card, .glass, .logo-3d-wrap, #loading-phase';
       document.addEventListener('mousemove', (e) => {
         cursorOuter.style.left = cursorInner.style.left = e.clientX + 'px';
         cursorOuter.style.top = cursorInner.style.top = e.clientY + 'px';
@@ -2249,7 +2303,7 @@ void main() {
     backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     // ==========================================
-    // KARTU PENGURUS
+    // KARTU PENGURUS (ID CARD LANYARD + FISIKA AYUNAN)
     // ==========================================
     const committeeData = [
       { name: "Vanessa Amelia", role: "Ketua Kelas", nim: "19", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/vanes%20revisi.jpg" },
@@ -2261,30 +2315,210 @@ void main() {
       { name: "Veronica Laura", role: "Sarpras", nim: "21", img: "https://raw.githubusercontent.com/blackhmp1122-lab/d4-tlm-2026/main/vero.jpg" }
     ];
 
+    const idcClamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+    const idcReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const IDC_TILT_MAX = 0.9; // batas sudut tarikan (radian, sekitar 50 derajat)
+    const idcCards = [];
+    let idcRaf = 0, idcLast = 0;
+
+    // Pola mirip QR (piksel acak tetap per nama)
+    function idcQR(seed) {
+      let s = 7;
+      for (const ch of seed) s = (s * 31 + ch.charCodeAt(0)) >>> 0;
+      const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+      const N = 9;
+      let rects = '';
+      for (let y = 0; y < N; y++) {
+        for (let x = 0; x < N; x++) {
+          const fx = x < 3 ? x : (x > 5 ? x - 6 : -1);
+          const fy = y < 3 ? y : (y > 5 ? y - 6 : -1);
+          const inFinder = fx >= 0 && fy >= 0 && !(x > 2 && y > 2);
+          let dark;
+          if (inFinder) dark = !(fx === 1 && fy === 1);
+          else dark = rnd() > 0.48;
+          if (dark) rects += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>';
+        }
+      }
+      return '<svg viewBox="0 0 ' + N + ' ' + N + '" shape-rendering="crispEdges" fill="#111" aria-hidden="true">' + rects + '</svg>';
+    }
+
+    function idcApply(c) {
+      c.sp.style.transform = 'rotate(' + c.th.toFixed(4) + 'rad)';
+      c.cp.style.transform = 'rotate(' + c.r.toFixed(4) + 'rad)';
+      c.gloss.style.backgroundPosition = (50 + (c.th + c.r) * 140).toFixed(1) + '% 0';
+    }
+
+    function idcWake(c) {
+      c.awake = true;
+      if (!idcRaf) { idcLast = performance.now(); idcRaf = requestAnimationFrame(idcTick); }
+    }
+
+    function idcTick(now) {
+      idcRaf = 0;
+      const dt = Math.min(0.033, (now - idcLast) / 1000 || 0.016);
+      idcLast = now;
+      let any = false;
+
+      for (const c of idcCards) {
+        if (!c.awake) continue;
+
+        if (c.drag) {
+          // Sedang ditarik: tali mengikuti pointer, kartu tertinggal (lag) di ujung tali
+          const prev = c.th;
+          c.th += (c.tt - c.th) * Math.min(1, dt * 22);
+          const nw = (c.th - prev) / dt;
+          const aTh = idcClamp((nw - c.lastW) / dt, -120, 120);
+          c.lastW = nw;
+          c.w += (nw - c.w) * 0.5;
+          const aR = -34 * c.r - 2.8 * c.rw - 0.55 * aTh;
+          c.rw += aR * dt; c.r += c.rw * dt;
+          any = true;
+        } else {
+          // Bebas: ayunan bandul + kartu yang berayun di ujung tali (double pendulum sederhana)
+          const h = dt / 2;
+          for (let i = 0; i < 2; i++) {
+            const aTh = -16 * c.th - 1.9 * c.w;
+            c.w += aTh * h; c.th += c.w * h;
+            const aR = -34 * c.r - 2.8 * c.rw - 0.55 * aTh;
+            c.rw += aR * h; c.r += c.rw * h;
+          }
+          c.th = idcClamp(c.th, -1.1, 1.1);
+          c.r = idcClamp(c.r, -1.2, 1.2);
+          if (Math.abs(c.th) < 0.0008 && Math.abs(c.w) < 0.004 && Math.abs(c.r) < 0.0008 && Math.abs(c.rw) < 0.004) {
+            c.th = c.w = c.r = c.rw = 0;
+            c.awake = false;
+          } else any = true;
+        }
+        idcApply(c);
+      }
+      if (any) idcRaf = requestAnimationFrame(idcTick);
+    }
+
+    const idcObserver = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        const c = en.target._idc;
+        if (!c || c.seen) return;
+        c.seen = true;
+        if (idcReduce.matches) return;
+        // ayunan awal begitu kartu muncul di layar
+        c.th = c.dir * 0.34;
+        c.w = 0;
+        idcWake(c);
+      });
+    }, { threshold: 0.35 });
+
     const committeeGrid = document.getElementById('committeeGrid');
     committeeData.forEach((data, index) => {
-      const card = document.createElement('div');
-      card.className = `lanyard-wrap float ${index % 2 !== 0 ? 'float-delay' : ''} zoom-scroll shine-effect cursor-hover-target`;
-      card.setAttribute('data-aos', 'fade-up');
-      card.setAttribute('data-aos-delay', index * 100);
-      card.innerHTML = `
-        <div class="lanyard"></div>
-        <div class="lanyard-clip"></div>
-        <div class="glass rounded-2xl w-64 p-6 text-center shadow-neon mt-2">
-          <div class="hole-punch"></div>
-          <img src="${data.img}" alt="" class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-neon object-cover object-top zoomable">
-          <h4 class="font-bold text-white"></h4>
-          <p class="text-neon text-sm mb-1"></p>
-          <p class="text-xs text-slate-400"></p>
+      const wrap = document.createElement('div');
+      wrap.className = 'idc-wrap';
+      wrap.setAttribute('data-aos', 'fade-up');
+      wrap.setAttribute('data-aos-delay', (index % 3) * 100);
+      wrap.innerHTML = `
+        <div class="idc">
+          <div class="idc-pin"></div>
+          <div class="idc-sp">
+            <div class="idc-strap"></div>
+            <div class="idc-cp">
+              <div class="idc-card cursor-hover-target">
+                <div class="idc-slot"></div>
+                <div class="idc-head">
+                  <div class="idc-brand"><i class="idc-tri"></i><div><b>D-IV TLM 2026</b><span>STIKES NASIONAL SURAKARTA</span></div></div>
+                  <div class="idc-tags"><span>AKURASI</span><span>TANPA</span><span>KOMPROMI</span><em></em></div>
+                </div>
+                <div class="idc-photo">
+                  <img src="${data.img}" alt="" draggable="false">
+                  <span class="idc-badge"><svg viewBox="0 0 12 12" width="11" height="11"><path d="M2.5 6.4l2.3 2.3 4.7-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </div>
+                <h4 class="idc-name"></h4>
+                <p class="idc-role"></p>
+                <div class="idc-info">
+                  <dl>
+                    <dt>NIM</dt><dd class="idc-nim"></dd>
+                    <dt>PRODI</dt><dd>D-IV TLM</dd>
+                    <dt>ANGKATAN</dt><dd>2026</dd>
+                  </dl>
+                  <div class="idc-qr"></div>
+                </div>
+                <div class="idc-foot"><span>KOMPAK</span><span>SOLID</span><span>AKURAT</span></div>
+                <div class="idc-gloss"></div>
+              </div>
+            </div>
+          </div>
         </div>`;
-      card.querySelector('img').addEventListener('click', () => zoomImage(data.img));
+
+      const root = wrap.querySelector('.idc');
+      const card = wrap.querySelector('.idc-card');
       card.querySelector('img').alt = data.name;
-      card.querySelector('h4').textContent = data.name;
-      card.querySelector('.text-neon').textContent = data.role;
-      card.querySelector('.text-xs').textContent = 'NIM: ' + data.nim;
-      committeeGrid.appendChild(card);
+      card.querySelector('.idc-name').textContent = data.name;
+      card.querySelector('.idc-role').textContent = data.role;
+      card.querySelector('.idc-nim').textContent = data.nim;
+      card.querySelector('.idc-qr').innerHTML = idcQR(data.name);
+
+      const c = {
+        root, card, img: data.img,
+        pin: wrap.querySelector('.idc-pin'),
+        sp: wrap.querySelector('.idc-sp'),
+        cp: wrap.querySelector('.idc-cp'),
+        gloss: wrap.querySelector('.idc-gloss'),
+        th: 0, w: 0, r: 0, rw: 0, tt: 0, lastW: 0,
+        drag: false, awake: false, seen: false,
+        dir: index % 2 === 0 ? -1 : 1,
+        ax: 0, ay: 0, sx: 0, sy: 0, st: 0, moved: 0
+      };
+      idcCards.push(c);
+      root._idc = c;
+
+      card.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        const pr = c.pin.getBoundingClientRect();
+        c.ax = pr.left + pr.width / 2;
+        c.ay = pr.top + pr.height / 2;
+        c.drag = true; c.moved = 0; c.lastW = 0;
+        c.sx = e.clientX; c.sy = e.clientY; c.st = performance.now();
+        c.tt = c.th;
+        try { card.setPointerCapture(e.pointerId); } catch (err) {}
+        root.classList.add('is-drag');
+        idcWake(c);
+      });
+
+      card.addEventListener('pointermove', (e) => {
+        if (c.drag) {
+          c.moved = Math.max(c.moved, Math.hypot(e.clientX - c.sx, e.clientY - c.sy));
+          const dy = Math.max(40, e.clientY - c.ay);
+          c.tt = idcClamp(Math.atan2(-(e.clientX - c.ax), dy), -IDC_TILT_MAX, IDC_TILT_MAX);
+        } else if (e.pointerType === 'mouse' && !idcReduce.matches) {
+          // mouse lewat di atas kartu = kartu terdorong sedikit
+          c.w = idcClamp(c.w - (e.movementX || 0) * 0.0035, -3, 3);
+          idcWake(c);
+        }
+      });
+
+      const release = (e) => {
+        if (!c.drag) return;
+        c.drag = false;
+        root.classList.remove('is-drag');
+        try { card.releasePointerCapture(e.pointerId); } catch (err) {}
+        c.w = idcClamp(c.w, -6, 6);
+        const isTap = e.type === 'pointerup' && c.moved < 6 && performance.now() - c.st < 500;
+        if (isTap) {
+          if (e.target.closest && e.target.closest('.idc-photo')) {
+            zoomImage(c.img);
+          } else {
+            // ketuk bagian lain = kartu terdorong
+            const rect = card.getBoundingClientRect();
+            const off = (e.clientX - (rect.left + rect.width / 2)) / rect.width;
+            c.w += -off * 4;
+          }
+        }
+        idcWake(c);
+      };
+      card.addEventListener('pointerup', release);
+      card.addEventListener('pointercancel', release);
+
+      committeeGrid.appendChild(wrap);
+      idcObserver.observe(root);
     });
-    VanillaTilt.init(document.querySelectorAll(".lanyard-wrap"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 });
 
     // ==========================================
     // KARTU ANGGOTA

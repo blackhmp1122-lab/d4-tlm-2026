@@ -1975,7 +1975,7 @@ void main() {
       const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
       const FADE = 0.035;
       const finale = document.getElementById('vid-finale');
-      const FIN_ON = 0.78; // progres saat teks penutup mulai muncul
+      const FIN_ON = 0.74; // progres saat teks penutup mulai muncul
 
       const frame = document.getElementById('vid-frame');
       let target = 0, cur = 0, lastT = -1, lastRenderP = -1;
@@ -2024,78 +2024,48 @@ void main() {
         updateBg();
       }
 
-      function renderUI(p) {
-        // teks bergantian
+           function renderUI(p) {
+        const ZOOM_ON = 0.9; // saat zoom ke tulisan mulai (sama dengan akhir gerak video)
+
+        // teks bergantian (video)
         for (const c of caps) {
           const i = clamp((p - c.a) / FADE, 0, 1);
           const o = clamp((c.b - p) / FADE, 0, 1);
           c.el.style.opacity = Math.min(i, o).toFixed(3);
           c.el.style.transform = 'translate3d(0,' + ((1 - i) * 26 - (1 - o) * 26).toFixed(1) + 'px,0)';
         }
+
         // petunjuk scroll + bar progres
         hint.style.opacity = (1 - clamp(p / 0.03, 0, 1)).toFixed(3);
         progFill.style.height = (clamp(p / VID_END, 0, 1) * 100).toFixed(1) + '%';
-        const vp = clamp(p / VID_END, 0, 1);
-        placeVideo(vp);
-        // transisi keluar ke halaman berikutnya: membesar sambil memudar
-        const out = clamp((p - VID_END) / (1 - VID_END), 0, 1);
-        stage.style.opacity = (1 - out).toFixed(3);
-        stage.style.transform = 'scale(' + (1 + out * 0.22).toFixed(4) + ')';
-        stage.style.visibility = out >= 0.999 ? 'hidden' : 'visible';
+        placeVideo(clamp(p / VID_END, 0, 1));
 
-        // teks penutup: latar halftone membesar masuk, lalu zoom keluar sambil memudar
-        const fin = clamp((p - FIN_ON) / 0.04, 0, 1);
-        const outE = out * out;
+        // video memudar dan sedikit membesar saat zoom ke tulisan
+        const stageOut = clamp((p - ZOOM_ON) / (1 - ZOOM_ON), 0, 1);
+        stage.style.opacity = (1 - stageOut).toFixed(3);
+        stage.style.transform = 'scale(' + (1 + stageOut * 0.12).toFixed(4) + ')';
+        stage.style.visibility = stageOut >= 0.999 ? 'hidden' : 'visible';
+
+        // teks penutup: muncul dulu, lalu zoom ke arah tulisan dan memudar.
+        // Semuanya dihitung dari posisi scroll (p), jadi scroll naik membalik animasinya.
+        const fin = clamp((p - FIN_ON) / 0.06, 0, 1);
+        const z = clamp((p - ZOOM_ON) / (1 - ZOOM_ON), 0, 1);
+        const ze = z * z;
         finale.classList.toggle('play', p >= FIN_ON);
-        finale.classList.toggle('zooming', out > 0.005 && out < 0.995);
-        if (fin > 0 && out < 0.999) {
+        finale.classList.toggle('zooming', z > 0 && z < 1);
+
+        if (fin > 0 && z < 1) {
           if (!bridgeHT) bridgeHT = createHalftone(document.getElementById('bridge-ht'), BRIDGE_CFG);
           bridgeHT.start();
           finale.style.visibility = 'visible';
-          finale.style.opacity = (fin * (1 - outE)).toFixed(3);
-          finale.style.transform = 'scale(' + ((1 + (1 - fin) * 0.35) + outE * 2).toFixed(4) + ')';
+          finale.style.opacity = (fin * (1 - ze)).toFixed(3);
+          finale.style.transform = 'scale(' + ((1 + (1 - fin) * 0.35) + ze * 2.5).toFixed(4) + ')';
         } else {
           if (bridgeHT) bridgeHT.stop();
           finale.style.visibility = 'hidden';
           finale.style.opacity = '0';
           finale.style.transform = 'scale(1)';
         }
-      }
-
-      const st = ScrollTrigger.create({
-        trigger: section,
-        start: 'top top',
-        end: () => '+=' + Math.round(window.innerHeight * VIDEO_SCROLL_SCREENS),
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => { target = self.progress; },
-        onToggle: (self) => setActive(self.isActive)
-      });
-      setActive(st.isActive);
-      target = cur = st.progress;
-      onVidMeta = measure;
-      measure();
-      renderUI(cur);
-      window.addEventListener('resize', measure);
-      ScrollTrigger.addEventListener('refresh', measure);
-
-      // Satu loop: menghaluskan progres scroll, lalu menggerakkan video + teks
-      gsap.ticker.add(() => {
-        const d = target - cur;
-        if (Math.abs(d) > 0.0002) cur += d * (1 - Math.pow(0.86, gsap.ticker.deltaRatio(60)));
-        else cur = target;
-
-        // video: lompat ke frame sesuai progres (hanya saat tidak sedang seek)
-        if (vidReady && vidDuration) {
-          const t = clamp(cur / VID_END, 0, 1) * Math.max(0, vidDuration - 0.05);
-          if (!vid.seeking && Math.abs(t - lastT) >= 0.02) {
-            try { vid.currentTime = t; lastT = t; } catch (e) {}
-          }
-        }
-        if (Math.abs(cur - lastRenderP) > 0.00005) { lastRenderP = cur; renderUI(cur); }
-      });
-    }
 
     // ==========================================
     // JUDUL HALAMAN 3: PECAH JADI HURUF

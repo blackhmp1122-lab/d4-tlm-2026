@@ -399,6 +399,8 @@
     }
     .msl.is-hover .msl-face { box-shadow: 0 26px 46px rgba(0,0,0,0.55), 0 0 26px rgba(0,240,255,0.18), inset 0 1px 0 rgba(255,255,255,0.45), inset 0 0 30px rgba(120,200,255,0.08); }
     /* sisi belakang: solid (tidak transparan) supaya teks jelas terbaca */
+    /* anak-anak yang punya translateZ harus ikut menyembunyikan sisi belakangnya, kalau tidak teksnya tembus ke sisi lain */
+    .msl-face > * { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
     .msl-back {
       transform: rotateY(180deg);
       background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 45%), linear-gradient(160deg, #16284a 0%, #0b1730 100%);

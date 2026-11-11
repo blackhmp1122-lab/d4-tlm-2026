@@ -1477,12 +1477,14 @@ void main() {
     const BG_ASCII = {
       cell: isMobile ? 7 : 8,        // ukuran satu sel ASCII (px). Kecil = lebih detail, lebih berat
       ramp: ' .:-=+*#%@',            // urutan simbol: gelap -> terang
-      focusX: 0.5,                   // titik fokus foto (0-1). Dipakai saat layar lebar memotong foto
-      focusY: 0.6,                   // 0.6 = sekitar deret wajah (di laptop foto tegak terpotong jadi pita lebar)
+      focusX: 0.5,                   // titik fokus foto (0-1) untuk mode layar penuh
+      focusY: 0.62,                  // 0.62 = deret wajah (baris belakang sampai depan)
+      panelSpan: 0.6,                // tiap panel kiri/kanan menampilkan 60% lebar foto (kiri 0-60%, kanan 40-100%) -> yang di tengah muncul di kedua sisi, tidak terbelah
+      idleDim: 0.5,                  // keadaan diam: makin kecil makin gelap (0-1)
+      idleTint: 0.7,                 // keadaan diam: 0 = warna asli foto, 1 = full biru-cyan
       shimmer: 0.07,                 // kekuatan kilau/berkedip simbol
-      tint: 0.12,                    // 0 = warna asli foto, 1 = full biru-cyan
       gain: 1.15,                    // kecerahan umum
-      radius: isMobile ? 120 : 170   // radius sorot kursor (px)
+      radius: isMobile ? 130 : 190   // radius sorot kursor (px); di dalamnya foto asli muncul
     };
 
     const ASCII_VERT = `#version 300 es
@@ -1505,14 +1507,27 @@ uniform float u_cell;
 uniform float u_time;
 uniform float u_glyphs;
 uniform float u_shimmer;
-uniform float u_tint;
 uniform float u_gain;
+uniform float u_idleDim;
+uniform float u_idleTint;
 uniform vec2 u_pointer;
 uniform float u_pointerAmt;
 uniform float u_radius;
 out vec4 outColor;
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
+
+// posisi piksel layar -> posisi di foto. Mode pita: 2 panel kiri/kanan (tengah tertutup video)
+vec2 mapUV(vec2 p) {
+  float y = u_off.y + (1.0 - p.y / u_res.y) * u_cover.y;
+  if (u_stripW > 0.0) {
+    float pw = (u_res.x - u_stripW) * 0.5;
+    bool right = p.x > u_res.x * 0.5;
+    float pu = clamp(right ? (p.x - (u_res.x - pw)) / pw : p.x / pw, 0.0, 1.0);
+    return vec2((right ? u_offR.x : u_off.x) + pu * u_cover.x, y);
+  }
+  return vec2(u_off.x + p.x / u_res.x * u_cover.x, y);
+}
 
 void main() {
   vec2 g = gl_FragCoord.xy / u_cell;
@@ -1521,44 +1536,44 @@ void main() {
   vec2 center = (id + 0.5) * u_cell;
   vec2 uv = center / u_res;
 
-  // posisi di foto (mode "cover": foto memenuhi layar, kelebihan dipotong)
-  float px = center.x;
-  vec2 iuv;
-  if (u_stripW > 0.0) {
-    // mode pita: layar dibagi 2 panel kiri-kanan (tengah tertutup video). Kiri = separuh kiri foto, kanan = separuh kanan foto
-    float pw = (u_res.x - u_stripW) * 0.5;
-    bool right = px > u_res.x * 0.5;
-    float pu = clamp(right ? (px - (u_res.x - pw)) / pw : px / pw, 0.0, 1.0);
-    iuv = vec2((right ? u_offR.x : u_off.x) + pu * u_cover.x, u_off.y + (1.0 - uv.y) * u_cover.y);
-  } else {
-    iuv = vec2(u_off.x + uv.x * u_cover.x, u_off.y + (1.0 - uv.y) * u_cover.y);
-  }
   float panelW = u_stripW > 0.0 ? (u_res.x - u_stripW) * 0.5 : u_res.x;
   float texelsPerCell = u_cell * (u_cover.x * u_imgSize.x) / panelW;
-  vec3 c = textureLod(u_photo, iuv, max(0.0, log2(texelsPerCell))).rgb;
+  vec3 c = textureLod(u_photo, mapUV(center), max(0.0, log2(texelsPerCell))).rgb;
   float lum = dot(c, vec3(0.299, 0.587, 0.114));
 
-  // kilau: tiap sel berkedip dengan fase acak + gelombang cahaya pelan melintas
+  // sorot kursor: pf 1 di tengah -> 0 di tepi
+  float d = length(center - u_pointer) / u_radius;
+  float pf = (1.0 - smoothstep(0.0, 1.0, d)) * u_pointerAmt;
+
   float h = hash(id);
   float wave = sin(u_time * 1.6 + h * 6.2831 + id.x * 0.07 - id.y * 0.05);
   float sweep = sin(u_time * 0.35 - uv.x * 3.0 + uv.y * 1.5) * 0.5 + 0.5;
   float l = pow(smoothstep(0.02, 0.75, lum), 0.7) * u_gain;
-  l += wave * u_shimmer * (0.35 + l) + sweep * 0.05;
-
-  // sorot kursor / sentuhan
-  float d = length(center - u_pointer) / u_radius;
-  float pf = (1.0 - smoothstep(0.0, 1.0, d)) * u_pointerAmt;
-  l = clamp(l + pf * 0.45, 0.0, 0.999);
+  l *= mix(u_idleDim + 0.15, 1.0, pf);                 // diam: simbol jarang & redup
+  l += wave * u_shimmer * (0.35 + l) + sweep * 0.04 + pf * 0.25;
+  l = clamp(l, 0.0, 0.999);
 
   float idx = floor(l * u_glyphs);
   float m = texture(u_atlas, vec2((idx + f.x) / u_glyphs, 1.0 - f.y)).r;
 
-  vec3 col = pow(c, vec3(0.62));                       // angkat bagian gelap (seragam ungu)
-  col = mix(col, vec3(lum) * vec3(0.55, 0.95, 1.15), u_tint);
-  col = mix(vec3(dot(col, vec3(0.3333))), col, 1.45) * 1.55;
+  vec3 vivid = pow(c, vec3(0.62));
+  vec3 idleCol = mix(vivid, vec3(lum) * vec3(0.45, 0.85, 1.2), u_idleTint);
+  vec3 hotCol = mix(vec3(dot(vivid, vec3(0.3333))), vivid, 1.45) * 1.55;
+  vec3 col = mix(idleCol * 1.1, hotCol, smoothstep(0.0, 0.6, pf));
+  float bright = mix(u_idleDim, 1.0, pf);
 
   vec3 bg = vec3(0.020, 0.043, 0.102);
-  vec3 outc = bg + col * (0.10 + pf * 0.35) + col * m * (0.65 + 0.9 * l);
+  vec3 outc = bg + col * (0.04 + pf * 0.30) + col * m * (0.55 + 0.9 * l) * bright;
+
+  // inti sorot: foto ASLI muncul (wajah jelas), pinggirnya ASCII yang makin terang
+  vec3 ph = textureLod(u_photo, mapUV(gl_FragCoord.xy), 0.0).rgb;
+  ph = pow(ph, vec3(0.92)) * 1.12;
+  float rev = smoothstep(0.18, 0.5, pf);
+  outc = mix(outc, ph, rev * 0.94);
+
+  // cincin tipis cyan di tepi lensa
+  float ring = smoothstep(0.05, 0.0, abs(d - 0.96)) * u_pointerAmt;
+  outc += vec3(0.0, 0.85, 1.0) * ring * 0.45;
 
   vec2 q = uv - 0.5;
   outc *= 1.0 - dot(q, q) * 0.9;
@@ -1648,13 +1663,14 @@ void main() {
         const ia = iw / ih;
         let cx = 1, cy = 1, ox = 0, oy = 0, oxR = 0, stripW = 0;
         if (C.strip > 0) {
-          // panel kiri/kanan di samping video: tiap panel menampilkan separuh foto (kiri / kanan)
+          // panel kiri/kanan di samping video. Tumpang tindih: kiri = 0..span, kanan = (1-span)..1 dari lebar foto
           stripW = canvas.height * C.strip;
-          const pa = Math.max(1, (canvas.width - stripW) / 2) / canvas.height;
-          const ha = (ia * 0.5);                      // rasio separuh foto
-          if (pa > ha) { cx = 0.5; cy = ha / pa; oy = Math.min(Math.max(C.focusY - cy / 2, 0), 1 - cy); }
-          else { cy = 1; cx = 0.5 * pa / ha; }
-          ox = (0.5 - cx) / 2; oxR = 0.5 + (0.5 - cx) / 2;
+          const W = C.panelSpan;
+          const pa = Math.max(1, (canvas.width - stripW) / 2) / canvas.height;   // rasio panel
+          const ha = ia * W;                                                      // rasio bagian foto yang dipakai
+          if (pa > ha) { cx = W; cy = ha / pa; oy = Math.min(Math.max(C.focusY - cy / 2, 0), 1 - cy); }
+          else { cy = 1; cx = W * pa / ha; }
+          ox = (W - cx) / 2; oxR = (1 - W) + (W - cx) / 2;
         } else {
           const ca = canvas.width / canvas.height;
           if (ca > ia) { cy = ia / ca; oy = Math.min(Math.max(C.focusY - cy / 2, 0), 1 - cy); }
@@ -1662,7 +1678,8 @@ void main() {
         }
         gl.uniform2f(L('u_offR'), oxR, oy);
         gl.uniform1f(L('u_stripW'), stripW);
-
+        gl.uniform1f(L('u_idleDim'), C.idleDim);
+        gl.uniform1f(L('u_idleTint'), C.idleTint);
         gl.uniform2f(L('u_res'), canvas.width, canvas.height);
         gl.uniform2f(L('u_imgSize'), iw, ih);
         gl.uniform2f(L('u_cover'), cx, cy);
@@ -1671,7 +1688,6 @@ void main() {
         gl.uniform1f(L('u_time'), time);
         gl.uniform1f(L('u_glyphs'), ramp.length);
         gl.uniform1f(L('u_shimmer'), reduce.matches ? 0 : C.shimmer);
-        gl.uniform1f(L('u_tint'), C.tint);
         gl.uniform1f(L('u_gain'), C.gain);
         gl.uniform2f(L('u_pointer'), pointer.x * scale, pointer.y * scale);
         gl.uniform1f(L('u_pointerAmt'), pointer.amt);
@@ -1692,8 +1708,8 @@ void main() {
         const still = reduce.matches;
         if (!still) time += dt;
         const amtTo = !still && pointer.inside ? 1 : 0;
-        pointer.amt = ease(pointer.amt, amtTo, 4, dt, 0.002);
-        const rate = C.isMobile ? 40 : 14;
+        pointer.amt = ease(pointer.amt, amtTo, amtTo ? 6 : 2.2, dt, 0.002);   // muncul cepat, memudar pelan
+        const rate = C.isMobile ? 40 : 10;
         pointer.x = ease(pointer.x, pointer.tx, rate, dt, 0.1);
         pointer.y = ease(pointer.y, pointer.ty, rate, dt, 0.1);
         draw();

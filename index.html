@@ -8,6 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="preload" as="image" href="https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/foto-kelas.jpg" crossorigin="anonymous">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
@@ -31,7 +32,7 @@
       overflow-x: hidden !important; width: 100%; max-width: 100vw; position: relative;
     }
 
-    /* HALFTONE LATAR */
+    /* LATAR: ASCII FOTO KELAS (canvas yang sama; fallback halftone) */
     #main-halftone {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       z-index: 0; pointer-events: none; opacity: .65;
@@ -1464,20 +1465,284 @@ void main() {
       };
     }
 
-    const mainHT = createHalftone(document.getElementById('main-halftone'), {
-      isMobile: isMobile,
-      mobileScale: 0.7,
-      spacing: isMobile ? 14 : 9,
-      speed: 0.6,
-      radius: isMobile ? 130 : 90,
-      glow: 0.3,
-      minDot: 0.15,
-      trailLength: isMobile ? 1.0 : 0.9,
-      follow: isMobile ? 1.0 : 0.55,
-      background: '#0f172a',
-      colors: ['#0f172a', '#16325c', '#1e90ff', '#00f0ff'],
-      interactive: true
-    });
+    // ==========================================
+    // LATAR ASCII FOTO KELAS (WEBGL2)
+    // Gaya "Starry Nights" dari 21st.dev, tapi sumbernya FOTO KELAS.
+    // Foto dipecah jadi sel-sel kecil; tiap sel digambar sebagai huruf/simbol ASCII
+    // (makin terang = simbol makin padat) dengan warna asli foto, berkilau pelan,
+    // dan menyala di sekitar kursor/sentuhan.
+    // Kalau foto gagal dimuat / WebGL2 tidak ada -> otomatis kembali ke latar halftone lama.
+    // ==========================================
+    const BG_PHOTO_URL = 'https://raw.githack.com/blackhmp1122-lab/d4-tlm-2026/main/foto-kelas.jpg';
+    const BG_ASCII = {
+      cell: isMobile ? 7 : 8,        // ukuran satu sel ASCII (px). Kecil = lebih detail, lebih berat
+      ramp: ' .:-=+*#%@',            // urutan simbol: gelap -> terang
+      focusX: 0.5,                   // titik fokus foto (0-1). Dipakai saat layar lebar memotong foto
+      focusY: 0.6,                   // 0.6 = sekitar deret wajah (di laptop foto tegak terpotong jadi pita lebar)
+      shimmer: 0.07,                 // kekuatan kilau/berkedip simbol
+      tint: 0.12,                    // 0 = warna asli foto, 1 = full biru-cyan
+      gain: 1.15,                    // kecerahan umum
+      radius: isMobile ? 120 : 170   // radius sorot kursor (px)
+    };
+
+    const ASCII_VERT = `#version 300 es
+void main() {
+  vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2));
+  gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+}`;
+
+    const ASCII_FRAG = `#version 300 es
+precision highp float;
+uniform sampler2D u_photo;
+uniform sampler2D u_atlas;
+uniform vec2 u_res;
+uniform vec2 u_imgSize;
+uniform vec2 u_cover;
+uniform vec2 u_off;
+uniform float u_cell;
+uniform float u_time;
+uniform float u_glyphs;
+uniform float u_shimmer;
+uniform float u_tint;
+uniform float u_gain;
+uniform vec2 u_pointer;
+uniform float u_pointerAmt;
+uniform float u_radius;
+out vec4 outColor;
+
+float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
+
+void main() {
+  vec2 g = gl_FragCoord.xy / u_cell;
+  vec2 id = floor(g);
+  vec2 f = fract(g);
+  vec2 center = (id + 0.5) * u_cell;
+  vec2 uv = center / u_res;
+
+  // posisi di foto (mode "cover": foto memenuhi layar, kelebihan dipotong)
+  vec2 iuv = vec2(u_off.x + uv.x * u_cover.x, u_off.y + (1.0 - uv.y) * u_cover.y);
+  float texelsPerCell = u_cell * (u_cover.x * u_imgSize.x) / u_res.x;
+  vec3 c = textureLod(u_photo, iuv, max(0.0, log2(texelsPerCell))).rgb;
+  float lum = dot(c, vec3(0.299, 0.587, 0.114));
+
+  // kilau: tiap sel berkedip dengan fase acak + gelombang cahaya pelan melintas
+  float h = hash(id);
+  float wave = sin(u_time * 1.6 + h * 6.2831 + id.x * 0.07 - id.y * 0.05);
+  float sweep = sin(u_time * 0.35 - uv.x * 3.0 + uv.y * 1.5) * 0.5 + 0.5;
+  float l = pow(smoothstep(0.02, 0.75, lum), 0.7) * u_gain;
+  l += wave * u_shimmer * (0.35 + l) + sweep * 0.05;
+
+  // sorot kursor / sentuhan
+  float d = length(center - u_pointer) / u_radius;
+  float pf = (1.0 - smoothstep(0.0, 1.0, d)) * u_pointerAmt;
+  l = clamp(l + pf * 0.45, 0.0, 0.999);
+
+  float idx = floor(l * u_glyphs);
+  float m = texture(u_atlas, vec2((idx + f.x) / u_glyphs, 1.0 - f.y)).r;
+
+  vec3 col = pow(c, vec3(0.62));                       // angkat bagian gelap (seragam ungu)
+  col = mix(col, vec3(lum) * vec3(0.55, 0.95, 1.15), u_tint);
+  col = mix(vec3(dot(col, vec3(0.3333))), col, 1.45) * 1.55;
+
+  vec3 bg = vec3(0.020, 0.043, 0.102);
+  vec3 outc = bg + col * (0.10 + pf * 0.35) + col * m * (0.65 + 0.9 * l);
+
+  vec2 q = uv - 0.5;
+  outc *= 1.0 - dot(q, q) * 0.9;
+  outColor = vec4(outc, 1.0);
+}`;
+
+    function createAsciiPhoto(canvas, img, cfg = {}) {
+      const C = { isMobile: false, maxDpr: 1.5, ...BG_ASCII, ...cfg };
+      const gl = canvas.getContext('webgl2', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'default' });
+      if (!gl) return null;
+
+      const compile = (type, src) => {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.error(gl.getShaderInfoLog(s)); return null; }
+        return s;
+      };
+      const vs = compile(gl.VERTEX_SHADER, ASCII_VERT);
+      const fs = compile(gl.FRAGMENT_SHADER, ASCII_FRAG);
+      if (!vs || !fs) return null;
+      const prog = gl.createProgram();
+      gl.attachShader(prog, vs);
+      gl.attachShader(prog, fs);
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(prog)); return null; }
+      gl.useProgram(prog);
+
+      const locCache = {};
+      const L = (n) => (n in locCache ? locCache[n] : (locCache[n] = gl.getUniformLocation(prog, n)));
+
+      // tekstur foto (butuh CORS: raw.githack mengirim Access-Control-Allow-Origin: *)
+      const photoTex = gl.createTexture();
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, photoTex);
+      try {
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      } catch (e) { console.warn('Foto latar tidak bisa dipakai di WebGL:', e); return null; }
+      gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+      // atlas simbol ASCII: satu strip horizontal, 1 simbol = 1 kotak 32x32
+      const ramp = C.ramp.split('');
+      const G = 32;
+      const ac = document.createElement('canvas');
+      ac.width = G * ramp.length; ac.height = G;
+      const ax = ac.getContext('2d');
+      ax.fillStyle = '#000'; ax.fillRect(0, 0, ac.width, ac.height);
+      ax.fillStyle = '#fff'; ax.textAlign = 'center'; ax.textBaseline = 'middle';
+      ax.font = 'bold 26px "Courier New", Courier, monospace';
+      ramp.forEach((ch, i) => { if (ch !== ' ') ax.fillText(ch, i * G + G / 2, G / 2 + 1); });
+      const atlasTex = gl.createTexture();
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, atlasTex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, ac);
+      gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.uniform1i(L('u_photo'), 0);
+      gl.uniform1i(L('u_atlas'), 1);
+
+      const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+      const pointer = { x: 0, y: 0, tx: 0, ty: 0, amt: 0, inside: false, seen: false };
+      let cssW = 1, cssH = 1, time = 0, last = 0, raf = 0, running = false, visible = true, resizeTimer = 0;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const ease = (from, to, rate, dt, snap) => {
+        const v = from + (to - from) * (1 - Math.exp(-rate * dt));
+        return Math.abs(to - v) < snap ? to : v;
+      };
+
+      function resize() {
+        const r = canvas.getBoundingClientRect();
+        cssW = Math.max(1, r.width); cssH = Math.max(1, r.height);
+        const d = C.isMobile ? 1 : Math.min(window.devicePixelRatio || 1, C.maxDpr);
+        canvas.width = Math.max(1, Math.round(cssW * d));
+        canvas.height = Math.max(1, Math.round(cssH * d));
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+
+      function draw() {
+        const scale = canvas.width / cssW;
+        const ca = canvas.width / canvas.height, ia = iw / ih;
+        let cx = 1, cy = 1, ox = 0, oy = 0;
+        if (ca > ia) { cy = ia / ca; oy = Math.min(Math.max(C.focusY - cy / 2, 0), 1 - cy); }
+        else { cx = ca / ia; ox = Math.min(Math.max(C.focusX - cx / 2, 0), 1 - cx); }
+
+        gl.uniform2f(L('u_res'), canvas.width, canvas.height);
+        gl.uniform2f(L('u_imgSize'), iw, ih);
+        gl.uniform2f(L('u_cover'), cx, cy);
+        gl.uniform2f(L('u_off'), ox, oy);
+        gl.uniform1f(L('u_cell'), C.cell * scale);
+        gl.uniform1f(L('u_time'), time);
+        gl.uniform1f(L('u_glyphs'), ramp.length);
+        gl.uniform1f(L('u_shimmer'), reduce.matches ? 0 : C.shimmer);
+        gl.uniform1f(L('u_tint'), C.tint);
+        gl.uniform1f(L('u_gain'), C.gain);
+        gl.uniform2f(L('u_pointer'), pointer.x * scale, pointer.y * scale);
+        gl.uniform1f(L('u_pointerAmt'), pointer.amt);
+        gl.uniform1f(L('u_radius'), C.radius * scale);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+
+      function schedule() {
+        if (!raf && running && visible && !document.hidden) raf = requestAnimationFrame(frame);
+      }
+
+      function frame(now) {
+        raf = 0;
+        const active = pointer.inside || pointer.amt > 0.01;
+        if (now - last < (active ? 16 : 33)) return schedule();   // diam: 30fps (hemat baterai), disentuh: 60fps
+        const dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
+        last = now;
+        const still = reduce.matches;
+        if (!still) time += dt;
+        const amtTo = !still && pointer.inside ? 1 : 0;
+        pointer.amt = ease(pointer.amt, amtTo, 4, dt, 0.002);
+        const rate = C.isMobile ? 40 : 14;
+        pointer.x = ease(pointer.x, pointer.tx, rate, dt, 0.1);
+        pointer.y = ease(pointer.y, pointer.ty, rate, dt, 0.1);
+        draw();
+        const settling = pointer.amt !== amtTo || (pointer.amt > 0 && (pointer.x !== pointer.tx || pointer.y !== pointer.ty));
+        if (!still || settling) schedule(); else last = 0;
+      }
+
+      const onMove = (e) => {
+        const r = canvas.getBoundingClientRect();
+        const cx = e.touches ? e.touches[0].clientX : e.clientX;
+        const cy = e.touches ? e.touches[0].clientY : e.clientY;
+        pointer.tx = cx - r.left;
+        pointer.ty = r.bottom - cy;
+        pointer.inside = cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom;
+        if (!pointer.seen || e.type === 'pointerdown' || e.type === 'touchstart') { pointer.x = pointer.tx; pointer.y = pointer.ty; pointer.seen = true; }
+        schedule();
+      };
+      const onLeave = () => { pointer.inside = false; schedule(); };
+      const onUp = (e) => { if (e.pointerType === 'touch' || e.type === 'touchend') setTimeout(onLeave, 400); };
+      window.addEventListener('pointermove', onMove, { passive: true });
+      window.addEventListener('pointerdown', onMove, { passive: true });
+      window.addEventListener('touchmove', onMove, { passive: true });
+      window.addEventListener('touchstart', onMove, { passive: true });
+      window.addEventListener('pointerup', onUp, { passive: true });
+      window.addEventListener('touchend', onUp, { passive: true });
+      document.documentElement.addEventListener('pointerleave', onLeave);
+      window.addEventListener('blur', onLeave);
+      document.addEventListener('visibilitychange', schedule);
+
+      new ResizeObserver(() => {
+        if (!running) return;
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => { resize(); draw(); schedule(); }, 150);
+      }).observe(canvas);
+      new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; last = 0; schedule(); }).observe(canvas);
+
+      return {
+        start() { if (running) return; running = true; last = 0; resize(); draw(); schedule(); },
+        stop() { running = false; cancelAnimationFrame(raf); raf = 0; }
+      };
+    }
+
+    // Pembungkus: coba ASCII foto kelas dulu; kalau gagal pakai halftone lama (API sama: start/stop)
+    const mainHT = (function () {
+      const canvas = document.getElementById('main-halftone');
+      const htCfg = {
+        isMobile: isMobile,
+        mobileScale: 0.7,
+        spacing: isMobile ? 14 : 9,
+        speed: 0.6,
+        radius: isMobile ? 130 : 90,
+        glow: 0.3,
+        minDot: 0.15,
+        trailLength: isMobile ? 1.0 : 0.9,
+        follow: isMobile ? 1.0 : 0.55,
+        background: '#0f172a',
+        colors: ['#0f172a', '#16325c', '#1e90ff', '#00f0ff'],
+        interactive: true
+      };
+      let impl = null, want = false;
+      const useFallback = () => { impl = createHalftone(canvas, htCfg); if (want) impl.start(); };
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        let a = null;
+        try { a = createAsciiPhoto(canvas, img, { isMobile: isMobile }); } catch (e) { console.warn(e); }
+        if (a) { impl = a; if (want) impl.start(); } else useFallback();
+      };
+      img.onerror = useFallback;
+      img.src = BG_PHOTO_URL;
+      return {
+        start() { want = true; if (impl) impl.start(); },
+        stop() { want = false; if (impl) impl.stop(); }
+      };
+    })();
 
     // ==========================================
     // VIDEO TUR KAMPUS: PENGATURAN

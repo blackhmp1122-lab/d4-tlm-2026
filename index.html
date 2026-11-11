@@ -476,7 +476,21 @@
       background: radial-gradient(ellipse at center, rgba(5,11,26,0.72) 0%, rgba(5,11,26,0.35) 38%, rgba(5,11,26,0) 70%);
     }
     #vid-finale .title-ring, #vid-finale .title-ring-2 { z-index: 0; }
-    .vf-title { font-size: clamp(1.9rem, 7.2vw, 3.75rem); }
+    /* Tulisan penutup = tulisan hero (eyebrow neon + judul putih bercahaya), lalu zoom menembus ke halaman hero */
+    .vf-inner { position: relative; z-index: 1; width: 100%; max-width: 48rem; }
+    .vf-eyebrow {
+      margin: 0 0 1rem; font-size: 0.875rem; line-height: 1.4; letter-spacing: 0.3em; text-transform: uppercase;
+      color: #00f0ff; text-shadow: 0 0 10px rgba(0,0,0,0.9); opacity: 0; transform: translateY(10px);
+    }
+    .vf-title { font-size: 2.25rem; line-height: 1.25; font-weight: 800; }
+    @media (min-width: 768px) { .vf-eyebrow { font-size: 1rem; } .vf-title { font-size: 3.75rem; } }
+    #vid-finale .split-title { filter: none; }
+    #vid-finale .split-glyph {
+      background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #fff; animation: none;
+      text-shadow: 0 0 8px rgba(0,240,255,0.7), 0 0 20px rgba(30,144,255,0.5);
+    }
+    #vid-finale.play .vf-eyebrow { animation: vfEyebrow 0.9s ease 0.05s forwards; }
+    @keyframes vfEyebrow { to { opacity: 1; transform: translateY(0); } }
     .split-word { display: inline-flex; white-space: nowrap; margin: 0 0.14em; }
     /* animasi baru jalan saat teks masuk (kelas .play), dan mulai ulang kalau scroll balik */
     #vid-finale .split-char { animation: none; opacity: 0; }
@@ -819,20 +833,20 @@
       </div>
 
       <!-- TEKS PENUTUP: efek yang sama dengan judul "Dokumentasi Kelas" (huruf muncul bergelombang + cincin + zoom keluar) -->
-      <div id="vid-finale" aria-label="Selamat datang, STIKES Nasional Surakarta, D-IV Teknologi Laboratorium Medis Angkatan 2026">
+      <div id="vid-finale" aria-label="STIKES Nasional Surakarta, Angkatan 2026. D-IV Teknologi Laboratorium Medis">
         <div class="title-ring"></div>
         <div class="title-ring-2"></div>
-        <p class="title-sub title-pulse mb-6">Selamat datang</p>
-        <h2 class="split-title vf-title" id="vid-finale-title">STIKES Nasional Surakarta</h2>
-        <div class="title-line mt-8"></div>
-        <p class="title-sub title-pulse mt-6">D-IV Teknologi Laboratorium Medis &middot; Angkatan 2026</p>
+        <div class="vf-inner">
+          <p class="vf-eyebrow">STIKES Nasional Surakarta | Angkatan 2026</p>
+          <h2 class="split-title vf-title" id="vid-finale-title">D-IV Teknologi Laboratorium Medis</h2>
+        </div>
       </div>
     </section>
 
     <!-- HALAMAN 2: HERO, TENTANG KAMI, STRUKTUR & ANGGOTA -->
     <div id="page-1-content">
       <section class="relative min-h-screen flex items-center justify-center px-6 pt-24 w-full overflow-hidden" id="hero-section">
-        <div class="text-center max-w-3xl w-full" data-aos="fade-up" data-aos-duration="1000" id="hero-content">
+        <div class="text-center max-w-3xl w-full" id="hero-content">
           <p class="text-neon text-sm md:text-base tracking-[0.3em] uppercase mb-4">STIKES Nasional Surakarta | Angkatan 2026</p>
           <h1 class="text-4xl md:text-6xl font-extrabold text-white neon-text leading-tight mb-6">D-IV Teknologi Laboratorium Medis</h1>
           <p class="glass rounded-2xl px-6 py-4 text-lg md:text-xl italic text-slate-300 mb-10 shadow-neon">"Satu Angkatan, Satu Visi: Akurasi Tanpa Kompromi."</p>
@@ -1976,6 +1990,8 @@ void main() {
       const FIN_ON = 0.78; // progres saat teks penutup mulai muncul
 
       const frame = document.getElementById('vid-frame');
+      const vidBg = document.getElementById('vid-bg');
+      let lastOut = 0, vidActive = false, shaderOn = true;
       let target = 0, cur = 0, lastT = -1, lastRenderP = -1;
       let cw = 1, ch = 1, S = 1, XOFF = 0, lastPlace = '';
 
@@ -2018,7 +2034,8 @@ void main() {
         document.body.classList.toggle('in-video', a);
         nav.classList.toggle('nav-hide', a);
         // Latar halftone + partikel dihentikan saat halaman video tampil (tertutup shader/video)
-        bgFlags.video = a;
+        vidActive = a;
+        bgFlags.video = a && lastOut < 0.3;
         updateBg();
       }
 
@@ -2040,6 +2057,16 @@ void main() {
         stage.style.opacity = (1 - out).toFixed(3);
         stage.style.transform = 'scale(' + (1 + out * 0.22).toFixed(4) + ')';
         stage.style.visibility = out >= 0.999 ? 'hidden' : 'visible';
+
+        // PINDAH HALAMAN (seperti Dokumentasi Kelas): latar video/shader memudar dan memperlihatkan latar halftone yang sama dengan halaman hero
+        lastOut = out;
+        const bgOut = clamp(out * 2.2, 0, 1);
+        vidBg.style.opacity = (1 - bgOut).toFixed(3);
+        section.style.backgroundColor = 'rgba(5,11,26,' + (1 - bgOut).toFixed(3) + ')';
+        const wantShader = bgOut < 1;
+        if (wantShader !== shaderOn) { shaderOn = wantShader; if (wantShader) vidShader.start(); else vidShader.stop(); }
+        const needHT = vidActive && out < 0.3;
+        if (needHT !== bgFlags.video) { bgFlags.video = needHT; updateBg(); }
 
         // teks penutup: muncul huruf demi huruf, lalu zoom membesar + memudar seperti "Dokumentasi Kelas"
         const fin = clamp((p - FIN_ON) / 0.04, 0, 1);
@@ -2072,6 +2099,16 @@ void main() {
       onVidMeta = measure;
       measure();
       renderUI(cur);
+
+      // Halaman hero: tulisan muncul dengan efek pop, sama seperti judul di halaman Dokumentasi Kelas
+      const heroEyebrow = document.querySelector('#hero-content > p:first-child');
+      const heroTitle = document.querySelector('#hero-content > h1');
+      if (heroEyebrow && heroTitle) {
+        gsap.fromTo([heroEyebrow, heroTitle], { opacity: 0, scale: 0.6 }, {
+          opacity: 1, scale: 1, duration: 0.9, ease: 'back.out(1.4)', stagger: 0.12,
+          scrollTrigger: { trigger: '#hero-content', start: 'top 88%', toggleActions: 'play none none reverse' }
+        });
+      }
       window.addEventListener('resize', measure);
       ScrollTrigger.addEventListener('refresh', measure);
 
